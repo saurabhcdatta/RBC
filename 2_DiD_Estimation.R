@@ -812,7 +812,7 @@ r2_loan <- run_did("loan_growth",    data = df_balanced)
 message("  R3: Placebo treatment (2020q1)...")
 
 df_placebo <- df |>
-  filter(q_period_num < RBC_PERIOD) |>   # pre-RBC data only
+  filter(q_period_num < RBC_EFFECTIVE_PERIOD) |>   # pre-RBC data only
   mutate(
     placebo_post  = as.integer(q_period_num >= 2020.1),
     placebo_treat = complex * placebo_post
