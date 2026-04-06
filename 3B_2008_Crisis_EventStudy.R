@@ -316,7 +316,8 @@ analyze_shape <- function(coef_data, window_label, outcome_label) {
   if (is.null(coef_data)) return(NULL)
 
   d <- coef_data |>
-    filter(window == window_label, !is.na(p.value))
+    filter(str_detect(as.character(window), fixed(window_label)),
+           !is.na(p.value))
 
   # Early post: Q+1 to Q+4 | Late post: Q+5 to Q+10
   early_post <- d |> filter(event_time >= 1, event_time <= 4)
