@@ -776,9 +776,9 @@ p_forest <- ggplot(
   geom_vline(xintercept = 0, linetype = "dashed",
              color = "gray50", linewidth = 0.6) +
   geom_errorbarh(height = 0.25, linewidth = 0.8,
-                 position = position_dodgev(height = 0.5)) +
+                 position = position_dodge(width = 0.6)) +
   geom_point(size = 3,
-             position = position_dodgev(height = 0.5)) +
+             position = position_dodge(width = 0.6)) +
   scale_color_manual(values = c(
     "Crisis (2008q3)"   = COL_CRISIS,
     "RBC Rule (2022q1)" = COL_RBC
