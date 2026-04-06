@@ -875,12 +875,14 @@ if (nrow(results_3g) > 0) {
   cat("Negative Relief = CCULR worsened relative to full RBC\n\n")
   results_3g |>
     select(Outcome, Beta_RBC, Stars_RBC, Beta_CCULR, Stars_CCULR,
-           Relief, Stars_Relief) |>
+           Relief, Relief_p, Stars_Relief) |>
     mutate(
-      Interpretation = case_when(
-        Relief > 0 & Relief_p < 0.10 ~ "CCULR provided relief",
-        Relief < 0 & Relief_p < 0.10 ~ "CCULR worsened outcome",
-        TRUE                          ~ "No significant difference"
+      Interpretation = ifelse(
+        Relief > 0 & Relief_p < 0.10, "CCULR provided relief",
+        ifelse(
+          Relief < 0 & Relief_p < 0.10, "CCULR worsened outcome",
+          "No significant difference"
+        )
       )
     ) |>
     print(row.names = FALSE)
