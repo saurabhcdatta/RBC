@@ -236,55 +236,241 @@ message(sprintf("  pre_re_share built: mean = %.3f pp",
 # Join FRED rates
 fred_rates_loaded <- FALSE
 
-if (RUN_RATE_ROBUSTNESS && !is.null(FRED_DATA_PATH) &&
-    file.exists(FRED_DATA_PATH)) {
+if (RUN_RATE_ROBUSTNESS) {
 
-  fred_rates <- read_csv(FRED_DATA_PATH, show_col_types = FALSE) |>
-    select(q_period_num, rate_10yr, rate_2yr)
+  # ── Strategy: try three sources in order ───────────────────────────────────
+  # 1. Pre-downloaded CSV (fastest, no internet needed, best for reproducibility)
+  # 2. fredr package API (live download — requires FRED_API_KEY)
+  # 3. httr direct API call (no package — falls back if fredr not installed)
+  # If all fail: placeholder NAs so RATE 3 still runs cleanly.
 
-  # Validate expected columns
-  stopifnot(
-    "fred_treasury_rates.csv must have column q_period_num" =
-      "q_period_num" %in% names(fred_rates),
-    "fred_treasury_rates.csv must have column rate_10yr" =
-      "rate_10yr" %in% names(fred_rates),
-    "fred_treasury_rates.csv must have column rate_2yr" =
-      "rate_2yr" %in% names(fred_rates)
-  )
+  fred_rates <- NULL   # will hold tibble(q_period_num, rate_10yr, rate_2yr)
 
-  df <- df |>
-    left_join(fred_rates, by = "q_period_num")
+  # ── Helper: convert FRED daily series to quarterly averages ────────────────
+  # FRED returns daily observations. We average within each calendar quarter
+  # and convert to q_period_num format (e.g. 2022 Q1 = 2022.1).
+  fred_to_quarterly <- function(df_daily, col_name) {
+    df_daily |>
+      mutate(
+        yr  = as.integer(format(date, "%Y")),
+        qtr = as.integer(ceiling(as.integer(format(date, "%m")) / 3)),
+        q_period_num = yr + (qtr - 1) * 0.1
+      ) |>
+      group_by(q_period_num) |>
+      summarise(!!col_name := mean(value, na.rm = TRUE), .groups = "drop")
+  }
 
-  missing_rates <- mean(is.na(df$rate_10yr)) * 100
-  message(sprintf("  FRED rates joined. Missing rate_10yr: %.1f%%", missing_rates))
+  # ── SOURCE 1: Pre-downloaded CSV ───────────────────────────────────────────
+  if (!is.null(FRED_DATA_PATH) && file.exists(FRED_DATA_PATH)) {
+    message("  [FRED] Loading from pre-downloaded CSV: ", FRED_DATA_PATH)
+    fred_rates <- tryCatch({
+      read_csv(FRED_DATA_PATH, show_col_types = FALSE) |>
+        select(q_period_num, rate_10yr, rate_2yr)
+    }, error = function(e) {
+      warning("CSV load failed: ", e$message); NULL
+    })
+    if (!is.null(fred_rates)) {
+      message("  [FRED] CSV loaded successfully.")
+    }
+  }
 
-  if (missing_rates > 10) {
-    warning(paste0(
-      "rate_10yr missing in > 10%% of rows after join. ",
-      "Check q_period_num format in fred_treasury_rates.csv. ",
-      "Expected format: 2022.1 (year.quarter), e.g. 2022 Q1 = 2022.1."
+  # ── SOURCE 2: fredr package ────────────────────────────────────────────────
+  if (is.null(fred_rates)) {
+    message("  [FRED] Trying fredr package...")
+    fred_pkg_ok <- requireNamespace("fredr", quietly = TRUE)
+
+    if (!fred_pkg_ok) {
+      message("  [FRED] fredr not installed. Installing now...")
+      tryCatch(
+        install.packages("fredr", repos = "https://cloud.r-project.org",
+                         quiet = TRUE),
+        error = function(e) message("  [FRED] install.packages failed: ", e$message)
+      )
+      fred_pkg_ok <- requireNamespace("fredr", quietly = TRUE)
+    }
+
+    if (fred_pkg_ok) {
+      # Set API key — edit this line with your FRED API key, or set as an
+      # environment variable FRED_API_KEY before running the script.
+      # Get a free key at: https://fred.stlouisfed.org/docs/api/api_key.html
+      # Takes < 1 minute to register. Key is emailed immediately.
+      api_key <- Sys.getenv("FRED_API_KEY")
+
+      if (nchar(api_key) == 0) {
+        # ── Fallback: hardcode key here if environment variable not set ──
+        # Replace the empty string below with your key, e.g.:
+        #   api_key <- "abcdef1234567890abcdef1234567890"
+        api_key <- ""   # <── PASTE YOUR FRED API KEY HERE
+      }
+
+      if (nchar(api_key) > 0) {
+        tryCatch({
+          fredr::fredr_set_key(api_key)
+
+          message("  [FRED] Downloading GS10 (10-year Treasury)...")
+          gs10_raw <- fredr::fredr(
+            series_id         = "GS10",
+            observation_start = as.Date("2000-01-01"),
+            observation_end   = Sys.Date(),
+            frequency         = "m"   # monthly — we'll average to quarterly
+          )
+
+          message("  [FRED] Downloading GS2 (2-year Treasury)...")
+          gs2_raw <- fredr::fredr(
+            series_id         = "GS2",
+            observation_start = as.Date("2000-01-01"),
+            observation_end   = Sys.Date(),
+            frequency         = "m"
+          )
+
+          gs10_q <- fred_to_quarterly(gs10_raw, "rate_10yr")
+          gs2_q  <- fred_to_quarterly(gs2_raw,  "rate_2yr")
+
+          fred_rates <- full_join(gs10_q, gs2_q, by = "q_period_num") |>
+            arrange(q_period_num)
+
+          message(sprintf(
+            "  [FRED] fredr download complete. %d quarters, %.1f to %.1f",
+            nrow(fred_rates),
+            min(fred_rates$q_period_num),
+            max(fred_rates$q_period_num)
+          ))
+
+          # Save for future runs — avoids needing API key on re-runs
+          write_csv(fred_rates, FRED_DATA_PATH)
+          message("  [FRED] Saved to: ", FRED_DATA_PATH,
+                  " (future runs will use CSV directly)")
+
+        }, error = function(e) {
+          warning("[FRED] fredr download failed: ", e$message)
+          fred_rates <<- NULL
+        })
+      } else {
+        message(paste0(
+          "  [FRED] fredr installed but no API key found.\n",
+          "  Get a free key at: https://fred.stlouisfed.org/docs/api/api_key.html\n",
+          "  Then either:\n",
+          "    (a) Set env var: Sys.setenv(FRED_API_KEY = 'your_key_here')\n",
+          "    (b) Paste key directly into line: api_key <- 'your_key_here'\n",
+          "  Trying direct httr fallback..."
+        ))
+      }
+    }
+  }
+
+  # ── SOURCE 3: Direct FRED API via httr (no fredr package needed) ──────────
+  if (is.null(fred_rates)) {
+    message("  [FRED] Trying direct API call via httr...")
+    httr_ok <- requireNamespace("httr", quietly = TRUE)
+
+    if (!httr_ok) {
+      tryCatch(
+        install.packages("httr", repos = "https://cloud.r-project.org",
+                         quiet = TRUE),
+        error = function(e) NULL
+      )
+      httr_ok <- requireNamespace("httr", quietly = TRUE)
+    }
+
+    api_key_httr <- Sys.getenv("FRED_API_KEY")
+    if (nchar(api_key_httr) == 0) api_key_httr <- ""  # <── same key as above
+
+    if (httr_ok && nchar(api_key_httr) > 0) {
+      fetch_fred_httr <- function(series, api_key) {
+        url <- paste0(
+          "https://api.stlouisfed.org/fred/series/observations",
+          "?series_id=", series,
+          "&observation_start=2000-01-01",
+          "&frequency=m",
+          "&api_key=", api_key,
+          "&file_type=json"
+        )
+        resp <- httr::GET(url)
+        if (httr::status_code(resp) != 200) {
+          stop("FRED API returned status ", httr::status_code(resp))
+        }
+        obs <- httr::content(resp, as = "parsed")$observations
+        tibble(
+          date  = as.Date(sapply(obs, `[[`, "date")),
+          value = suppressWarnings(as.numeric(sapply(obs, `[[`, "value")))
+        ) |> filter(!is.na(value))
+      }
+
+      tryCatch({
+        message("  [FRED] Fetching GS10...")
+        gs10_raw <- fetch_fred_httr("GS10", api_key_httr)
+        message("  [FRED] Fetching GS2...")
+        gs2_raw  <- fetch_fred_httr("GS2",  api_key_httr)
+
+        gs10_q <- fred_to_quarterly(gs10_raw, "rate_10yr")
+        gs2_q  <- fred_to_quarterly(gs2_raw,  "rate_2yr")
+
+        fred_rates <- full_join(gs10_q, gs2_q, by = "q_period_num") |>
+          arrange(q_period_num)
+
+        message(sprintf(
+          "  [FRED] httr download complete. %d quarters.", nrow(fred_rates)
+        ))
+
+        # Cache for future runs
+        dir.create(dirname(FRED_DATA_PATH), showWarnings = FALSE, recursive = TRUE)
+        write_csv(fred_rates, FRED_DATA_PATH)
+        message("  [FRED] Cached to: ", FRED_DATA_PATH)
+
+      }, error = function(e) {
+        warning("[FRED] httr download failed: ", e$message)
+        fred_rates <<- NULL
+      })
+
+    } else if (httr_ok && nchar(api_key_httr) == 0) {
+      message(paste0(
+        "  [FRED] httr available but no API key.\n",
+        "  ── HOW TO GET A FREE FRED API KEY ──────────────────────────\n",
+        "  1. Go to: https://fred.stlouisfed.org/docs/api/api_key.html\n",
+        "  2. Click 'Request API Key' — takes < 1 minute\n",
+        "  3. Key is emailed to you immediately\n",
+        "  4. Add to this script: Sys.setenv(FRED_API_KEY = 'your_key')\n",
+        "     OR paste directly into: api_key <- 'your_key'\n",
+        "  ────────────────────────────────────────────────────────────\n",
+        "  Continuing with RATE 3 only (no FRED data needed)."
+      ))
+    }
+  }
+
+  # ── Join rates to panel (or create NA placeholders) ────────────────────────
+  if (!is.null(fred_rates) && nrow(fred_rates) > 0) {
+
+    df <- df |>
+      left_join(fred_rates, by = "q_period_num")
+
+    missing_10yr <- mean(is.na(df$rate_10yr)) * 100
+    message(sprintf("  FRED rates joined. Missing rate_10yr: %.1f%%", missing_10yr))
+
+    if (missing_10yr > 10) {
+      warning(paste0(
+        "rate_10yr missing in > 10% of rows after join. ",
+        "Check q_period_num format. Expected: 2022.1 for 2022Q1."
+      ))
+    }
+
+    fred_rates_loaded <- TRUE
+    message("  [RATE 1 & 2] Treasury rate controls ready.")
+
+  } else {
+    # No FRED data from any source — create NA placeholders
+    df <- df |>
+      mutate(rate_10yr = NA_real_, rate_2yr = NA_real_)
+
+    message(paste0(
+      "  [FRED] All sources exhausted. RATE 1 and RATE 2 will return NA.\n",
+      "  RATE 3 (post-period restriction) will still run — no data needed.\n",
+      "  To enable RATE 1/2: add your FRED API key (see instructions above)."
     ))
   }
 
-  fred_rates_loaded <- TRUE
-  message("  [RATE 1 & 2] Treasury rate controls available.")
-
-} else if (RUN_RATE_ROBUSTNESS) {
-  # Create placeholder columns so controls_rate1/rate2 formulas parse cleanly.
-  # Models will have all-NA outcome — extract_did() will return NA rows.
-  # These will be flagged in the robustness table as "FRED data not loaded".
-  df <- df |>
-    mutate(rate_10yr = NA_real_, rate_2yr = NA_real_)
-
-  message(paste0(
-    "  [RATE 1 & 2] FRED data not found at: ", FRED_DATA_PATH, "\n",
-    "  Create data/fred_treasury_rates.csv with columns:\n",
-    "    q_period_num  (e.g. 2022.1 for 2022Q1)\n",
-    "    rate_10yr     (quarterly avg of FRED series GS10, %)\n",
-    "    rate_2yr      (quarterly avg of FRED series GS2, %)\n",
-    "  Download: https://fred.stlouisfed.org/series/GS10 and GS2\n",
-    "  RATE 3 (post-period restriction) will still run without FRED data."
-  ))
+} else {
+  # RUN_RATE_ROBUSTNESS = FALSE — just add placeholders to avoid column errors
+  df <- df |> mutate(rate_10yr = NA_real_, rate_2yr = NA_real_)
 }
 
 # Rebuild sub-samples after joins
