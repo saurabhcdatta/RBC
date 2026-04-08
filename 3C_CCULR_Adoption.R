@@ -661,13 +661,13 @@ if (nrow(results_3g) > 0) {
   forest_3g <- bind_rows(
     results_3g |>
       transmute(Outcome, Group = "Full RBC (no CCULR)",
-                Beta = Beta_RBC, Stars,
+                Beta    = Beta_RBC,
                 CI_low  = Beta_RBC - 1.96 * SE_RBC,
                 CI_high = Beta_RBC + 1.96 * SE_RBC,
                 Stars   = Stars_RBC),
     results_3g |>
       transmute(Outcome, Group = "CCULR adopters",
-                Beta = Beta_CCULR, Stars,
+                Beta    = Beta_CCULR,
                 CI_low  = Beta_CCULR - 1.96 * SE_CCULR,
                 CI_high = Beta_CCULR + 1.96 * SE_CCULR,
                 Stars   = Stars_CCULR)
