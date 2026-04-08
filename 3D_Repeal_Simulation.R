@@ -401,12 +401,12 @@ welfare <- sim_results |>
     # Annual interest saving per average loan at each horizon
     Annual_saving_K = case_when(
       Outcome == "spread_mortgage" ~
-        # Spread reduction (pp) × avg mortgage balance ($K) × (-1 because recovery = negative spread)
-        -Effect_recovered / 100 * AVG_MORTGAGE_BAL_K,
+        # Spread recovered (pp) × avg mortgage balance ($K) = annual saving to member
+        Effect_recovered / 100 * AVG_MORTGAGE_BAL_K,
       Outcome == "spread_nauto"   ~
-        -Effect_recovered / 100 * AVG_AUTO_BAL_K,
+        Effect_recovered / 100 * AVG_AUTO_BAL_K,
       Outcome == "spread_comm"    ~
-        -Effect_recovered / 100 * AVG_COMM_NONRE_BAL_K,
+        Effect_recovered / 100 * AVG_COMM_NONRE_BAL_K,
       TRUE ~ NA_real_
     ),
     # Loan growth restoration: cumulative additional loan volume ($BN)
@@ -568,21 +568,23 @@ message("  Chart 1: Loan spread fan chart...")
 spread_sim <- sim_results |>
   filter(Outcome == "spread_mortgage") |>
   mutate(
-    # Negative = recovered (benefit to member); zero = full reversal
-    Benefit_pp = -Effect_remaining   # pp reduction in mortgage spread
+    # Benefit = how much of the spread has been reversed (starts at 0, grows to 0.75)
+    Benefit_pp = Effect_recovered   # positive = spread cost removed from members
   )
 
 p_fan_spread <- ggplot(spread_sim,
                         aes(x = Quarter, y = Benefit_pp,
                             color = Scenario, linetype = Scenario)) +
-  # Shade the "recovery zone" — area above zero is restored benefit
+  # Shade the "recovery zone" — area where benefit is being delivered
   annotate("rect", xmin = 0, xmax = N_QUARTERS,
            ymin = 0, ymax = 0.75, fill = "#E8F5E9", alpha = 0.4) +
-  # CI band (gradual scenario)
+  # CI band (gradual scenario) — uncertainty around how fast benefit accrues
   geom_ribbon(
     data = spread_sim |> filter(Scenario == "Gradual"),
-    aes(x = Quarter, ymin = -Effect_remaining_hi, ymax = -Effect_remaining_lo),
-    fill = COL_GRADUAL, alpha = 0.12, color = NA, inherit.aes = FALSE
+    aes(x = Quarter,
+        ymin = Effect_remaining_hi * -1 + Beta_RBC,   # upper recovery = lower remaining
+        ymax = Effect_remaining_lo * -1 + Beta_RBC),  # lower recovery = upper remaining
+    fill = COL_GRADUAL, alpha = 0.15, color = NA, inherit.aes = FALSE
   ) +
   # Full reversal reference line
   geom_hline(yintercept = 0.750, linetype = "dashed",
@@ -727,11 +729,11 @@ savings_integrated <- sim_results |>
     # Per-quarter dollar benefit: recovery × outstanding loan balance (approx)
     Benefit_per_Q_BN = sum(case_when(
       Outcome == "spread_mortgage" ~
-        -Effect_recovered / 100 * 0.35 * TOTAL_COMPLEX_LOANS_BN,  # 35% of loans
+        Effect_recovered / 100 * 0.35 * TOTAL_COMPLEX_LOANS_BN,
       Outcome == "spread_nauto" ~
-        -Effect_recovered / 100 * 0.30 * TOTAL_COMPLEX_LOANS_BN,  # 30% of loans
+        Effect_recovered / 100 * 0.30 * TOTAL_COMPLEX_LOANS_BN,
       Outcome == "spread_comm" ~
-        -Effect_recovered / 100 * 0.10 * TOTAL_COMPLEX_LOANS_BN,  # 10% of loans
+        Effect_recovered / 100 * 0.10 * TOTAL_COMPLEX_LOANS_BN,
       TRUE ~ 0
     ), na.rm = TRUE) / 4,   # quarterly
     .groups = "drop"
