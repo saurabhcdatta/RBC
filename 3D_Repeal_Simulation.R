@@ -581,7 +581,7 @@ p_fan_spread <- ggplot(spread_sim,
   # CI band (gradual scenario)
   geom_ribbon(
     data = spread_sim |> filter(Scenario == "Gradual"),
-    aes(ymin = -Effect_remaining_hi, ymax = -Effect_remaining_lo),
+    aes(x = Quarter, ymin = -Effect_remaining_hi, ymax = -Effect_remaining_lo),
     fill = COL_GRADUAL, alpha = 0.12, color = NA, inherit.aes = FALSE
   ) +
   # Full reversal reference line
@@ -750,7 +750,7 @@ p_savings <- ggplot(savings_integrated,
                          fill  = Scenario)) +
   geom_ribbon(
     data = savings_integrated |> filter(Scenario == "Gradual"),
-    aes(ymin = Cumulative_BN * 0.75, ymax = Cumulative_BN * 1.25),
+    aes(x = Quarter, ymin = Cumulative_BN * 0.75, ymax = Cumulative_BN * 1.25),
     fill = COL_GRADUAL, alpha = 0.12, color = NA, inherit.aes = FALSE
   ) +
   geom_line(linewidth = 1.2) +
@@ -1029,7 +1029,8 @@ p_loanvol <- ggplot(loan_vol,
                          color = Scenario, linetype = Scenario)) +
   geom_ribbon(
     data = loan_vol |> filter(Scenario == "Gradual"),
-    aes(ymin = Restored_BN_cumulative * 0.7,
+    aes(x = Quarter,
+        ymin = Restored_BN_cumulative * 0.7,
         ymax = Restored_BN_cumulative * 1.3),
     fill = COL_GRADUAL, alpha = 0.12, color = NA, inherit.aes = FALSE
   ) +
