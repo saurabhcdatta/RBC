@@ -1264,7 +1264,7 @@ cat(sprintf("  Cumulative loan volume restored      : ~$%.0fBN\n", loan_4yr))
 
 roa_yr2 <- tier_sim |>
   filter(Scenario == "Gradual", Quarter == 8) |>
-  summarise(wtd = sum(ROA_recovered * asset_share, na.rm = TRUE)) |>
+  summarise(wtd = sum(ROA_recovered * Asset_share, na.rm = TRUE)) |>
   pull(wtd)
 cat(sprintf("  Weighted ROA recovered at 2 years    : ~%.3fpp\n", -roa_yr2))
 
