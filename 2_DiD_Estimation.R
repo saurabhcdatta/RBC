@@ -688,7 +688,7 @@ message("  Combined panels saved.")
 message("── Step 8: Heterogeneity by asset size tier ──────────────────────────")
 
 tiers       <- c("3_Complex ($500M-$1B)", "2_Large   ($1B-$10B)", "1_Mega    (>$10B)")
-tier_labels <- c("$500M\u2013$1B",         "$1B\u2013$10B",         ">\$10B")
+tier_labels <- c("$500M\u2013$1B",         "$1B\u2013$10B",         ">$10B")
 
 # [FIX 1]: Growth outcomes use canonical labels
 het_outcomes <- c("networth_ratio", "cap_buffer", "loan_growth",
@@ -746,7 +746,7 @@ p_het <- ggplot(
   scale_color_manual(values = c(
     "$500M\u2013$1B" = "#1B3A6B",
     "$1B\u2013$10B"  = "#4A7CB5",
-    ">\$10B"         = "#8AB4D9"
+    ">$10B"          = "#8AB4D9"
   )) +
   labs(
     title    = "Heterogeneity of RBC Effects by Asset Size Tier",
