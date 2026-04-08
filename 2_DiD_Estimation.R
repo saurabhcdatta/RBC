@@ -909,7 +909,7 @@ message("── Step 11: Main results coefficient plot ────────�
 # any silent label mismatches immediately rather than producing a silent
 # incomplete plot.
 
-COEF_PLOT_EXPECTED_ROWS <- 17   # update if outcomes added/removed
+COEF_PLOT_EXPECTED_ROWS <- 21   # 5 capital + 5 spreads + 3 portfolio + 3 growth + 3 credit quality + 2 profitability + Cost of funds
 
 plot_results <- results_main |>
   filter(
@@ -941,9 +941,8 @@ if (nrow(plot_results) != COEF_PLOT_EXPECTED_ROWS) {
     unique(plot_results$Outcome)
   ))
   stop(sprintf(
-    "[FIX 3] Coefficient plot has %d rows but expected %d. ",
-    nrow(plot_results), COEF_PLOT_EXPECTED_ROWS,
-    "Check label consistency between results_main and plot filter."
+    "[FIX 3] Coefficient plot has %d rows but expected %d. Check label consistency between results_main and plot filter.",
+    nrow(plot_results), COEF_PLOT_EXPECTED_ROWS
   ))
 }
 message(sprintf("  Coefficient plot validation passed: %d rows ✓",
