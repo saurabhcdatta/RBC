@@ -74,16 +74,42 @@ message(sprintf("  Range   : %.1f to %.1f",
                 min(df_raw$q_period_num, na.rm = TRUE),
                 max(df_raw$q_period_num, na.rm = TRUE)))
 
-# Convert any haven_labelled columns to base R types.
-# call_report.rds may have been imported from Stata (.dta) format, which
-# stores categorical variables as haven_labelled. These cause vec_equal()
-# errors in filter() and mutate() comparisons.
+# Convert haven_labelled columns to base R types.
+# Stata-imported data stores categoricals as haven_labelled<integer> or
+# haven_labelled<character>. as.numeric() fails on the character variant.
+# Strategy:
+#   - haven::zap_labels() strips Stata labels, returning the underlying type
+#   - For numeric/integer underlying types: convert to numeric
+#   - For character underlying types: leave as character (don't force numeric)
+# This handles both variants safely.
 if (any(sapply(df_raw, inherits, "haven_labelled"))) {
   n_labelled <- sum(sapply(df_raw, inherits, "haven_labelled"))
-  message(sprintf("  Converting %d haven_labelled columns to base R types",
-                  n_labelled))
+  message(sprintf("  Found %d haven_labelled columns — stripping labels", n_labelled))
+
+  # Use haven::zap_labels() if available, otherwise manual approach
+  zap_fn <- if (requireNamespace("haven", quietly = TRUE)) {
+    haven::zap_labels
+  } else {
+    # Fallback: unclass strips the haven_labelled S3 class
+    function(x) unclass(x)
+  }
+
   df_raw <- df_raw |>
-    mutate(across(where(~ inherits(.x, "haven_labelled")), as.numeric))
+    mutate(across(
+      where(~ inherits(.x, "haven_labelled")),
+      ~ {
+        x_zapped <- zap_fn(.x)
+        # Only coerce to numeric if the underlying type is numeric/integer
+        # Leave character columns as character
+        if (is.numeric(x_zapped) || is.integer(x_zapped)) {
+          as.numeric(x_zapped)
+        } else {
+          as.character(x_zapped)
+        }
+      }
+    ))
+
+  message(sprintf("  haven_labelled conversion complete"))
 }
 
 
@@ -106,11 +132,12 @@ message(sprintf("  Rows after window filter: %s", comma(nrow(df))))
 
 message("-- Step 3: Removing merged/acquired CUs")
 
-# outcome and acquiredcu may be haven_labelled — coerce to numeric
+# outcome and acquiredcu: ensure numeric (redundant after zap_labels above,
+# but kept as safety net — as.numeric() is safe here since underlying is integer)
 df <- df |>
   mutate(
-    outcome    = as.numeric(outcome),
-    acquiredcu = as.numeric(acquiredcu)
+    outcome    = suppressWarnings(as.numeric(outcome)),
+    acquiredcu = suppressWarnings(as.numeric(acquiredcu))
   )
 
 merged_cus <- df |>
@@ -210,6 +237,19 @@ df <- df |>
 #   chg_tot_ratio-> chgoff_ratio
 
 message("-- Step 7: Variable construction")
+
+# Ensure all numeric source columns are base numeric type
+# (catches any haven_labelled columns that slipped through the earlier zap)
+numeric_source_cols <- c(
+  "assets_tot", "networth_tot", "lns_tot", "lns_re", "lns_auto",
+  "lns_comm", "lns_mbl", "lns_mbl_part723", "roa", "netintmrg",
+  "costfds", "yldavgloans", "dq_rate", "chg_tot_ratio", "pll_pcl",
+  "pcanetworth", "members", "eq_tot", "subdebt"
+)
+cols_present <- numeric_source_cols[numeric_source_cols %in% names(df)]
+df <- df |>
+  mutate(across(all_of(cols_present),
+                ~ suppressWarnings(as.numeric(.x))))
 
 df <- df |>
   mutate(
