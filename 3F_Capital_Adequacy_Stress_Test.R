@@ -67,17 +67,18 @@ library(tidyverse)
 library(patchwork)
 library(scales)
 
-# IMPORTANT: Use the full 2000-2025 panel from 0B_Crisis_Panel_Prep.R
-# analysis_panel_raw.rds only covers 2018-2025 — no 2008 crisis data.
-# Run 0B_Crisis_Panel_Prep.R first, then run this script.
-PANEL_RAW_PATH  <- "data/analysis_panel_full_raw.rds"  # 2000-2025, unwinsorized
-PANEL_PATH      <- "data/analysis_panel_full.rds"      # 2000-2025, winsorized
-# If full panel unavailable, comment above and uncomment below (uses DiD fallback):
-# PANEL_RAW_PATH <- "data/analysis_panel_raw.rds"
-# PANEL_PATH     <- "data/analysis_panel.rds"
-PANEL_EXT_PATH  <- "data/analysis_panel_extended.rds" # 2000-2025 (crisis calibration)
-# analysis_panel_extended.rds is produced by 0B_Crisis_Panel_Prep.R
-# It covers complex CUs from 2000Q1-2025Q4, using identical variable names
+# IMPORTANT: Run 0B_Crisis_Panel_Prep.R first to generate the full 2000-2025 panel.
+# 0B reads call_report.rds and saves:
+#   data/analysis_panel_full_raw.rds  (unwinsorized, 2000-2025)
+#   data/analysis_panel_full.rds      (winsorized,   2000-2025)
+
+# Component A (distributions): use full raw panel for 2018-2025 snapshots
+PANEL_RAW_PATH <- "data/analysis_panel_full_raw.rds"  # 2000-2025, unwinsorized
+PANEL_PATH     <- "data/analysis_panel_full.rds"      # 2000-2025, winsorized
+
+# Components B & C (crisis calibration): same full panel — no separate file needed
+# 0B saves analysis_panel_full_raw.rds which covers 2000-2025 including 2008 crisis
+PANEL_EXT_PATH <- "data/analysis_panel_full_raw.rds"  # same file — full time series
 FIGURE_PATH    <- "output/figures/"
 TABLE_PATH     <- "output/tables/"
 
@@ -150,7 +151,7 @@ message(sprintf("  Distribution panel (2018-2025): %s rows",
                 scales::comma(nrow(df_complex_raw))))
 
 # ── Components B & C: crisis calibration uses extended panel (2000-2025) ──────
-# Run 0B_Crisis_Panel_Prep.R first to generate analysis_panel_extended.rds
+# Run 0B_Crisis_Panel_Prep.R first to generate analysis_panel_full_raw.rds
 if (file.exists(PANEL_EXT_PATH)) {
   df_extended <- readRDS(PANEL_EXT_PATH)
   has_extended <- TRUE
@@ -166,7 +167,7 @@ if (file.exists(PANEL_EXT_PATH)) {
   df_complex <- df_extended  # complex CUs only, 2000-2025
 } else {
   has_extended <- FALSE
-  message("  WARNING: analysis_panel_extended.rds NOT found.")
+  message("  WARNING: analysis_panel_full_raw.rds NOT found.")
   message("  Run 0B_Crisis_Panel_Prep.R first for actual 2008 crisis calibration.")
   message("  Proceeding with synthesized drawdown fallback.")
   df_complex <- df_complex_raw  # fallback: 2018-2025 only
