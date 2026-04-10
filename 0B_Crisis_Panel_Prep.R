@@ -74,6 +74,18 @@ message(sprintf("  Range   : %.1f to %.1f",
                 min(df_raw$q_period_num, na.rm = TRUE),
                 max(df_raw$q_period_num, na.rm = TRUE)))
 
+# Convert any haven_labelled columns to base R types.
+# call_report.rds may have been imported from Stata (.dta) format, which
+# stores categorical variables as haven_labelled. These cause vec_equal()
+# errors in filter() and mutate() comparisons.
+if (any(sapply(df_raw, inherits, "haven_labelled"))) {
+  n_labelled <- sum(sapply(df_raw, inherits, "haven_labelled"))
+  message(sprintf("  Converting %d haven_labelled columns to base R types",
+                  n_labelled))
+  df_raw <- df_raw |>
+    mutate(across(where(~ inherits(.x, "haven_labelled")), as.numeric))
+}
+
 
 # =============================================================================
 # 3. FILTER TO FULL WINDOW
@@ -94,12 +106,21 @@ message(sprintf("  Rows after window filter: %s", comma(nrow(df))))
 
 message("-- Step 3: Removing merged/acquired CUs")
 
+# outcome and acquiredcu may be haven_labelled — coerce to numeric
+df <- df |>
+  mutate(
+    outcome    = as.numeric(outcome),
+    acquiredcu = as.numeric(acquiredcu)
+  )
+
 merged_cus <- df |>
   filter(outcome %in% c(2, 3)) |>
   pull(cu_number) |>
   unique()
 
+# acquiredcu may be haven_labelled type (from Stata import) — convert first
 df <- df |>
+  mutate(acquiredcu = as.numeric(acquiredcu)) |>
   filter(
     !cu_number %in% merged_cus,
     is.na(acquiredcu) | acquiredcu == 0
