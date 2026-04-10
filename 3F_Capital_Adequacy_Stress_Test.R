@@ -67,8 +67,17 @@ library(tidyverse)
 library(patchwork)
 library(scales)
 
-PANEL_RAW_PATH <- "data/analysis_panel_raw.rds"
-PANEL_PATH     <- "data/analysis_panel.rds"
+# IMPORTANT: Use the full 2000-2025 panel from 0B_Crisis_Panel_Prep.R
+# analysis_panel_raw.rds only covers 2018-2025 — no 2008 crisis data.
+# Run 0B_Crisis_Panel_Prep.R first, then run this script.
+PANEL_RAW_PATH  <- "data/analysis_panel_full_raw.rds"  # 2000-2025, unwinsorized
+PANEL_PATH      <- "data/analysis_panel_full.rds"      # 2000-2025, winsorized
+# If full panel unavailable, comment above and uncomment below (uses DiD fallback):
+# PANEL_RAW_PATH <- "data/analysis_panel_raw.rds"
+# PANEL_PATH     <- "data/analysis_panel.rds"
+PANEL_EXT_PATH  <- "data/analysis_panel_extended.rds" # 2000-2025 (crisis calibration)
+# analysis_panel_extended.rds is produced by 0B_Crisis_Panel_Prep.R
+# It covers complex CUs from 2000Q1-2025Q4, using identical variable names
 FIGURE_PATH    <- "output/figures/"
 TABLE_PATH     <- "output/tables/"
 
@@ -120,37 +129,48 @@ message("-- Step 1: Loading data")
 df_raw <- readRDS(PANEL_RAW_PATH)
 df     <- readRDS(PANEL_PATH)
 
-# ── Detect correct variable names (vary across panel versions) ────────────────
+# ── Detect variable names from the raw panel (should be consistent) ───────────
 detect_col <- function(df, candidates) {
   found <- candidates[candidates %in% names(df)]
-  if (length(found) == 0) stop(sprintf("None of [%s] found in panel", paste(candidates, collapse=", ")))
-  message(sprintf("  Using column '%s' (candidates: %s)", found[1], paste(candidates, collapse=", ")))
+  if (length(found) == 0) stop(sprintf("None of [%s] found", paste(candidates, collapse=", ")))
   found[1]
 }
 
-ROA_COL    <- detect_col(df_raw, c("roa_var", "roa", "roa_ann", "return_on_assets"))
-CHGOFF_COL <- detect_col(df_raw, c("chgoff_ratio", "chgoff_rate", "chgoff", "charge_off_ratio"))
-NW_COL     <- detect_col(df_raw, c("networth_ratio", "nw_ratio", "net_worth_ratio"))
-
+# analysis_panel_raw.rds was built by 0_Data_Prep.R which uses these exact names:
+#   networth_ratio (= networth_tot/assets_tot*100), roa_var (= roa), chgoff_ratio (= chg_tot_ratio)
+ROA_COL    <- detect_col(df_raw, c("roa_var", "roa", "roa_ann"))
+CHGOFF_COL <- detect_col(df_raw, c("chgoff_ratio", "chgoff_rate", "chg_tot_ratio"))
+NW_COL     <- detect_col(df_raw, c("networth_ratio", "nw_ratio"))
 message(sprintf("  Column mapping: NW=%s, ROA=%s, chgoff=%s", NW_COL, ROA_COL, CHGOFF_COL))
 
+# ── Component A: distribution snapshots use 2018-2025 raw panel ───────────────
 df_complex_raw <- df_raw |>
   filter(complex == 1, !is.na(.data[[NW_COL]]))
-
-# For winsorized panel: use raw panel for ALL crisis-era computations
-# (winsorized panel may only cover 2018+ for complex CUs)
-# Use df_raw for BOTH distributions AND crisis drawdowns
-df_complex <- df_raw |>
-  filter(complex == 1, !is.na(.data[[NW_COL]]))
-
-message(sprintf("  Complex CU obs: %s (raw for all analysis)",
+message(sprintf("  Distribution panel (2018-2025): %s rows",
                 scales::comma(nrow(df_complex_raw))))
-message(sprintf("  Date range: %.1f to %.1f",
-                min(df_complex_raw$q_period_num, na.rm = TRUE),
-                max(df_complex_raw$q_period_num, na.rm = TRUE)))
-message(sprintf("  Crisis obs (2008.1-2010.4): %d",
-                sum(df_complex_raw$q_period_num >= 2008.1 &
-                    df_complex_raw$q_period_num <= 2010.4, na.rm = TRUE)))
+
+# ── Components B & C: crisis calibration uses extended panel (2000-2025) ──────
+# Run 0B_Crisis_Panel_Prep.R first to generate analysis_panel_extended.rds
+if (file.exists(PANEL_EXT_PATH)) {
+  df_extended <- readRDS(PANEL_EXT_PATH)
+  has_extended <- TRUE
+  message(sprintf("  Extended panel loaded: %s rows (%.1f to %.1f)",
+                  scales::comma(nrow(df_extended)),
+                  min(df_extended$q_period_num, na.rm = TRUE),
+                  max(df_extended$q_period_num, na.rm = TRUE)))
+  message(sprintf("  Crisis rows (2008.1-2010.4): %d",
+                  sum(df_extended$q_period_num >= 2008.1 &
+                      df_extended$q_period_num <= 2010.4, na.rm = TRUE)))
+  # Variable names in extended panel are identical to analysis_panel_raw.rds
+  # (both built with same construction logic from call_report.rds)
+  df_complex <- df_extended  # complex CUs only, 2000-2025
+} else {
+  has_extended <- FALSE
+  message("  WARNING: analysis_panel_extended.rds NOT found.")
+  message("  Run 0B_Crisis_Panel_Prep.R first for actual 2008 crisis calibration.")
+  message("  Proceeding with synthesized drawdown fallback.")
+  df_complex <- df_complex_raw  # fallback: 2018-2025 only
+}
 
 # Repeal decay fractions
 decay_4q  <- 1 - 0.5^(4  / REPEAL_HALFLIFE)
@@ -312,13 +332,14 @@ cu_drawdown <- df_complex_raw |>
   group_by(cu_number) |>
   arrange(q_period_num) |>
   summarise(
-    nw_start  = first(.data[[NW_COL]]),
-    nw_trough = min(.data[[NW_COL]], na.rm = TRUE),
+    nw_start  = if (n() > 0) first(.data[[NW_COL]]) else NA_real_,
+    nw_trough = if (n() > 0 && any(!is.na(.data[[NW_COL]])))
+                  min(.data[[NW_COL]], na.rm = TRUE) else NA_real_,
     drawdown  = nw_start - nw_trough,
     n_q       = n(),
     .groups   = "drop"
   ) |>
-  filter(n_q >= 4, drawdown >= 0)   # relaxed from 6 to 4 quarters minimum
+  filter(n_q >= 4, !is.na(drawdown), is.finite(drawdown), drawdown >= 0)
 
 message(sprintf("  Crisis drawdown CUs: %d", nrow(cu_drawdown)))
 
@@ -331,13 +352,23 @@ if (nrow(cu_drawdown) == 0) {
   # the crisis DiD and RBC rule cross-sectional SD (2.309pp from Table 1).
   # Mean drawdown ≈ 0.5pp (modest — consistent with crisis building capital on avg)
   # SD ≈ 1.5pp (substantial cross-sectional variation)
+  # Use ALL unique CU numbers across all regimes so left_join works for
+  # withrule, repeal_4q, repeal_8q too (not just prerule)
+  all_cu_numbers <- unique(c(df_prerule$cu_number,
+                             df_withrule$cu_number,
+                             df_repeal_4q$cu_number))
+  n_cus <- length(all_cu_numbers)
   set.seed(42)
-  n_cus <- nrow(df_prerule)
+  # Calibrated from Table 7: crisis charge-off DiD +0.364pp/yr ~ 0.73pp over 2yr
+  # NIM compression ~0.3pp, NW ratio DiD +0.610pp net (capital built on avg).
+  # Mean drawdown ~0.5pp reflects that on average complex CUs survived well;
+  # SD ~1.5pp reflects substantial cross-sectional variation.
   cu_drawdown <- tibble(
-    cu_number = df_prerule$cu_number,
+    cu_number = all_cu_numbers,
     drawdown  = pmax(rnorm(n_cus, mean = 0.50, sd = 1.50), 0)
   )
-  message(sprintf("  Simulated drawdown distribution: mean=%.3fpp, sd=%.3fpp",
+  message(sprintf("  Simulated drawdown distribution: N=%d, mean=%.3fpp, sd=%.3fpp",
+                  n_cus,
                   mean(cu_drawdown$drawdown),
                   sd(cu_drawdown$drawdown)))
 } else {
@@ -547,24 +578,42 @@ if (nrow(crisis_summary_q) == 0) {
                               mean_chgoff = numeric(0), mean_roa = numeric(0), n = integer(0))
 }
 
-p3f3_a <- ggplot(crisis_summary_q,
-                 aes(x = q_period_num, y = mean_impact * 4)) +
-  geom_hline(yintercept = 0, linetype = "dashed", color = COL_ZERO) +
-  geom_col(aes(fill = mean_impact < 0), width = 0.08) +
-  geom_line(color = COL_WITHRULE, linewidth = 1.0) +
-  scale_fill_manual(values = c("FALSE" = COL_PRERULE, "TRUE" = COL_SEVERE),
-                    guide = "none") +
-  scale_x_continuous(
-    breaks = seq(2008.3, 2010.4, by = 0.4),
-    labels = function(x) {
-      yr <- floor(x); q <- round((x - yr) * 10) + 1
-      paste0(yr, " Q", q)
-    }
-  ) +
-  labs(title = "A. Quarterly Capital Impact During 2008 Crisis",
-       subtitle = "Mean annualized net capital impact (ROA - charge-offs) for complex CUs.",
-       x = NULL, y = "Capital impact (annualized, pp)") +
-  theme_rbc()
+# Panel A: only draw if crisis data exists; otherwise show a note
+if (nrow(crisis_summary_q) > 0) {
+  p3f3_a <- ggplot(crisis_summary_q,
+                   aes(x = q_period_num, y = mean_impact * 4)) +
+    geom_hline(yintercept = 0, linetype = "dashed", color = COL_ZERO) +
+    geom_col(aes(fill = mean_impact < 0), width = 0.08) +
+    geom_line(color = COL_WITHRULE, linewidth = 1.0) +
+    scale_fill_manual(values = c("FALSE" = COL_PRERULE, "TRUE" = COL_SEVERE),
+                      guide = "none") +
+    scale_x_continuous(
+      breaks = seq(2008.3, 2010.4, by = 0.4),
+      labels = function(x) {
+        yr <- floor(x); q <- round((x - yr) * 10) + 1
+        paste0(yr, " Q", q)
+      }
+    ) +
+    labs(title = "A. Quarterly Capital Impact During 2008 Crisis",
+         subtitle = "Mean annualized net capital impact (ROA - charge-offs) for complex CUs.",
+         x = NULL, y = "Capital impact (annualized, pp)") +
+    theme_rbc()
+} else {
+  p3f3_a <- ggplot() +
+    annotate("text", x = 0.5, y = 0.5,
+             label = paste0("2008 crisis data not available in panel\n",
+                            "(panel covers 2018-2025 only).\n",
+                            "Stress calibration uses DiD-based simulation\n",
+                            "(Table 7: charge-off DiD +0.364pp/yr, NW DiD +0.610pp)."),
+             size = 4.5, color = "gray40", hjust = 0.5) +
+    theme_void() +
+    labs(title = "A. Crisis Capital Impact (2008 data not in panel)")
+  message("  Chart 3F3 panel A: no crisis data — showing note.")
+}
+
+# Panel B: drawdown distribution — uses simulated data if crisis unavailable
+p3f3_b_label <- if ("nw_start" %in% names(cu_drawdown))
+  "Actual 2008 crisis data" else "Simulated (DiD calibration)"
 
 p3f3_b <- ggplot(cu_drawdown, aes(x = drawdown)) +
   geom_histogram(aes(fill = after_stat(x > 2)), bins = 40,
@@ -585,8 +634,9 @@ p3f3_b <- ggplot(cu_drawdown, aes(x = drawdown)) +
                            quantile(cu_drawdown$drawdown, 0.90, na.rm = TRUE))) +
   scale_fill_manual(values = c("FALSE" = COL_PRERULE, "TRUE" = COL_SEVERE),
                     guide = "none") +
-  labs(title    = "B. Cross-Sectional Distribution of Crisis Capital Drawdown",
-       subtitle = "Peak-to-trough NW ratio drop per complex CU during 2008 crisis.",
+  labs(title    = paste0("B. Distribution of Capital Drawdown (", p3f3_b_label, ")"),
+       subtitle = paste0("Peak-to-trough NW ratio drop per complex CU.\n",
+                         "Source: ", p3f3_b_label, "."),
        x = "Peak-to-trough NW ratio decline (pp)", y = "Number of CUs") +
   theme_rbc()
 
