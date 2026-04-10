@@ -384,29 +384,28 @@ all_sims <- map_dfr(1:nrow(repeal_params), function(i) {
       t_vec          = t_vec
     )
 
-    combined <- left_join(repeal_df, rec_df, by = "Quarter") |>
+    joined <- left_join(repeal_df, rec_df, by = "Quarter")
+
+    # Compute Recession_net outside mutate() — sign_dir is a scalar string,
+    # and dplyr::if_else() requires all arguments to match the tibble length.
+    # Base R if/else recycles the scalar condition correctly.
+    recession_net_vec <- if (sign_dir == "positive") {
+      joined$Repeal_benefit + joined$Recession_shock
+    } else {
+      joined$Repeal_benefit - joined$Recession_shock
+    }
+
+    combined <- joined |>
       mutate(
-        # Net effect = repeal benefit MINUS recession headwind
-        # Recession shock is in same direction as crisis DiD effect.
-        # For outcomes where crisis was POSITIVE for complex CUs
-        #   (capital, NIM), recession HELPS relative to no-recession baseline —
-        #   complex CUs still benefit more than non-complex (same as crisis).
-        # For outcomes where crisis was NEGATIVE for complex CUs
-        #   (lending, DQ, charge-off), recession is an ADDITIONAL headwind
-        #   that offsets repeal benefit.
-        Recession_net = if_else(
-          sign_dir == "positive",
-          Repeal_benefit + Recession_shock,   # recession adds to benefit
-          Repeal_benefit - Recession_shock    # recession subtracts from benefit
-        ),
-        Scenario      = sc_name,
+        Recession_net  = recession_net_vec,
+        Scenario       = sc_name,
         Scenario_label = label,
-        Outcome       = outcome,
-        Unit          = unit,
-        Sign_dir      = sign_dir,
-        Beta          = beta,
-        Crisis_frac   = cr_frac,
-        Stress_mult   = stress_mult
+        Outcome        = outcome,
+        Unit           = unit,
+        Sign_dir       = sign_dir,
+        Beta           = beta,
+        Crisis_frac    = cr_frac,
+        Stress_mult    = stress_mult
       )
     combined
   })
