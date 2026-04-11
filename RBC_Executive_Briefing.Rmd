@@ -17,13 +17,7 @@ output:
     code_folding: hide
     self_contained: true
     css: exec_briefing.css
-  pdf_document:
-    toc: true
-    toc_depth: 2
-    number_sections: false
-    latex_engine: xelatex
-    geometry: "margin=1in"
-    fontsize: 11pt
+  # pdf_document: uncomment below to enable PDF output (requires tinytex)
 params:
   fig_dir: "output/paper/figures"
   table_dir: "output/paper/tables"
@@ -35,56 +29,75 @@ knitr::opts_chunk$set(
   echo        = FALSE,
   warning     = FALSE,
   message     = FALSE,
+  error       = FALSE,   # never halt on figure errors
   out.width   = "100%",
   fig.align   = "center",
   dpi         = 150
 )
 
-# ── Core packages ──────────────────────────────────────────────────────────────
-library(tidyverse)
+# ── Install missing packages silently ────────────────────────────────────────
+needed <- c("knitr", "kableExtra", "scales", "dplyr", "readr")
+missing <- needed[!sapply(needed, requireNamespace, quietly = TRUE)]
+if (length(missing) > 0) install.packages(missing, repos = "https://cloud.r-project.org")
+
 library(knitr)
 library(kableExtra)
 library(scales)
+library(dplyr)
+library(readr)
 
-# ── Figure directory (set via params or default) ───────────────────────────────
-# Run 4_Paper_Tables.R before knitting to populate output/paper/figures/
+# ── Paths ─────────────────────────────────────────────────────────────────────
 FIG_DIR   <- params$fig_dir
 TABLE_DIR <- params$table_dir
 
-# ── Helper: safe figure inclusion ─────────────────────────────────────────────
-# Returns knitr::include_graphics() if file exists; placeholder message if not.
-fig_include <- function(filename, caption = "") {
+# ── Safe figure inclusion ─────────────────────────────────────────────────────
+# Uses tryCatch so a missing file never halts the render.
+# Note: cat() string uses double quotes — no apostrophe issues.
+fig_include <- function(filename) {
   path <- file.path(FIG_DIR, filename)
-  if (file.exists(path)) {
-    include_graphics(path)
+  if (isTRUE(file.exists(path))) {
+    tryCatch(
+      include_graphics(path),
+      error = function(e) {
+        cat(paste0(
+          "<div style=\"border:2px dashed #DDE3EE;border-radius:8px;",
+          "padding:32px;text-align:center;color:#9BA8C0;background:#F8F9FC\">",
+          "<p><strong>", filename, "</strong></p>",
+          "<p style=\"font-size:12px\">Could not load figure: ", conditionMessage(e), "</p>",
+          "</div>"
+        ))
+      }
+    )
   } else {
     cat(paste0(
-      '<div style="border:2px dashed #DDE3EE;border-radius:8px;padding:32px;',
-      'text-align:center;color:#9BA8C0;background:#F8F9FC">',
-      "<p>&#128202; <strong>", filename, "</strong></p>",
-      "<p style='font-size:12px'>Run <code>4_Paper_Tables.R</code> to generate this figure.</p>",
+      "<div style=\"border:2px dashed #DDE3EE;border-radius:8px;",
+      "padding:32px;text-align:center;color:#9BA8C0;background:#F8F9FC\">",
+      "<p>Figure not found: <strong>", filename, "</strong></p>",
+      "<p style=\"font-size:12px\">Run 4_Paper_Tables.R to generate this figure.</p>",
       "</div>"
     ))
   }
 }
 
-# ── Helper: load a CSV table safely ───────────────────────────────────────────
+# ── Safe table loader ──────────────────────────────────────────────────────────
 load_table <- function(filename) {
   path <- file.path(TABLE_DIR, filename)
-  if (file.exists(path)) read_csv(path, show_col_types = FALSE)
-  else tibble(Note = paste("Table not found:", filename, "— run 4_Paper_Tables.R"))
+  if (isTRUE(file.exists(path))) {
+    tryCatch(
+      read_csv(path, show_col_types = FALSE),
+      error = function(e) data.frame(Note = paste("Could not load:", filename))
+    )
+  } else {
+    data.frame(Note = paste("Not found:", filename, "- run 4_Paper_Tables.R"))
+  }
 }
 
-# ── Colour palette (consistent with paper) ────────────────────────────────────
 COL_NAVY  <- "#1B3A6B"
 COL_RED   <- "#C94040"
 COL_AMBER <- "#E8A838"
 COL_BLUE  <- "#4A7CB5"
 ```
 
-```{r inline-css, results='asis'}
-# Inject lightweight CSS for the inference badge system
-cat('
 <style>
 body { font-family: "Source Sans 3", "Helvetica Neue", Arial, sans-serif; }
 h1.title { font-family: Georgia, serif; font-size: 28px; color: #1B3A6B; }
@@ -104,20 +117,16 @@ h3 { color: #2A3A5E; font-size: 14px; text-transform: uppercase;
 .leg-lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 2px;
            color: #6B7A99; font-weight: 700; margin-right: 4px; }
 </style>
-')
-```
 
 
 # Executive Summary {#exec-summary}
 
-```{r exec-hero, results='asis'}
-cat('
 <div style="background:#1B3A6B;color:white;padding:36px 40px;border-radius:10px;margin-bottom:28px;position:relative;overflow:hidden">
 <p style="font-size:10px;text-transform:uppercase;letter-spacing:3px;color:#E8A838;font-weight:700;margin:0 0 14px">Confidential &middot; Senior Management Briefing &middot; April 2026</p>
 <p style="font-size:15px;color:rgba(255,255,255,0.65);max-width:700px;margin:0;line-height:1.65">
 The 2022 NCUA Risk-Based Capital rule imposed significantly higher capital requirements on the 696 credit unions with average assets above $500 million.
 Using a rigorous difference-in-differences design that controls for macroeconomic conditions, pre-existing trends, and thousands of smaller credit unions
-unaffected by the rule, this analysis documents the rule's effects across five outcome domains: capital adequacy, loan pricing, credit availability,
+unaffected by the rule, this analysis documents the rule&#39;s effects across five outcome domains: capital adequacy, loan pricing, credit availability,
 portfolio composition, and profitability.
 </p>
 </div>
@@ -137,7 +146,7 @@ portfolio composition, and profitability.
 </div>
 <div class="score-card" style="border-top-color:#E8A838">
 <div class="score-val">&#x2212;0.3pp</div>
-<div class="score-lbl">Rule's actual protection at 2008-crisis stress level</div>
+<div class="score-lbl">Rule&#39;s actual protection at 2008-crisis stress level</div>
 </div>
 </div>
 
@@ -148,11 +157,8 @@ portfolio composition, and profitability.
 <span style="background:#F0FFF5;color:#2E7D4F;border:1px solid #2E7D4F33;padding:3px 10px;border-radius:3px;font-size:10.5px;font-weight:700;font-family:monospace">&#x25B2; Positive</span>
 <span style="background:#F0F5FF;color:#2A5A9B;border:1px solid #4A7CB533;padding:3px 10px;border-radius:3px;font-size:10.5px;font-weight:700;font-family:monospace">&#x25CF; Baseline</span>
 <span style="background:#FFF8F0;color:#8B4513;border:1px solid #8B451333;padding:3px 10px;border-radius:3px;font-size:10.5px;font-weight:700;font-family:monospace">&#x2717; No effect</span>
-<span style="font-size:11px;color:#6B7A99;font-style:italic;margin-left:4px">— appears in every Key Numbers and Model Results table</span>
+<span style="font-size:11px;color:#6B7A99;font-style:italic;margin-left:4px">&#8212; appears in every Key Numbers and Model Results table</span>
 </div>
-')
-```
-
 **Central finding:** The rule imposed large, persistent costs on member-borrowers through higher loan rates, reduced credit availability, and deteriorating profitability — while providing only marginal protective benefit over and above what existed before the rule. An empirically calibrated threshold of **8.5%**, rather than 10%, would deliver equivalent tail-risk protection at approximately one-third the compliance burden.
 
 ---
@@ -324,7 +330,7 @@ The RBC rule required complex credit unions (those with more than $500 million i
 
 ### Supporting Chart
 
-```{r fig1, echo=FALSE, fig.cap="Event study of net worth ratio. Average rises post-2022, but distribution analysis reveals institutions nearest the threshold were harmed.", out.width="100%"}
+```{r fig1, echo=FALSE, error=TRUE, fig.cap="Event study of net worth ratio. Average rises post-2022, but distribution analysis reveals institutions nearest the threshold were harmed.", out.width="100%"}
 fig_path <- file.path(FIG_DIR, "Figure3_EventStudy_Capital.png")
 if (file.exists(fig_path)) {
   knitr::include_graphics(fig_path)
@@ -377,7 +383,7 @@ When a credit union faces higher capital requirements, one way it adjusts is by 
 
 ### Supporting Chart
 
-```{r fig2, echo=FALSE, fig.cap="Loan spreads over Treasuries. Flat before 2022Q1, sharp and sustained rise after — consistent with a causal effect of the rule.", out.width="100%"}
+```{r fig2, echo=FALSE, error=TRUE, fig.cap="Loan spreads over Treasuries. Flat before 2022Q1, sharp and sustained rise after — consistent with a causal effect of the rule.", out.width="100%"}
 fig_path <- file.path(FIG_DIR, "Figure4_EventStudy_Spreads.png")
 if (file.exists(fig_path)) {
   knitr::include_graphics(fig_path)
@@ -431,7 +437,7 @@ Higher capital requirements can reduce the volume of lending — if a credit uni
 
 ### Supporting Chart
 
-```{r fig3, echo=FALSE, fig.cap="Loan growth event study. Sharp, persistent step-down at RBC implementation with no subsequent recovery — a structural constraint, not a temporary adjustment.", out.width="100%"}
+```{r fig3, echo=FALSE, error=TRUE, fig.cap="Loan growth event study. Sharp, persistent step-down at RBC implementation with no subsequent recovery — a structural constraint, not a temporary adjustment.", out.width="100%"}
 fig_path <- file.path(FIG_DIR, "Figure3_EventStudy_Capital.png")
 if (file.exists(fig_path)) {
   knitr::include_graphics(fig_path)
@@ -484,7 +490,7 @@ Under the RBC rule, different loan types carry different 'risk weights' — esse
 
 ### Supporting Chart
 
-```{r fig4, echo=FALSE, fig.cap="Portfolio composition around RBC. Auto share falls sharply and permanently; RE share rises — a textbook risk-weight arbitrage pattern not seen in the 2008 crisis.", out.width="100%"}
+```{r fig4, echo=FALSE, error=TRUE, fig.cap="Portfolio composition around RBC. Auto share falls sharply and permanently; RE share rises — a textbook risk-weight arbitrage pattern not seen in the 2008 crisis.", out.width="100%"}
 fig_path <- file.path(FIG_DIR, "Figure5_Portfolio_Trends.png")
 if (file.exists(fig_path)) {
   knitr::include_graphics(fig_path)
@@ -538,7 +544,7 @@ One might expect that higher capital requirements would make credit unions more 
 
 ### Supporting Chart
 
-```{r fig5, echo=FALSE, fig.cap="Delinquency rate event study. Persistent increase beginning with RBC implementation, sustained throughout the observation window.", out.width="100%"}
+```{r fig5, echo=FALSE, error=TRUE, fig.cap="Delinquency rate event study. Persistent increase beginning with RBC implementation, sustained throughout the observation window.", out.width="100%"}
 fig_path <- file.path(FIG_DIR, "Figure3_EventStudy_Capital.png")
 if (file.exists(fig_path)) {
   knitr::include_graphics(fig_path)
@@ -592,7 +598,7 @@ A credit union's return on assets (ROA) measures how much profit it generates pe
 
 ### Supporting Chart
 
-```{r fig6, echo=FALSE, fig.cap="ROA event study. Monotonically declining path post-RBC — unlike the V-shaped recovery seen in the 2008 crisis. No sign of reversal through Q+10.", out.width="100%"}
+```{r fig6, echo=FALSE, error=TRUE, fig.cap="ROA event study. Monotonically declining path post-RBC — unlike the V-shaped recovery seen in the 2008 crisis. No sign of reversal through Q+10.", out.width="100%"}
 fig_path <- file.path(FIG_DIR, "Figure3_EventStudy_Capital.png")
 if (file.exists(fig_path)) {
   knitr::include_graphics(fig_path)
@@ -647,7 +653,7 @@ To distinguish regulatory effects from generic financial stress, we compare what
 
 ### Supporting Chart
 
-```{r fig7, echo=FALSE, fig.cap="Parallel DiD comparing 2008 crisis vs. 2022 RBC rule. Capital responses are similar; profitability and portfolio show opposite-sign patterns — confirming a regulatory channel.", out.width="100%"}
+```{r fig7, echo=FALSE, error=TRUE, fig.cap="Parallel DiD comparing 2008 crisis vs. 2022 RBC rule. Capital responses are similar; profitability and portfolio show opposite-sign patterns — confirming a regulatory channel.", out.width="100%"}
 fig_path <- file.path(FIG_DIR, "Figure6_Crisis_vs_RBC_Capital.png")
 if (file.exists(fig_path)) {
   knitr::include_graphics(fig_path)
@@ -701,7 +707,7 @@ When credit unions face stress, they adjust their portfolios. The critical quest
 
 ### Supporting Chart
 
-```{r fig8, echo=FALSE, fig.cap="Shape comparison: V-shapes under crisis, step-changes under RBC. The divergence in portfolio and profitability paths is the structural signature of regulatory-specific effects.", out.width="100%"}
+```{r fig8, echo=FALSE, error=TRUE, fig.cap="Shape comparison: V-shapes under crisis, step-changes under RBC. The divergence in portfolio and profitability paths is the structural signature of regulatory-specific effects.", out.width="100%"}
 fig_path <- file.path(FIG_DIR, "Figure6b_Crisis_vs_RBC_Portfolio.png")
 if (file.exists(fig_path)) {
   knitr::include_graphics(fig_path)
@@ -755,7 +761,7 @@ Recognizing that the 10% threshold might be too burdensome, NCUA created a simpl
 
 ### Supporting Chart
 
-```{r fig9, echo=FALSE, fig.cap="Three-group event study. CCULR adopters show pre-trend violations and worse outcomes — confirming negative selection rather than genuine relief.", out.width="100%"}
+```{r fig9, echo=FALSE, error=TRUE, fig.cap="Three-group event study. CCULR adopters show pre-trend violations and worse outcomes — confirming negative selection rather than genuine relief.", out.width="100%"}
 fig_path <- file.path(FIG_DIR, "Figure7_CCULR_EventStudy.png")
 if (file.exists(fig_path)) {
   knitr::include_graphics(fig_path)
@@ -810,7 +816,7 @@ Everything above documents costs of the rule. But the rule was designed to prote
 
 ### Supporting Chart
 
-```{r fig10, echo=FALSE, fig.cap="Stress survival rates by regime and severity. The rule provides essentially no protection at 2008-severity stress (pre vs. with-rule: −0.3pp). Repeal adds 3.4pp of failure risk.", out.width="100%"}
+```{r fig10, echo=FALSE, error=TRUE, fig.cap="Stress survival rates by regime and severity. The rule provides essentially no protection at 2008-severity stress (pre vs. with-rule: −0.3pp). Repeal adds 3.4pp of failure risk.", out.width="100%"}
 fig_path <- file.path(FIG_DIR, "Figure11_4_Survival_Frontier.png")
 if (file.exists(fig_path)) {
   knitr::include_graphics(fig_path)
@@ -846,19 +852,19 @@ if (file.exists(fig_path)) {
 
 These figures show projected trajectories for key outcomes in the 3 years following a hypothetical 2026Q1 repeal of the RBC rule, under Fast (4Q half-life), Gradual (8Q/16Q), and Slow (plateau) recovery scenarios. All estimates derive directly from the DiD parameters — no new regressions.
 
-```{r fig9-1, fig.cap="Loan spread fan chart under repeal — three recovery scenarios"}
+```{r fig9-1, error=TRUE, fig.cap="Loan spread fan chart under repeal — three recovery scenarios"}
 fig_include("Figure9_1_Spread_Fan_Chart.png")
 ```
 
-```{r fig9-3, fig.cap="Cumulative member savings from spread reduction ($B) — 4-year horizon"}
+```{r fig9-3, error=TRUE, fig.cap="Cumulative member savings from spread reduction ($B) — 4-year horizon"}
 fig_include("Figure9_3_Cumulative_Member_Savings.png")
 ```
 
-```{r fig9-4, fig.cap="ROA recovery by asset size tier post-repeal"}
+```{r fig9-4, error=TRUE, fig.cap="ROA recovery by asset size tier post-repeal"}
 fig_include("Figure9_4_ROA_Recovery_by_Tier.png")
 ```
 
-```{r fig9-8, fig.cap="Cost of delay: foregone member welfare by repeal timing"}
+```{r fig9-8, error=TRUE, fig.cap="Cost of delay: foregone member welfare by repeal timing"}
 fig_include("Figure9_8_Cost_of_Delay.png")
 ```
 
@@ -868,19 +874,19 @@ fig_include("Figure9_8_Cost_of_Delay.png")
 
 These figures overlay a moderate recession (oil shock + inflation, 60% of 2008 crisis magnitude, 6Q duration) on the repeal recovery path. Recession calibrated from 3A crisis DiD estimates.
 
-```{r fig10-1, fig.cap="Net worth ratio: repeal benefit vs. recession headwind"}
+```{r fig10-1, error=TRUE, fig.cap="Net worth ratio: repeal benefit vs. recession headwind"}
 fig_include("Figure10_1_Stress_Capital.png")
 ```
 
-```{r fig10-4, fig.cap="Cumulative member savings net of recession — all scenarios"}
+```{r fig10-4, error=TRUE, fig.cap="Cumulative member savings net of recession — all scenarios"}
 fig_include("Figure10_4_Stress_Net_Welfare.png")
 ```
 
-```{r fig10-6, fig.cap="Four-panel dashboard: net outcomes across channels under recession"}
+```{r fig10-6, error=TRUE, fig.cap="Four-panel dashboard: net outcomes across channels under recession"}
 fig_include("Figure10_6_Stress_Scenario_Comparison.png")
 ```
 
-```{r fig10-8, fig.cap="Cost of delaying repeal into a deepening recession"}
+```{r fig10-8, error=TRUE, fig.cap="Cost of delaying repeal into a deepening recession"}
 fig_include("Figure10_8_Stress_Repeal_Timing.png")
 ```
 
@@ -890,31 +896,31 @@ fig_include("Figure10_8_Stress_Repeal_Timing.png")
 
 These figures are based on actual 2008 crisis drawdown data for 634 complex credit unions (mean drawdown 1.86pp, P90 3.36pp) and empirical NW ratio distributions from the NCUA Call Report.
 
-```{r fig11-1, fig.cap="NW ratio distribution: pre-rule, with-rule, and post-repeal"}
+```{r fig11-1, error=TRUE, fig.cap="NW ratio distribution: pre-rule, with-rule, and post-repeal"}
 fig_include("Figure11_1_NW_Distribution_Regimes.png")
 ```
 
-```{r fig11-2, fig.cap="Fraction of complex CUs below each capital threshold by regime"}
+```{r fig11-2, error=TRUE, fig.cap="Fraction of complex CUs below each capital threshold by regime"}
 fig_include("Figure11_2_Threshold_Breach_Rates.png")
 ```
 
-```{r fig11-3, fig.cap="Empirical stress loss calibration from 2008 crisis data"}
+```{r fig11-3, error=TRUE, fig.cap="Empirical stress loss calibration from 2008 crisis data"}
 fig_include("Figure11_3_Stress_Drawdown_Calibration.png")
 ```
 
-```{r fig11-4, fig.cap="Stress survival frontier: % falling below 7% by regime and severity"}
+```{r fig11-4, error=TRUE, fig.cap="Stress survival frontier: % falling below 7% by regime and severity"}
 fig_include("Figure11_4_Survival_Frontier.png")
 ```
 
-```{r fig11-6, fig.cap="RBC rule marginal effect on institutional failure risk"}
+```{r fig11-6, error=TRUE, fig.cap="RBC rule marginal effect on institutional failure risk"}
 fig_include("Figure11_6_Rule_Effect_vs_Tailrisk.png")
 ```
 
-```{r fig11-7, fig.cap="Near-threshold institution vulnerability map — actual 2008 drawdown data"}
+```{r fig11-7, error=TRUE, fig.cap="Near-threshold institution vulnerability map — actual 2008 drawdown data"}
 fig_include("Figure11_7_Thin_Buffer_Zoom.png")
 ```
 
-```{r fig11-8, fig.cap="Threshold calibration: compliance burden vs. residual failure risk. Curves cross at ~8.5%."}
+```{r fig11-8, error=TRUE, fig.cap="Threshold calibration: compliance burden vs. residual failure risk. Curves cross at ~8.5%."}
 fig_include("Figure11_8_Optimal_Threshold.png")
 ```
 
