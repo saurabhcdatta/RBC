@@ -139,25 +139,7 @@ portfolio composition, and profitability.
 </p>
 </div>
 
-<div class="score-row">
-<div class="score-card" style="border-top-color:#C94040">
-<div class="score-val">+73bp</div>
-<div class="score-lbl">Mortgage spread increase over Treasury benchmarks</div>
-</div>
-<div class="score-card" style="border-top-color:#C94040">
-<div class="score-val">$325.9B</div>
-<div class="score-lbl">Foregone 4-year member welfare under repeal baseline</div>
-</div>
-<div class="score-card" style="border-top-color:#1B3A6B">
-<div class="score-val">&#x2212;26bp</div>
-<div class="score-lbl">Return on assets decline (31% of pre-rule mean)</div>
-</div>
-<div class="score-card" style="border-top-color:#E8A838">
-<div class="score-val">&#x2212;0.3pp</div>
-<div class="score-lbl">Rule&#39;s actual protection at 2008-crisis stress level</div>
-</div>
-</div>
-
+<div class="score-row"><div class="score-card" style="border-top-color:#C94040"><div class="score-val">+73bp</div><div class="score-lbl">Mortgage spread increase over Treasury benchmarks</div></div><div class="score-card" style="border-top-color:#C94040"><div class="score-val">$325.9B</div><div class="score-lbl">Foregone 4-year member welfare under repeal baseline</div></div><div class="score-card" style="border-top-color:#1B3A6B"><div class="score-val">&#x2212;26bp</div><div class="score-lbl">Return on assets decline (31% of pre-rule mean)</div></div><div class="score-card" style="border-top-color:#E8A838"><div class="score-val">&#x2212;0.3pp</div><div class="score-lbl">Rule&#39;s actual protection at 2008-crisis stress level</div></div></div>
 <div class="legend-row">
 <span class="leg-lbl">Inference key:</span>
 <span style="background:#FFF0F0;color:#C94040;border:1px solid #C9404033;padding:3px 10px;border-radius:3px;font-size:10.5px;font-weight:700;font-family:monospace">&#x25BC; Concern</span>

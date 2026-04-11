@@ -893,8 +893,104 @@ for (fm in sim_figure_map) {
 
 
 # =============================================================================
-# 13. FIGURE 1 — NET WORTH RATIO DISTRIBUTION (Motivating figure)
+# 12D. COPY STRESS SCENARIO POLICY CHARTS (3E figures → paper/figures/)
 # =============================================================================
+# 3E_Stress_Scenario_Simulation.R writes policy_3e*.png to output/figures/.
+# This block renames them to Figure10_* for the paper.
+# Figure10_* = Section 10B (Stress Scenario) — follows Figure9_* (Section 10A repeal)
+# Run 3E_Stress_Scenario_Simulation.R before running 4_Paper_Tables.R.
+
+# Pre-flight check: warn if policy source figures are missing
+# These must exist in output/figures/ before 4_Paper_Tables.R can copy them.
+policy_sources <- c(
+  paste0("policy_3e", 1:8, c("_net_effect_capital","_net_effect_lending",
+    "_net_effect_roa","_net_welfare_spreads","_stress_multiplier_sensitivity",
+    "_scenario_comparison","_dq_stress_overlay","_repeal_timing_under_stress"), ".png"),
+  paste0("policy_3f", 1:8, c("_nw_distribution_regimes","_threshold_breach_rates",
+    "_stress_drawdown_calibration","_survival_frontier","_vulnerability_heatmap",
+    "_rule_effect_vs_tailrisk","_thin_buffer_zoom","_optimal_threshold"), ".png")
+)
+missing_sources <- policy_sources[!file.exists(file.path(FIGURE_IN, policy_sources))]
+if (length(missing_sources) > 0) {
+  message(sprintf("  NOTE: %d policy source figures not yet in output/figures/",
+                  length(missing_sources)))
+  message("  Run 3E and 3F scripts first, or source('copy_figures.R') after running them.")
+  message("  Briefing will show placeholders for missing figures.")
+} else {
+  message("  All 16 policy source figures present in output/figures/")
+}
+
+message("── Step 12D: Copying 3E stress scenario figures ──────────────────────")
+
+stress_figure_map <- list(
+  list("policy_3e1_net_effect_capital.png",
+       "Figure10_1_Stress_Capital.png"),
+  list("policy_3e2_net_effect_lending.png",
+       "Figure10_2_Stress_Lending.png"),
+  list("policy_3e3_net_effect_roa.png",
+       "Figure10_3_Stress_ROA_by_Tier.png"),
+  list("policy_3e4_net_welfare_spreads.png",
+       "Figure10_4_Stress_Net_Welfare.png"),
+  list("policy_3e5_stress_multiplier_sensitivity.png",
+       "Figure10_5_Stress_Multiplier_Sensitivity.png"),
+  list("policy_3e6_scenario_comparison.png",
+       "Figure10_6_Stress_Scenario_Comparison.png"),
+  list("policy_3e7_dq_stress_overlay.png",
+       "Figure10_7_Stress_DQ_Overlay.png"),
+  list("policy_3e8_repeal_timing_under_stress.png",
+       "Figure10_8_Stress_Repeal_Timing.png")
+)
+
+n_3e_copied <- 0L
+for (fm in stress_figure_map) {
+  src  <- file.path(FIGURE_IN, fm[[1]])
+  dest <- file.path(FIGURE_OUT, fm[[2]])
+  if (file.exists(src)) {
+    file.copy(src, dest, overwrite = TRUE)
+    message(sprintf("  Copied: %s → %s", fm[[1]], fm[[2]]))
+    n_3e_copied <- n_3e_copied + 1L
+  } else {
+    message(sprintf("  Not found (run 3E first): %s", fm[[1]]))
+  }
+}
+message(sprintf("  3E figures: %d / %d copied.", n_3e_copied, length(stress_figure_map)))
+
+
+# =============================================================================
+# 12E. COPY CAPITAL STRESS TEST CHARTS (3F figures → paper/figures/)
+# =============================================================================
+# 3F_Capital_Adequacy_Stress_Test.R writes policy_3f*.png to output/figures/.
+# This block renames them to Figure11_* for the paper.
+# Figure11_* = Section 11B (Capital Adequacy Stress Test / RQ5)
+# Run 3F_Capital_Adequacy_Stress_Test.R before running 4_Paper_Tables.R.
+
+message("-- Step 12E: Copying 3F capital stress test figures")
+
+stress_test_figure_map <- list(
+  list("policy_3f1_nw_distribution_regimes.png",   "Figure11_1_NW_Distribution_Regimes.png"),
+  list("policy_3f2_threshold_breach_rates.png",     "Figure11_2_Threshold_Breach_Rates.png"),
+  list("policy_3f3_stress_drawdown_calibration.png","Figure11_3_Stress_Drawdown_Calibration.png"),
+  list("policy_3f4_survival_frontier.png",          "Figure11_4_Survival_Frontier.png"),
+  list("policy_3f5_vulnerability_heatmap.png",      "Figure11_5_Vulnerability_Heatmap.png"),
+  list("policy_3f6_rule_effect_vs_tailrisk.png",    "Figure11_6_Rule_Effect_vs_Tailrisk.png"),
+  list("policy_3f7_thin_buffer_zoom.png",           "Figure11_7_Thin_Buffer_Zoom.png"),
+  list("policy_3f8_optimal_threshold.png",          "Figure11_8_Optimal_Threshold.png")
+)
+
+n_3f_copied <- 0L
+for (fm in stress_test_figure_map) {
+  src  <- file.path(FIGURE_IN, fm[[1]])
+  dest <- file.path(FIGURE_OUT, fm[[2]])
+  if (file.exists(src)) {
+    file.copy(src, dest, overwrite = TRUE)
+    message(sprintf("  Copied: %s -> %s", fm[[1]], fm[[2]]))
+    n_3f_copied <- n_3f_copied + 1L
+  } else {
+    message(sprintf("  Not found (run 3F first): %s", fm[[1]]))
+  }
+}
+message(sprintf("  3F figures: %d / %d copied.", n_3f_copied,
+                length(stress_test_figure_map)))
 
 message("── Step 12: Figure 1 — NW ratio distribution ────────────────────────")
 
@@ -1145,6 +1241,7 @@ figures_list <- c(
   "Figure6_Crisis_vs_RBC_Capital.png",
   "Figure6b_Crisis_vs_RBC_Portfolio.png",
   "Figure7_CCULR_EventStudy.png",
+  # 3D: Section 10A repeal simulation figures
   "Figure9_1_Spread_Fan_Chart.png",
   "Figure9_2_Recovery_Dashboard.png",
   "Figure9_3_Cumulative_Member_Savings.png",
@@ -1153,6 +1250,27 @@ figures_list <- c(
   "Figure9_6_Horizon_Comparison.png",
   "Figure9_7_Loan_Volume_Restored.png",
   "Figure9_8_Cost_of_Delay.png",
+  # 3E: Section 10B stress scenario figures (NEW)
+  "Figure10_1_Stress_Capital.png",
+  "Figure10_2_Stress_Lending.png",
+  "Figure10_3_Stress_ROA_by_Tier.png",
+  "Figure10_4_Stress_Net_Welfare.png",
+  "Figure10_5_Stress_Multiplier_Sensitivity.png",
+  "Figure10_6_Stress_Scenario_Comparison.png",
+  "Figure10_7_Stress_DQ_Overlay.png",
+  "Figure10_8_Stress_Repeal_Timing.png",
+  # 3F: Section 11 — Capital adequacy stress test (NEW)
+
+  # 3F: Section 11B capital stress test figures (NEW)
+  "Figure11_1_NW_Distribution_Regimes.png",
+  "Figure11_2_Threshold_Breach_Rates.png",
+  "Figure11_3_Stress_Drawdown_Calibration.png",
+  "Figure11_4_Survival_Frontier.png",
+  "Figure11_5_Vulnerability_Heatmap.png",
+  "Figure11_6_Rule_Effect_vs_Tailrisk.png",
+  "Figure11_7_Thin_Buffer_Zoom.png",
+  "Figure11_8_Optimal_Threshold.png",
+  # Appendix
   "FigureA1_Heterogeneity.png",
   "FigureA2_Bunching.png",
   "FigureA3_Crisis_Forest.png"
