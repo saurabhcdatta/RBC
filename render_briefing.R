@@ -58,20 +58,11 @@ if (dir.exists(FIG_DIR)) {
 message("Rendering HTML briefing...")
 t0 <- proc.time()
 
+# output_format = NULL tells rmarkdown to use the output spec in the Rmd YAML
+# (passing html_document() here conflicts with the YAML header)
 rmarkdown::render(
   input         = RMD_FILE,
-  output_format = html_document(
-    theme          = "flatly",
-    highlight      = "tango",
-    toc            = TRUE,
-    toc_float      = list(collapsed = FALSE, smooth_scroll = TRUE),
-    toc_depth      = 2,
-    number_sections = FALSE,
-    df_print       = "kable",
-    code_folding   = "hide",
-    css            = "exec_briefing.css",
-    self_contained = TRUE   # single file — easy to share
-  ),
+  output_format = NULL,          # use output: spec from Rmd YAML header
   output_file   = HTML_OUTPUT,
   params        = list(
     fig_dir   = FIG_DIR,
