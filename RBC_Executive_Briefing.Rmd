@@ -1,6 +1,6 @@
 ---
 title: "The Impact of the 2022 NCUA Risk-Based Capital Rule on Complex Credit Unions"
-subtitle: "Executive Briefing — Senior Management"
+subtitle: "Research Briefing — Internal Use"
 author: "Saurabh C. Datta, Ph.D. | Senior Economist | NCUA Office of the Chief Economist"
 date: "April 2026"
 output:
@@ -17,6 +17,8 @@ output:
     code_folding: hide
     self_contained: true
     css: exec_briefing.css
+    pandoc_args:
+      - "--wrap=none"
   # pdf_document: uncomment below to enable PDF output (requires tinytex)
 params:
   fig_dir: "output/paper/figures"
@@ -59,22 +61,28 @@ fig_include <- function(filename) {
     tryCatch(
       include_graphics(path),
       error = function(e) {
-        cat(paste0(
-          "<div style=\"border:2px dashed #DDE3EE;border-radius:8px;",
-          "padding:32px;text-align:center;color:#9BA8C0;background:#F8F9FC\">",
+        knitr::asis_output(paste0(
+          "<div style='border:2px dashed #DDE3EE;border-radius:8px;",
+          "padding:32px;text-align:center;color:#9BA8C0;background:#F8F9FC'>",
           "<p><strong>", filename, "</strong></p>",
-          "<p style=\"font-size:12px\">Could not load figure: ", conditionMessage(e), "</p>",
+          "<p style='font-size:12px'>Could not load: ", conditionMessage(e), "</p>",
           "</div>"
         ))
       }
     )
   } else {
-    cat(paste0(
-      "<div style=\"border:2px dashed #DDE3EE;border-radius:8px;",
-      "padding:32px;text-align:center;color:#9BA8C0;background:#F8F9FC\">",
-      "<p>Figure not found: <strong>", filename, "</strong></p>",
-      "<p style=\"font-size:12px\">Run 4_Paper_Tables.R to generate this figure.</p>",
-      "</div>"
+    # knitr::asis_output() renders HTML regardless of chunk results= setting
+    knitr::asis_output(paste0(
+      "
+
+<div style='border:2px dashed #DDE3EE;border-radius:8px;",
+      "padding:32px;text-align:center;color:#9BA8C0;background:#F8F9FC'>",
+      "<p>&#128202; Figure not found: <strong>", filename, "</strong></p>",
+      "<p style='font-size:12px'>Run <code>4_Paper_Tables.R</code> ",
+      "to generate figures.</p>",
+      "</div>
+
+"
     ))
   }
 }
@@ -119,10 +127,10 @@ h3 { color: #2A3A5E; font-size: 14px; text-transform: uppercase;
 </style>
 
 
-# Executive Summary {#exec-summary}
+# Summary of Findings {#exec-summary}
 
 <div style="background:#1B3A6B;color:white;padding:36px 40px;border-radius:10px;margin-bottom:28px;position:relative;overflow:hidden">
-<p style="font-size:10px;text-transform:uppercase;letter-spacing:3px;color:#E8A838;font-weight:700;margin:0 0 14px">Confidential &middot; Senior Management Briefing &middot; April 2026</p>
+<p style="font-size:10px;text-transform:uppercase;letter-spacing:3px;color:#E8A838;font-weight:700;margin:0 0 14px">Confidential &middot; Internal Briefing &middot; April 2026</p>
 <p style="font-size:15px;color:rgba(255,255,255,0.65);max-width:700px;margin:0;line-height:1.65">
 The 2022 NCUA Risk-Based Capital rule imposed significantly higher capital requirements on the 696 credit unions with average assets above $500 million.
 Using a rigorous difference-in-differences design that controls for macroeconomic conditions, pre-existing trends, and thousands of smaller credit unions
@@ -330,7 +338,7 @@ The RBC rule required complex credit unions (those with more than $500 million i
 
 ### Supporting Chart
 
-```{r fig1, echo=FALSE, error=TRUE, fig.cap="Event study of net worth ratio. Average rises post-2022, but distribution analysis reveals institutions nearest the threshold were harmed.", out.width="100%"}
+```{r fig1, echo=FALSE, error=TRUE, results='asis', fig.cap="Event study of net worth ratio. Average rises post-2022, but distribution analysis reveals institutions nearest the threshold were harmed.", out.width="100%"}
 fig_path <- file.path(FIG_DIR, "Figure3_EventStudy_Capital.png")
 if (file.exists(fig_path)) {
   knitr::include_graphics(fig_path)
@@ -353,7 +361,7 @@ if (file.exists(fig_path)) {
 ### :dart: Key Takeaway
 
 <div style="border:1px solid #1B3A6B;background:#1B3A6B0D;border-radius:8px;padding:18px 22px;margin-top:12px">
-<p style="font-size:10.5px;text-transform:uppercase;letter-spacing:2px;color:#1B3A6B;font-weight:700;margin-bottom:8px">Key Takeaway for Senior Leadership</p>
+<p style="font-size:10.5px;text-transform:uppercase;letter-spacing:2px;color:#1B3A6B;font-weight:700;margin-bottom:8px">Bottom Line</p>
 <p style="font-size:14.5px;line-height:1.75;margin:0">Think of a class of students all trying to pass a harder exam. The class average score rises — because strong students studied harder — but the pass rate falls, because weaker students still can't reach the new bar. The rule raised the average capital ratio by 46 basis points, but the fraction actually achieving 'well-capitalized' status fell by 3.7 percentage points. Most strikingly, the smallest complex credit unions — those closest to the threshold — actually saw capital ratios decline as compliance costs ate into their retained earnings faster than they could rebuild them.</p>
 </div>
 
@@ -383,7 +391,7 @@ When a credit union faces higher capital requirements, one way it adjusts is by 
 
 ### Supporting Chart
 
-```{r fig2, echo=FALSE, error=TRUE, fig.cap="Loan spreads over Treasuries. Flat before 2022Q1, sharp and sustained rise after — consistent with a causal effect of the rule.", out.width="100%"}
+```{r fig2, echo=FALSE, error=TRUE, results='asis', fig.cap="Loan spreads over Treasuries. Flat before 2022Q1, sharp and sustained rise after — consistent with a causal effect of the rule.", out.width="100%"}
 fig_path <- file.path(FIG_DIR, "Figure4_EventStudy_Spreads.png")
 if (file.exists(fig_path)) {
   knitr::include_graphics(fig_path)
@@ -407,7 +415,7 @@ if (file.exists(fig_path)) {
 ### :dart: Key Takeaway
 
 <div style="border:1px solid #C94040;background:#C940400D;border-radius:8px;padding:18px 22px;margin-top:12px">
-<p style="font-size:10.5px;text-transform:uppercase;letter-spacing:2px;color:#C94040;font-weight:700;margin-bottom:8px">Key Takeaway for Senior Leadership</p>
+<p style="font-size:10.5px;text-transform:uppercase;letter-spacing:2px;color:#C94040;font-weight:700;margin-bottom:8px">Bottom Line</p>
 <p style="font-size:14.5px;line-height:1.75;margin:0">The rate increases are large, pervasive, and affected every loan type we could measure. A 73 basis-point increase in mortgage spreads means a member borrowing $220,000 pays approximately $1,875 more per year — for the life of the loan. The increases appear immediately after the rule takes effect and do not reverse. Larger institutions, which have more market power, charged even more: credit unions above $10 billion raised auto spreads by 97 basis points, well above the average.</p>
 </div>
 
@@ -437,7 +445,7 @@ Higher capital requirements can reduce the volume of lending — if a credit uni
 
 ### Supporting Chart
 
-```{r fig3, echo=FALSE, error=TRUE, fig.cap="Loan growth event study. Sharp, persistent step-down at RBC implementation with no subsequent recovery — a structural constraint, not a temporary adjustment.", out.width="100%"}
+```{r fig3, echo=FALSE, error=TRUE, results='asis', fig.cap="Loan growth event study. Sharp, persistent step-down at RBC implementation with no subsequent recovery — a structural constraint, not a temporary adjustment.", out.width="100%"}
 fig_path <- file.path(FIG_DIR, "Figure3_EventStudy_Capital.png")
 if (file.exists(fig_path)) {
   knitr::include_graphics(fig_path)
@@ -460,7 +468,7 @@ if (file.exists(fig_path)) {
 ### :dart: Key Takeaway
 
 <div style="border:1px solid #C94040;background:#C940400D;border-radius:8px;padding:18px 22px;margin-top:12px">
-<p style="font-size:10.5px;text-transform:uppercase;letter-spacing:2px;color:#C94040;font-weight:700;margin-bottom:8px">Key Takeaway for Senior Leadership</p>
+<p style="font-size:10.5px;text-transform:uppercase;letter-spacing:2px;color:#C94040;font-weight:700;margin-bottom:8px">Bottom Line</p>
 <p style="font-size:14.5px;line-height:1.75;margin:0">The lending contraction is not a temporary adjustment — it is a permanent step-down in the growth trajectory of these institutions. Every quarter, complex credit unions grew their loan books about 44 basis points more slowly than comparable non-complex institutions. This effect is driven by supply — the credit unions constrained their lending — not by reduced member demand. Members who needed loans from these institutions were less likely to get them.</p>
 </div>
 
@@ -490,7 +498,7 @@ Under the RBC rule, different loan types carry different 'risk weights' — esse
 
 ### Supporting Chart
 
-```{r fig4, echo=FALSE, error=TRUE, fig.cap="Portfolio composition around RBC. Auto share falls sharply and permanently; RE share rises — a textbook risk-weight arbitrage pattern not seen in the 2008 crisis.", out.width="100%"}
+```{r fig4, echo=FALSE, error=TRUE, results='asis', fig.cap="Portfolio composition around RBC. Auto share falls sharply and permanently; RE share rises — a textbook risk-weight arbitrage pattern not seen in the 2008 crisis.", out.width="100%"}
 fig_path <- file.path(FIG_DIR, "Figure5_Portfolio_Trends.png")
 if (file.exists(fig_path)) {
   knitr::include_graphics(fig_path)
@@ -514,7 +522,7 @@ if (file.exists(fig_path)) {
 ### :dart: Key Takeaway
 
 <div style="border:1px solid #E8A838;background:#E8A8380D;border-radius:8px;padding:18px 22px;margin-top:12px">
-<p style="font-size:10.5px;text-transform:uppercase;letter-spacing:2px;color:#E8A838;font-weight:700;margin-bottom:8px">Key Takeaway for Senior Leadership</p>
+<p style="font-size:10.5px;text-transform:uppercase;letter-spacing:2px;color:#E8A838;font-weight:700;margin-bottom:8px">Bottom Line</p>
 <p style="font-size:14.5px;line-height:1.75;margin:0">This is the clearest evidence that the rule had regulatory-specific effects. During the 2008 crisis, complex credit unions shifted away from auto loans by 1.8 percentage points. Under the RBC rule — in a stable economic environment — they shifted by 4.0 percentage points. Institutions responded not to economic conditions but to regulatory incentives. Auto loans are good products for members — accessible, short-duration, spread across many borrowers. Mortgages concentrate risk in real estate. The rule may have made complex credit union portfolios riskier, not safer.</p>
 </div>
 
@@ -544,7 +552,7 @@ One might expect that higher capital requirements would make credit unions more 
 
 ### Supporting Chart
 
-```{r fig5, echo=FALSE, error=TRUE, fig.cap="Delinquency rate event study. Persistent increase beginning with RBC implementation, sustained throughout the observation window.", out.width="100%"}
+```{r fig5, echo=FALSE, error=TRUE, results='asis', fig.cap="Delinquency rate event study. Persistent increase beginning with RBC implementation, sustained throughout the observation window.", out.width="100%"}
 fig_path <- file.path(FIG_DIR, "Figure3_EventStudy_Capital.png")
 if (file.exists(fig_path)) {
   knitr::include_graphics(fig_path)
@@ -567,7 +575,7 @@ if (file.exists(fig_path)) {
 ### :dart: Key Takeaway
 
 <div style="border:1px solid #E8A838;background:#E8A8380D;border-radius:8px;padding:18px 22px;margin-top:12px">
-<p style="font-size:10.5px;text-transform:uppercase;letter-spacing:2px;color:#E8A838;font-weight:700;margin-bottom:8px">Key Takeaway for Senior Leadership</p>
+<p style="font-size:10.5px;text-transform:uppercase;letter-spacing:2px;color:#E8A838;font-weight:700;margin-bottom:8px">Bottom Line</p>
 <p style="font-size:14.5px;line-height:1.75;margin:0">The portfolio shift from auto loans (stable delinquency profile) toward commercial real estate (more cycle-sensitive) explains part of this deterioration. Additionally, when credit unions are under capital pressure, they may be less able to work with borrowers who fall into difficulty — leading to faster progression to delinquency and charge-off. The rule designed to make credit unions more resilient may have made their loan books incrementally more fragile.</p>
 </div>
 
@@ -598,7 +606,7 @@ A credit union's return on assets (ROA) measures how much profit it generates pe
 
 ### Supporting Chart
 
-```{r fig6, echo=FALSE, error=TRUE, fig.cap="ROA event study. Monotonically declining path post-RBC — unlike the V-shaped recovery seen in the 2008 crisis. No sign of reversal through Q+10.", out.width="100%"}
+```{r fig6, echo=FALSE, error=TRUE, results='asis', fig.cap="ROA event study. Monotonically declining path post-RBC — unlike the V-shaped recovery seen in the 2008 crisis. No sign of reversal through Q+10.", out.width="100%"}
 fig_path <- file.path(FIG_DIR, "Figure3_EventStudy_Capital.png")
 if (file.exists(fig_path)) {
   knitr::include_graphics(fig_path)
@@ -622,7 +630,7 @@ if (file.exists(fig_path)) {
 ### :dart: Key Takeaway
 
 <div style="border:1px solid #1B3A6B;background:#1B3A6B0D;border-radius:8px;padding:18px 22px;margin-top:12px">
-<p style="font-size:10.5px;text-transform:uppercase;letter-spacing:2px;color:#1B3A6B;font-weight:700;margin-bottom:8px">Key Takeaway for Senior Leadership</p>
+<p style="font-size:10.5px;text-transform:uppercase;letter-spacing:2px;color:#1B3A6B;font-weight:700;margin-bottom:8px">Bottom Line</p>
 <p style="font-size:14.5px;line-height:1.75;margin:0">The profitability decline is the most alarming systemic finding. A credit union that cannot earn adequate returns cannot rebuild capital through retained earnings, cannot absorb loan losses without approaching regulatory thresholds, and eventually cannot offer competitive rates. The worsening trend through Q+10 — with no reversal — indicates this is a permanent regulatory earnings tax, not a temporary adjustment cost. Larger institutions, which have the greatest systemic importance, have been hit hardest.</p>
 </div>
 
@@ -653,7 +661,7 @@ To distinguish regulatory effects from generic financial stress, we compare what
 
 ### Supporting Chart
 
-```{r fig7, echo=FALSE, error=TRUE, fig.cap="Parallel DiD comparing 2008 crisis vs. 2022 RBC rule. Capital responses are similar; profitability and portfolio show opposite-sign patterns — confirming a regulatory channel.", out.width="100%"}
+```{r fig7, echo=FALSE, error=TRUE, results='asis', fig.cap="Parallel DiD comparing 2008 crisis vs. 2022 RBC rule. Capital responses are similar; profitability and portfolio show opposite-sign patterns — confirming a regulatory channel.", out.width="100%"}
 fig_path <- file.path(FIG_DIR, "Figure6_Crisis_vs_RBC_Capital.png")
 if (file.exists(fig_path)) {
   knitr::include_graphics(fig_path)
@@ -677,7 +685,7 @@ if (file.exists(fig_path)) {
 ### :dart: Key Takeaway
 
 <div style="border:1px solid #1B3A6B;background:#1B3A6B0D;border-radius:8px;padding:18px 22px;margin-top:12px">
-<p style="font-size:10.5px;text-transform:uppercase;letter-spacing:2px;color:#1B3A6B;font-weight:700;margin-bottom:8px">Key Takeaway for Senior Leadership</p>
+<p style="font-size:10.5px;text-transform:uppercase;letter-spacing:2px;color:#1B3A6B;font-weight:700;margin-bottom:8px">Bottom Line</p>
 <p style="font-size:14.5px;line-height:1.75;margin:0">During the 2008 financial crisis — the worst economic shock in post-war history — complex credit unions saw flat-to-positive ROA, because they could charge higher rates and credit losses were offset by earnings. Under the RBC rule — in a stable economic environment — ROA declined persistently and NIM compressed. This opposite-sign pattern for profitability is the clearest evidence that the RBC rule functions as a regulatory earnings tax rather than a prudential safeguard. The rule is doing something the financial crisis did not.</p>
 </div>
 
@@ -707,7 +715,7 @@ When credit unions face stress, they adjust their portfolios. The critical quest
 
 ### Supporting Chart
 
-```{r fig8, echo=FALSE, error=TRUE, fig.cap="Shape comparison: V-shapes under crisis, step-changes under RBC. The divergence in portfolio and profitability paths is the structural signature of regulatory-specific effects.", out.width="100%"}
+```{r fig8, echo=FALSE, error=TRUE, results='asis', fig.cap="Shape comparison: V-shapes under crisis, step-changes under RBC. The divergence in portfolio and profitability paths is the structural signature of regulatory-specific effects.", out.width="100%"}
 fig_path <- file.path(FIG_DIR, "Figure6b_Crisis_vs_RBC_Portfolio.png")
 if (file.exists(fig_path)) {
   knitr::include_graphics(fig_path)
@@ -731,7 +739,7 @@ if (file.exists(fig_path)) {
 ### :dart: Key Takeaway
 
 <div style="border:1px solid #E8A838;background:#E8A8380D;border-radius:8px;padding:18px 22px;margin-top:12px">
-<p style="font-size:10.5px;text-transform:uppercase;letter-spacing:2px;color:#E8A838;font-weight:700;margin-bottom:8px">Key Takeaway for Senior Leadership</p>
+<p style="font-size:10.5px;text-transform:uppercase;letter-spacing:2px;color:#E8A838;font-weight:700;margin-bottom:8px">Bottom Line</p>
 <p style="font-size:14.5px;line-height:1.75;margin:0">V-shaped responses are what we expect from temporary shocks. Step-change responses indicate structural realignment driven by permanent incentives. The auto loan exit under the RBC rule is structural because the risk-weight incentive never changes — unless the rule is redesigned. Complex credit unions have permanently repositioned their portfolios away from auto loans, regardless of whether this is good for their members or their own financial health.</p>
 </div>
 
@@ -761,7 +769,7 @@ Recognizing that the 10% threshold might be too burdensome, NCUA created a simpl
 
 ### Supporting Chart
 
-```{r fig9, echo=FALSE, error=TRUE, fig.cap="Three-group event study. CCULR adopters show pre-trend violations and worse outcomes — confirming negative selection rather than genuine relief.", out.width="100%"}
+```{r fig9, echo=FALSE, error=TRUE, results='asis', fig.cap="Three-group event study. CCULR adopters show pre-trend violations and worse outcomes — confirming negative selection rather than genuine relief.", out.width="100%"}
 fig_path <- file.path(FIG_DIR, "Figure7_CCULR_EventStudy.png")
 if (file.exists(fig_path)) {
   knitr::include_graphics(fig_path)
@@ -785,7 +793,7 @@ if (file.exists(fig_path)) {
 ### :dart: Key Takeaway
 
 <div style="border:1px solid #4A7CB5;background:#4A7CB50D;border-radius:8px;padding:18px 22px;margin-top:12px">
-<p style="font-size:10.5px;text-transform:uppercase;letter-spacing:2px;color:#4A7CB5;font-weight:700;margin-bottom:8px">Key Takeaway for Senior Leadership</p>
+<p style="font-size:10.5px;text-transform:uppercase;letter-spacing:2px;color:#4A7CB5;font-weight:700;margin-bottom:8px">Bottom Line</p>
 <p style="font-size:14.5px;line-height:1.75;margin:0">The CCULR failed as a relief mechanism for a structural reason: the institutions that adopted it were disproportionately those already in financial difficulty. A credit union with an 8% capital ratio that adopts the 9% CCULR threshold has gained no regulatory breathing room — it is still below the threshold. The 1 percentage point reduction was simply not large enough to provide meaningful relief to genuinely constrained institutions.</p>
 </div>
 
@@ -816,7 +824,7 @@ Everything above documents costs of the rule. But the rule was designed to prote
 
 ### Supporting Chart
 
-```{r fig10, echo=FALSE, error=TRUE, fig.cap="Stress survival rates by regime and severity. The rule provides essentially no protection at 2008-severity stress (pre vs. with-rule: −0.3pp). Repeal adds 3.4pp of failure risk.", out.width="100%"}
+```{r fig10, echo=FALSE, error=TRUE, results='asis', fig.cap="Stress survival rates by regime and severity. The rule provides essentially no protection at 2008-severity stress (pre vs. with-rule: −0.3pp). Repeal adds 3.4pp of failure risk.", out.width="100%"}
 fig_path <- file.path(FIG_DIR, "Figure11_4_Survival_Frontier.png")
 if (file.exists(fig_path)) {
   knitr::include_graphics(fig_path)
@@ -841,7 +849,7 @@ if (file.exists(fig_path)) {
 ### :dart: Key Takeaway
 
 <div style="border:1px solid #C94040;background:#C940400D;border-radius:8px;padding:18px 22px;margin-top:12px">
-<p style="font-size:10.5px;text-transform:uppercase;letter-spacing:2px;color:#C94040;font-weight:700;margin-bottom:8px">Key Takeaway for Senior Leadership</p>
+<p style="font-size:10.5px;text-transform:uppercase;letter-spacing:2px;color:#C94040;font-weight:700;margin-bottom:8px">Bottom Line</p>
 <p style="font-size:14.5px;line-height:1.75;margin:0">Repeal carries real tail risk — approximately 23 additional institutions would fall below 7% capitalization in a 2008-severity crisis. This cost must be taken seriously. However, the current 10% threshold constrains 47% of complex credit unions unnecessarily. An empirically calibrated threshold of 8.5% would provide equivalent protection while constraining only 15% of institutions — one-third the compliance burden at the same protective benefit. The policy recommendation is recalibration, not abolition: lower the threshold, redesign the risk weights, and eliminate the provisions that drove the auto loan exit without prudential justification.</p>
 </div>
 
@@ -852,19 +860,19 @@ if (file.exists(fig_path)) {
 
 These figures show projected trajectories for key outcomes in the 3 years following a hypothetical 2026Q1 repeal of the RBC rule, under Fast (4Q half-life), Gradual (8Q/16Q), and Slow (plateau) recovery scenarios. All estimates derive directly from the DiD parameters — no new regressions.
 
-```{r fig9-1, error=TRUE, fig.cap="Loan spread fan chart under repeal — three recovery scenarios"}
+```{r fig9-1, error=TRUE, results='asis', fig.cap="Loan spread fan chart under repeal — three recovery scenarios"}
 fig_include("Figure9_1_Spread_Fan_Chart.png")
 ```
 
-```{r fig9-3, error=TRUE, fig.cap="Cumulative member savings from spread reduction ($B) — 4-year horizon"}
+```{r fig9-3, error=TRUE, results='asis', fig.cap="Cumulative member savings from spread reduction ($B) — 4-year horizon"}
 fig_include("Figure9_3_Cumulative_Member_Savings.png")
 ```
 
-```{r fig9-4, error=TRUE, fig.cap="ROA recovery by asset size tier post-repeal"}
+```{r fig9-4, error=TRUE, results='asis', fig.cap="ROA recovery by asset size tier post-repeal"}
 fig_include("Figure9_4_ROA_Recovery_by_Tier.png")
 ```
 
-```{r fig9-8, error=TRUE, fig.cap="Cost of delay: foregone member welfare by repeal timing"}
+```{r fig9-8, error=TRUE, results='asis', fig.cap="Cost of delay: foregone member welfare by repeal timing"}
 fig_include("Figure9_8_Cost_of_Delay.png")
 ```
 
@@ -874,19 +882,19 @@ fig_include("Figure9_8_Cost_of_Delay.png")
 
 These figures overlay a moderate recession (oil shock + inflation, 60% of 2008 crisis magnitude, 6Q duration) on the repeal recovery path. Recession calibrated from 3A crisis DiD estimates.
 
-```{r fig10-1, error=TRUE, fig.cap="Net worth ratio: repeal benefit vs. recession headwind"}
+```{r fig10-1, error=TRUE, results='asis', fig.cap="Net worth ratio: repeal benefit vs. recession headwind"}
 fig_include("Figure10_1_Stress_Capital.png")
 ```
 
-```{r fig10-4, error=TRUE, fig.cap="Cumulative member savings net of recession — all scenarios"}
+```{r fig10-4, error=TRUE, results='asis', fig.cap="Cumulative member savings net of recession — all scenarios"}
 fig_include("Figure10_4_Stress_Net_Welfare.png")
 ```
 
-```{r fig10-6, error=TRUE, fig.cap="Four-panel dashboard: net outcomes across channels under recession"}
+```{r fig10-6, error=TRUE, results='asis', fig.cap="Four-panel dashboard: net outcomes across channels under recession"}
 fig_include("Figure10_6_Stress_Scenario_Comparison.png")
 ```
 
-```{r fig10-8, error=TRUE, fig.cap="Cost of delaying repeal into a deepening recession"}
+```{r fig10-8, error=TRUE, results='asis', fig.cap="Cost of delaying repeal into a deepening recession"}
 fig_include("Figure10_8_Stress_Repeal_Timing.png")
 ```
 
@@ -896,31 +904,31 @@ fig_include("Figure10_8_Stress_Repeal_Timing.png")
 
 These figures are based on actual 2008 crisis drawdown data for 634 complex credit unions (mean drawdown 1.86pp, P90 3.36pp) and empirical NW ratio distributions from the NCUA Call Report.
 
-```{r fig11-1, error=TRUE, fig.cap="NW ratio distribution: pre-rule, with-rule, and post-repeal"}
+```{r fig11-1, error=TRUE, results='asis', fig.cap="NW ratio distribution: pre-rule, with-rule, and post-repeal"}
 fig_include("Figure11_1_NW_Distribution_Regimes.png")
 ```
 
-```{r fig11-2, error=TRUE, fig.cap="Fraction of complex CUs below each capital threshold by regime"}
+```{r fig11-2, error=TRUE, results='asis', fig.cap="Fraction of complex CUs below each capital threshold by regime"}
 fig_include("Figure11_2_Threshold_Breach_Rates.png")
 ```
 
-```{r fig11-3, error=TRUE, fig.cap="Empirical stress loss calibration from 2008 crisis data"}
+```{r fig11-3, error=TRUE, results='asis', fig.cap="Empirical stress loss calibration from 2008 crisis data"}
 fig_include("Figure11_3_Stress_Drawdown_Calibration.png")
 ```
 
-```{r fig11-4, error=TRUE, fig.cap="Stress survival frontier: % falling below 7% by regime and severity"}
+```{r fig11-4, error=TRUE, results='asis', fig.cap="Stress survival frontier: % falling below 7% by regime and severity"}
 fig_include("Figure11_4_Survival_Frontier.png")
 ```
 
-```{r fig11-6, error=TRUE, fig.cap="RBC rule marginal effect on institutional failure risk"}
+```{r fig11-6, error=TRUE, results='asis', fig.cap="RBC rule marginal effect on institutional failure risk"}
 fig_include("Figure11_6_Rule_Effect_vs_Tailrisk.png")
 ```
 
-```{r fig11-7, error=TRUE, fig.cap="Near-threshold institution vulnerability map — actual 2008 drawdown data"}
+```{r fig11-7, error=TRUE, results='asis', fig.cap="Near-threshold institution vulnerability map — actual 2008 drawdown data"}
 fig_include("Figure11_7_Thin_Buffer_Zoom.png")
 ```
 
-```{r fig11-8, error=TRUE, fig.cap="Threshold calibration: compliance burden vs. residual failure risk. Curves cross at ~8.5%."}
+```{r fig11-8, error=TRUE, results='asis', fig.cap="Threshold calibration: compliance burden vs. residual failure risk. Curves cross at ~8.5%."}
 fig_include("Figure11_8_Optimal_Threshold.png")
 ```
 
