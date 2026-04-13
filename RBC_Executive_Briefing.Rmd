@@ -291,14 +291,8 @@ The RBC rule required complex credit unions (those with more than $500 million i
 
 **What you will see:** The average capital ratio does rise after 2022 — the overall line trends upward. But this average tells only part of the story. When you look separately at institutions that were already close to the 10% threshold before the rule (shown as a separate line or highlighted region), their capital actually falls. The rule imposed compliance costs — higher rates charged to members, tighter lending — and for weaker institutions those costs consumed retained earnings faster than they could build new capital. The strong got stronger; the thin-buffered got thinner.
 
-```{r fig1, echo=FALSE, error=TRUE, results='asis', fig.cap="Event study of net worth ratio. Average rises post-2022, but distribution analysis reveals institutions nearest the threshold were harmed.", out.width="100%"}
-fig_path <- file.path(FIG_DIR, "Figure3_EventStudy_Capital.png")
-if (file.exists(fig_path)) {
-  knitr::include_graphics(fig_path)
-} else {
-  message("Figure not found: ", fig_path,
-          "\nRun 4_Paper_Tables.R to generate all figures.")
-}
+```{r fig1, error=TRUE, results='asis', fig.cap="Event study: capital outcomes (4-panel). Focus on Panel A (Net Worth Ratio) and Panel B (Capital Buffer vs 10%). Average NW ratio rises post-2022; well-capitalized probability falls.", out.width="100%"}
+fig_include("Figure3_EventStudy_Capital.png")
 ```
 
 ### Statistical Model Results
@@ -348,14 +342,8 @@ When a credit union faces higher capital requirements, one way it adjusts is by 
 
 **What you will see:** Before 2022, the spread lines for complex and non-complex credit unions move in parallel — both groups were repricing similarly. At the moment the RBC rule took effect, the spread for complex credit unions jumps sharply upward and stays there across every loan type. This flat-then-sharp pattern is the hallmark of a causal effect: rates didn't drift up gradually as the economy changed — they jumped when the rule started, and in the group the rule applied to.
 
-```{r fig2, echo=FALSE, error=TRUE, results='asis', fig.cap="Loan spreads over Treasuries. Flat before 2022Q1, sharp and sustained rise after — consistent with a causal effect of the rule.", out.width="100%"}
-fig_path <- file.path(FIG_DIR, "Figure4_EventStudy_Spreads.png")
-if (file.exists(fig_path)) {
-  knitr::include_graphics(fig_path)
-} else {
-  message("Figure not found: ", fig_path,
-          "\nRun 4_Paper_Tables.R to generate all figures.")
-}
+```{r fig2, error=TRUE, results='asis', fig.cap="Loan spreads over Treasuries — mortgage, new auto, and commercial non-RE. Flat before 2022Q1, sharp and sustained rise after — consistent with a causal effect of the rule.", out.width="100%"}
+fig_include("Figure4_EventStudy_Spreads.png")
 ```
 
 ### Statistical Model Results
@@ -406,14 +394,8 @@ Higher capital requirements can reduce the volume of lending — if a credit uni
 
 **What you will see:** Before 2022, the two groups track each other closely. Once the rule takes effect, loan growth at complex credit unions drops sharply — and unlike a temporary economic shock, it does not bounce back. Ten or more quarters later, the gap is still present and roughly the same size. This is not members choosing to borrow less; it is credit unions choosing to lend less because each new loan requires more capital backing than before.
 
-```{r fig3, echo=FALSE, error=TRUE, results='asis', fig.cap="Loan growth event study. Sharp, persistent step-down at RBC implementation with no subsequent recovery — a structural constraint, not a temporary adjustment.", out.width="100%"}
-fig_path <- file.path(FIG_DIR, "Figure3_EventStudy_Capital.png")
-if (file.exists(fig_path)) {
-  knitr::include_graphics(fig_path)
-} else {
-  message("Figure not found: ", fig_path,
-          "\nRun 4_Paper_Tables.R to generate all figures.")
-}
+```{r fig3, error=TRUE, results='asis', fig.cap="Loan growth event study. Sharp, persistent step-down at RBC implementation with no subsequent recovery — a structural lending constraint, not a temporary adjustment.", out.width="100%"}
+fig_include("Figure3b_EventStudy_LoanGrowth.png")
 ```
 
 ### Statistical Model Results
@@ -463,14 +445,8 @@ Under the RBC rule, different loan types carry different 'risk weights' — esse
 
 **What you will see:** Before 2022, both groups have nearly identical portfolio compositions — the lines move together. After the rule takes effect, complex credit unions sharply reduce their auto loan share and increase their real estate share, while non-complex credit unions show no such shift. This is the fingerprint of regulatory arbitrage: institutions restructuring their portfolios around capital cost minimization, not member needs. The auto loan decline doesn't recover — it stays depressed throughout the entire post-rule window.
 
-```{r fig4, echo=FALSE, error=TRUE, results='asis', fig.cap="Portfolio composition around RBC. Auto share falls sharply and permanently; RE share rises — a textbook risk-weight arbitrage pattern not seen in the 2008 crisis.", out.width="100%"}
-fig_path <- file.path(FIG_DIR, "Figure5_Portfolio_Trends.png")
-if (file.exists(fig_path)) {
-  knitr::include_graphics(fig_path)
-} else {
-  message("Figure not found: ", fig_path,
-          "\nRun 4_Paper_Tables.R to generate all figures.")
-}
+```{r fig4, error=TRUE, results='asis', fig.cap="Portfolio composition around RBC. Auto share falls sharply and permanently; RE share rises — a textbook risk-weight arbitrage pattern not seen in the 2008 crisis.", out.width="100%"}
+fig_include("Figure5_Portfolio_Trends.png")
 ```
 
 ### Statistical Model Results
@@ -521,14 +497,8 @@ One might expect that higher capital requirements would make credit unions more 
 
 **What you will see:** Delinquency rates tick up steadily from the moment the rule takes effect and remain elevated throughout the observation window. The increase is not concentrated in a single loan type — it appears across the portfolio. The most likely mechanism: when credit unions are under capital pressure, they shift their loan mix toward commercial real estate (which is more cycle-sensitive), reduce their capacity to work proactively with struggling borrowers, and charge higher rates that themselves increase stress on marginal borrowers.
 
-```{r fig5, echo=FALSE, error=TRUE, results='asis', fig.cap="Delinquency rate event study. Persistent increase beginning with RBC implementation, sustained throughout the observation window.", out.width="100%"}
-fig_path <- file.path(FIG_DIR, "Figure3_EventStudy_Capital.png")
-if (file.exists(fig_path)) {
-  knitr::include_graphics(fig_path)
-} else {
-  message("Figure not found: ", fig_path,
-          "\nRun 4_Paper_Tables.R to generate all figures.")
-}
+```{r fig5, error=TRUE, results='asis', fig.cap="Delinquency rate event study. Persistent increase beginning with RBC implementation, sustained throughout the observation window.", out.width="100%"}
+fig_include("Figure3c_EventStudy_Delinquency.png")
 ```
 
 ### Statistical Model Results
@@ -579,14 +549,8 @@ A credit union's return on assets (ROA) measures how much profit it generates pe
 
 **What you will see:** Unlike the 2008 crisis, where ROA declined briefly and then recovered in a V-shape, the ROA decline under the RBC rule follows a straight downward line with no sign of reversal through ten or more quarters. This is the pattern of a permanent regulatory cost, not a temporary economic shock. Larger institutions show steeper declines — for credit unions above $10 billion in assets, the ROA decline is nearly double the average. This matters systemically: the largest credit unions are also those that serve the most members.
 
-```{r fig6, echo=FALSE, error=TRUE, results='asis', fig.cap="ROA event study. Monotonically declining path post-RBC — unlike the V-shaped recovery seen in the 2008 crisis. No sign of reversal through Q+10.", out.width="100%"}
-fig_path <- file.path(FIG_DIR, "Figure3_EventStudy_Capital.png")
-if (file.exists(fig_path)) {
-  knitr::include_graphics(fig_path)
-} else {
-  message("Figure not found: ", fig_path,
-          "\nRun 4_Paper_Tables.R to generate all figures.")
-}
+```{r fig6, error=TRUE, results='asis', fig.cap="ROA event study. Monotonically declining path post-RBC — unlike the V-shaped recovery seen in the 2008 crisis. No sign of reversal through Q+10.", out.width="100%"}
+fig_include("Figure3d_EventStudy_ROA.png")
 ```
 
 ### Statistical Model Results
@@ -644,14 +608,8 @@ The comparison is decisive: for loan growth contraction, the RBC effect is 47% *
 
 **What you will see:** For most outcomes, the 2008 crisis panels show a V-shape — a dip followed by a recovery back toward the baseline. The RBC panels show a different shape entirely: a sharp drop that flattens out at a lower level, with no return toward baseline even after many quarters. The single most important visual comparison is the ROA panel: in the crisis episode, the line is flat-to-positive (credit unions maintained earnings); in the RBC episode, the line trends steadily downward. This opposite-sign signature on the same institutions across two episodes is the empirical core of the argument that the RBC rule is functioning as a regulatory earnings tax, not a prudential safeguard.
 
-```{r fig7, echo=FALSE, error=TRUE, results='asis', fig.cap="Parallel DiD comparing 2008 crisis vs. 2022 RBC rule. Capital responses are similar; profitability and portfolio show opposite-sign patterns — confirming a regulatory channel.", out.width="100%"}
-fig_path <- file.path(FIG_DIR, "Figure6_Crisis_vs_RBC_Capital.png")
-if (file.exists(fig_path)) {
-  knitr::include_graphics(fig_path)
-} else {
-  message("Figure not found: ", fig_path,
-          "\nRun 4_Paper_Tables.R to generate all figures.")
-}
+```{r fig7, error=TRUE, results='asis', fig.cap="Parallel DiD comparing 2008 crisis vs. 2022 RBC rule. Capital responses are similar; profitability and portfolio show opposite-sign patterns — confirming a regulatory channel.", out.width="100%"}
+fig_include("Figure6_Crisis_vs_RBC_Capital.png")
 ```
 
 ### Statistical Model Results
@@ -702,14 +660,8 @@ When credit unions face stress, they adjust their portfolios. The critical quest
 
 **What you will see:** For auto loan share: under the 2008 crisis, the line dips and climbs back — a clear V-shape, fully reversing within about 10 quarters. Under the RBC rule, the line drops at implementation and flatlines there, with less than 10% of the decline reversed even after 2.5 years. For ROA: during the crisis, the line wobbles near zero and recovers; under the RBC rule, it slopes steadily downward with no floor in sight. This visual contrast between "V-shape" and "permanent step-down" is the most intuitive way to understand why the rule's effects are structural: the incentive that drove the change never turns off, so the change never reverses.
 
-```{r fig8, echo=FALSE, error=TRUE, results='asis', fig.cap="Shape comparison: V-shapes under crisis, step-changes under RBC. The divergence in portfolio and profitability paths is the structural signature of regulatory-specific effects.", out.width="100%"}
-fig_path <- file.path(FIG_DIR, "Figure6b_Crisis_vs_RBC_Portfolio.png")
-if (file.exists(fig_path)) {
-  knitr::include_graphics(fig_path)
-} else {
-  message("Figure not found: ", fig_path,
-          "\nRun 4_Paper_Tables.R to generate all figures.")
-}
+```{r fig8, error=TRUE, results='asis', fig.cap="Shape comparison: V-shapes under crisis, step-changes under RBC. The divergence in portfolio and profitability paths is the structural signature of regulatory-specific effects.", out.width="100%"}
+fig_include("Figure6b_Crisis_vs_RBC_Portfolio.png")
 ```
 
 ### Statistical Model Results
@@ -760,14 +712,8 @@ Recognizing that the 10% threshold might be too burdensome, NCUA created a simpl
 
 **What you will see:** Two things stand out. First, the CCULR adopters were already diverging from the other groups *before* the rule — their loan growth and profitability were already weaker heading into the implementation period. This tells us that CCULR adoption was driven by distress, not a free choice among equals. Second, after the rule takes effect, CCULR adopters perform *worse* than full-RBC credit unions on most metrics — not better. There is no relief visible in the chart. The CCULR line does not fall between the other two lines; it falls below them. This is the visual evidence of the self-selection failure: the institutions that needed relief the most were the least equipped to benefit from it.
 
-```{r fig9, echo=FALSE, error=TRUE, results='asis', fig.cap="Three-group event study. CCULR adopters show pre-trend violations and worse outcomes — confirming negative selection rather than genuine relief.", out.width="100%"}
-fig_path <- file.path(FIG_DIR, "Figure7_CCULR_EventStudy.png")
-if (file.exists(fig_path)) {
-  knitr::include_graphics(fig_path)
-} else {
-  message("Figure not found: ", fig_path,
-          "\nRun 4_Paper_Tables.R to generate all figures.")
-}
+```{r fig9, error=TRUE, results='asis', fig.cap="Three-group event study. CCULR adopters show pre-trend violations and worse outcomes — confirming negative selection rather than genuine relief.", out.width="100%"}
+fig_include("Figure7_CCULR_EventStudy.png")
 ```
 
 ### Statistical Model Results
@@ -823,14 +769,8 @@ The central finding is nuanced and must be stated carefully: **repeal does add r
 
 **What you will see:** At the 2008-equivalent severity, the first two bars in the cluster (pre-rule and with-rule) are almost exactly the same height — approximately 19%. This is the most important comparison in the chart: it shows that the 3 years of capital-building driven by the RBC rule has produced essentially no improvement in failure rates at historical stress levels. Why? Because the institutions that were already well-capitalised stayed well above 7% under either regime, and the institutions that were near the threshold under the pre-rule regime are *still* near the threshold under the with-rule regime — because their retained earnings were consumed by compliance costs. The third and fourth bars (post-repeal) are taller at about 22–26% — this is the real risk cost of repeal. That 3–4 percentage point gap is approximately 20–25 institutions. Moving to the 2.0× severity cluster, the bars spread further apart — the rule provides more protection at extreme stress. This is the scenario where maintaining capital buffers matters most. But it is also the scenario with no historical precedent.
 
-```{r fig10, echo=FALSE, error=TRUE, results='asis', fig.cap="Stress survival rates by regime and severity. At 2008-severity the rule provides just −0.3pp of protection. Repeal adds 3.4pp of institutional failure risk.", out.width="100%"}
-fig_path <- file.path(FIG_DIR, "Figure11_4_Survival_Frontier.png")
-if (file.exists(fig_path)) {
-  knitr::include_graphics(fig_path)
-} else {
-  message("Figure not found: ", fig_path,
-          "\nRun 4_Paper_Tables.R to generate all figures.")
-}
+```{r fig10, error=TRUE, results='asis', fig.cap="Stress survival rates by regime and severity. At 2008-severity the rule provides just −0.3pp of protection. Repeal adds 3.4pp of institutional failure risk.", out.width="100%"}
+fig_include("Figure11_4_Survival_Frontier.png")
 ```
 
 ### Statistical Model Results
