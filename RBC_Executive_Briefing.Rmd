@@ -116,7 +116,7 @@ h3 { color: #2A3A5E; font-size: 14px; text-transform: uppercase;
 <div class="score-row"><div class="score-card" style="border-top-color:#C94040"><div class="score-val">+73bp</div><div class="score-lbl">Mortgage spread increase over Treasury benchmarks</div></div><div class="score-card" style="border-top-color:#C94040"><div class="score-val">$325.9B</div><div class="score-lbl">Foregone 4-year member welfare under repeal baseline</div></div><div class="score-card" style="border-top-color:#1B3A6B"><div class="score-val">&#x2212;26bp</div><div class="score-lbl">Return on assets decline (31% of pre-rule mean)</div></div><div class="score-card" style="border-top-color:#E8A838"><div class="score-val">&#x2212;0.3pp</div><div class="score-lbl">Rule&#39;s actual protection at 2008-crisis stress level</div></div></div>
 <div class="legend-row"><span class="leg-lbl">Inference key:</span><span style="background:#FFF0F0;color:#C94040;border:1px solid #C9404033;padding:3px 10px;border-radius:3px;font-size:10.5px;font-weight:700;font-family:monospace">&#x25BC; Concern</span><span style="background:#FFFBF0;color:#B8821A;border:1px solid #E8A83833;padding:3px 10px;border-radius:3px;font-size:10.5px;font-weight:700;font-family:monospace">&#x25C6; Mixed</span><span style="background:#F0FFF5;color:#2E7D4F;border:1px solid #2E7D4F33;padding:3px 10px;border-radius:3px;font-size:10.5px;font-weight:700;font-family:monospace">&#x25B2; Positive</span><span style="background:#F0F5FF;color:#2A5A9B;border:1px solid #4A7CB533;padding:3px 10px;border-radius:3px;font-size:10.5px;font-weight:700;font-family:monospace">&#x25CF; Baseline</span><span style="background:#FFF8F0;color:#8B4513;border:1px solid #8B451333;padding:3px 10px;border-radius:3px;font-size:10.5px;font-weight:700;font-family:monospace">&#x2717; No effect</span><span style="font-size:11px;color:#6B7A99;font-style:italic;margin-left:4px">&#8212; appears in every Key Numbers and Model Results table</span></div>
 
-**Central finding:** The rule imposed large, persistent costs on member-borrowers through higher loan rates, reduced credit availability, and deteriorating profitability — while providing only marginal protective benefit over and above what existed before the rule. An empirically calibrated threshold of **8.5%**, rather than 10%, would deliver equivalent tail-risk protection at approximately one-third the compliance burden.
+**Central finding:** The rule imposed large, persistent costs on member-borrowers through higher loan rates, reduced credit availability, and deteriorating profitability — while providing only marginal protective benefit over and above what existed before the rule. An empirically calibrated threshold of **8.5%**, rather than 10%, would deliver equivalent tail-risk protection at approximately one-third the compliance burden. Finding 12 explains *why* the rule's effects were larger and more persistent than the 2008 financial crisis itself — through five structural mechanisms that distinguish permanent regulatory cost changes from temporary economic shocks.
 
 ---
 
@@ -250,12 +250,12 @@ Empirical stress tests using actual 2008 crisis data for 634 complex credit unio
 
 ---
 
-# Part II: Findings 1–10 — The Full Evidence {#findings}
+# Part II: Findings 1–12 — The Full Evidence {#findings}
 
 Each finding section contains:
 (a) **Context** — why this question matters, in plain English  
 (b) **Key Numbers** — the most important statistics, with an inference column  
-(c) **Supporting Chart** — directly imported from `output/paper/figures/`  
+(c) **Supporting Chart** — with a plain-English walk-through of what to look for  
 (d) **Statistical Model Results** — the formal estimates with signal and meaning columns  
 (e) **Bottom Line** — the plain-English conclusion for this finding
 
@@ -338,9 +338,9 @@ When a credit union faces higher capital requirements, one way it adjusts is by 
 
 ### Supporting Chart
 
-**How to read this chart:** The horizontal axis is time in quarters; the vertical axis shows the loan spread over comparable Treasury rates (the "markup" above the base market rate). A positive value means members are paying more than the market would otherwise suggest. Crucially, the spread is measured relative to Treasuries, so any economy-wide increase in interest rates is already stripped out — what remains is the credit union's own pricing decision.
+**How to read this chart:** The chart has three panels — Panel A (Mortgage Spread), Panel B (New Auto Spread), and Panel C (Commercial non-Real Estate Spread). In each panel, the horizontal axis is time in quarters relative to when the rule took effect (quarter zero). The vertical axis shows the DiD coefficient — the difference in loan spread between complex and non-complex credit unions, after accounting for overall market rate movements. A value of zero means the two groups are pricing identically. A positive value means complex credit unions are charging more than non-complex ones by that amount.
 
-**What you will see:** Before 2022, the spread lines for complex and non-complex credit unions move in parallel — both groups were repricing similarly. At the moment the RBC rule took effect, the spread for complex credit unions jumps sharply upward and stays there across every loan type. This flat-then-sharp pattern is the hallmark of a causal effect: rates didn't drift up gradually as the economy changed — they jumped when the rule started, and in the group the rule applied to.
+**What you will see:** Before quarter zero, the line in each panel hovers near zero — the two groups were pricing their loans similarly before the rule. At quarter zero, each line drops sharply below zero, then swings upward and stays positive through the post-rule period. The post-rule coefficients are positive and statistically significant (marked with stars), meaning complex credit unions are charging members more than their non-complex peers across every loan type. The pre-period stability near zero is what gives us confidence that this is a causal effect of the rule, not a pre-existing trend.
 
 ```{r fig2, error=TRUE, results='asis', fig.cap="Loan spreads over Treasuries — mortgage, new auto, and commercial non-RE. Flat before 2022Q1, sharp and sustained rise after — consistent with a causal effect of the rule.", out.width="100%"}
 fig_include("Figure4_EventStudy_Spreads.png")
@@ -390,9 +390,9 @@ Higher capital requirements can reduce the volume of lending — if a credit uni
 
 ### Supporting Chart
 
-**How to read this chart:** The vertical axis shows the quarter-over-quarter growth rate of the loan book, expressed as a log change (think of it as percentage growth). The horizontal axis is time around the rule's implementation date. Dots near zero before the rule mean both groups were growing at similar rates — the control (non-complex) group serves as the "what would have happened anyway" benchmark.
+**How to read this chart:** The vertical axis shows the DiD coefficient for loan growth (QoQ log×100) — the difference in loan growth rate between complex and non-complex credit unions each quarter. Zero means the two groups were growing at identical rates. The horizontal axis is time relative to the rule's implementation date. The shaded band around the line is the 95% confidence interval — the wider it is, the less precise the estimate.
 
-**What you will see:** Before 2022, the two groups track each other closely. Once the rule takes effect, loan growth at complex credit unions drops sharply — and unlike a temporary economic shock, it does not bounce back. Ten or more quarters later, the gap is still present and roughly the same size. This is not members choosing to borrow less; it is credit unions choosing to lend less because each new loan requires more capital backing than before.
+**What you will see:** The pre-period (left of quarter zero) shows some volatility — this is normal for quarterly growth rates, which are naturally noisy. What matters for causal identification is that the pre-period coefficients are statistically not different from zero on average — the dashed flat line at zero is inside the confidence band. After quarter zero, the line drops sharply into negative territory and the stars on the post-period dots confirm statistical significance. The line stays below zero through Q+8 and beyond, with no recovery trend. This persistent negative gap — complex credit unions growing their loan books more slowly than comparable non-complex ones, quarter after quarter — is the signature of a structural lending constraint, not a temporary adjustment.
 
 ```{r fig3, error=TRUE, results='asis', fig.cap="Loan growth event study. Sharp, persistent step-down at RBC implementation with no subsequent recovery — a structural lending constraint, not a temporary adjustment.", out.width="100%"}
 fig_include("Figure3b_EventStudy_LoanGrowth.png")
@@ -441,9 +441,9 @@ Under the RBC rule, different loan types carry different 'risk weights' — esse
 
 ### Supporting Chart
 
-**How to read this chart:** Two panels show the share of the loan portfolio made up of (a) auto loans and (b) real estate loans over time. If institutions were responding to borrower demand or economic conditions, you would expect both groups (complex and non-complex) to shift together. If the shift is regulatory-driven, you expect complex credit unions to move while non-complex ones stay put.
+**How to read this chart:** This is a 4-panel figure showing actual portfolio shares over calendar time (not event-time coefficients). Each panel shows the share of total loans in a category from 2018 to 2026. Two lines appear in each panel: dark (complex credit unions) and red/flat (non-complex credit unions). The dashed vertical line marks the RBC effective date (2022 Q1). If the shift is regulatory-driven, you expect the dark line to diverge from the red line at the dashed vertical — while the red line stays flat.
 
-**What you will see:** Before 2022, both groups have nearly identical portfolio compositions — the lines move together. After the rule takes effect, complex credit unions sharply reduce their auto loan share and increase their real estate share, while non-complex credit unions show no such shift. This is the fingerprint of regulatory arbitrage: institutions restructuring their portfolios around capital cost minimization, not member needs. The auto loan decline doesn't recover — it stays depressed throughout the entire post-rule window.
+**What you will see:** Panel A (Member Business Loans) and Panel B (Commercial Loans) show the dark line rising after 2022 while the red line stays flat — complex credit unions are growing their commercial exposure. Panel C (Real Estate Loans) shows the same pattern — rising after 2022 for complex institutions. Panel D (Auto Loans) shows the most dramatic shift: the dark line drops sharply after 2022 and keeps falling, while the red line stays elevated and flat. This is the fingerprint of risk-weight arbitrage — complex institutions are systematically exiting the highest-risk-weight asset (auto loans) and shifting toward lower-weight alternatives, driven purely by the regulatory cost structure.
 
 ```{r fig4, error=TRUE, results='asis', fig.cap="Portfolio composition around RBC. Auto share falls sharply and permanently; RE share rises — a textbook risk-weight arbitrage pattern not seen in the 2008 crisis.", out.width="100%"}
 fig_include("Figure5_Portfolio_Trends.png")
@@ -493,9 +493,9 @@ One might expect that higher capital requirements would make credit unions more 
 
 ### Supporting Chart
 
-**How to read this chart:** The vertical axis shows the delinquency rate — the fraction of loans where borrowers are behind on payments. A positive value after the rule takes effect means delinquency rose at complex credit unions relative to comparable non-complex ones. Since both groups face the same economic environment, any difference must be driven by the rule itself.
+**How to read this chart:** The vertical axis shows the DiD coefficient for the delinquency rate (%) — the difference in delinquency between complex and non-complex credit unions. Zero means identical delinquency rates. A positive value means complex credit unions have more borrowers falling behind on payments relative to comparable non-complex ones. The horizontal axis is event-time quarters relative to the rule.
 
-**What you will see:** Delinquency rates tick up steadily from the moment the rule takes effect and remain elevated throughout the observation window. The increase is not concentrated in a single loan type — it appears across the portfolio. The most likely mechanism: when credit unions are under capital pressure, they shift their loan mix toward commercial real estate (which is more cycle-sensitive), reduce their capacity to work proactively with struggling borrowers, and charge higher rates that themselves increase stress on marginal borrowers.
+**What you will see:** In the pre-period (left of the dashed vertical), the line runs slightly below zero and hugs close to the zero baseline — the two groups had similar delinquency before the rule. At quarter zero, the coefficient begins climbing and stays positive and statistically significant through Q+8 and beyond. The confidence band narrows in the post-period as more data accumulates, making the upward trend increasingly precise. The key message is persistence: this is not a one-quarter blip. The higher delinquency rate at complex credit unions is a sustained, multi-year pattern that began when the rule took effect.
 
 ```{r fig5, error=TRUE, results='asis', fig.cap="Delinquency rate event study. Persistent increase beginning with RBC implementation, sustained throughout the observation window.", out.width="100%"}
 fig_include("Figure3c_EventStudy_Delinquency.png")
@@ -545,9 +545,9 @@ A credit union's return on assets (ROA) measures how much profit it generates pe
 
 ### Supporting Chart
 
-**How to read this chart:** The vertical axis shows return on assets (ROA) — profits as a fraction of total assets. This is the single most important measure of financial health for a credit union, because retained profits are the primary way credit unions build capital organically. A declining ROA is particularly alarming under a capital-building rule because it undermines the very mechanism the rule relies on.
+**How to read this chart:** The vertical axis shows the DiD coefficient for Return on Assets (%) — how much more or less profitable complex credit unions are relative to comparable non-complex ones. Zero means no difference. Negative means complex credit unions are less profitable. The horizontal axis is event-time quarters.
 
-**What you will see:** Unlike the 2008 crisis, where ROA declined briefly and then recovered in a V-shape, the ROA decline under the RBC rule follows a straight downward line with no sign of reversal through ten or more quarters. This is the pattern of a permanent regulatory cost, not a temporary economic shock. Larger institutions show steeper declines — for credit unions above $10 billion in assets, the ROA decline is nearly double the average. This matters systemically: the largest credit unions are also those that serve the most members.
+**What you will see:** The pre-period shows the coefficient near zero, confirming no systematic profitability gap before the rule. After quarter zero, the line drops sharply and continues declining through Q+4, Q+6, and beyond — reaching approximately −0.6 percentage points by the late post-period. There is no bounce-back. The stars on the post-period dots confirm each quarterly estimate is statistically significant. This monotonically declining path is the diagnostic signature of a permanent regulatory cost: each quarter, the rule extracts a little more from earnings, and there is no offsetting mechanism that restores profitability. Unlike a business-cycle shock — which hits hard and then passes — the rule does not pass.
 
 ```{r fig6, error=TRUE, results='asis', fig.cap="ROA event study. Monotonically declining path post-RBC — unlike the V-shaped recovery seen in the 2008 crisis. No sign of reversal through Q+10.", out.width="100%"}
 fig_include("Figure3d_EventStudy_ROA.png")
@@ -604,9 +604,9 @@ The comparison is decisive: for loan growth contraction, the RBC effect is 47% *
 
 ### Supporting Chart
 
-**How to read this chart:** This is a side-by-side comparison chart — not a single time series, but two event studies shown together. The left panels show what happened during the 2008 crisis; the right panels show what happened under the RBC rule. Each panel tracks the same outcome (loan growth, ROA, auto share, NIM) for complex credit unions relative to a control group. The x-axis in each panel is time measured from the onset of each episode.
+**How to read this chart:** This is a 4-panel figure showing two overlapping event studies per panel — red triangles for the 2008 crisis episode and navy circles for the 2022 RBC episode. The x-axis in each panel is time measured from the onset of each episode (Q0 = 2008Q3 for crisis, Q0 = 2022Q1 for RBC). The four panels show: A. Net Worth Ratio, B. Capital Buffer (vs 10% threshold), C. Loan Growth, D. Delinquency Rate. Stars mark statistically significant quarters.
 
-**What you will see:** For most outcomes, the 2008 crisis panels show a V-shape — a dip followed by a recovery back toward the baseline. The RBC panels show a different shape entirely: a sharp drop that flattens out at a lower level, with no return toward baseline even after many quarters. The single most important visual comparison is the ROA panel: in the crisis episode, the line is flat-to-positive (credit unions maintained earnings); in the RBC episode, the line trends steadily downward. This opposite-sign signature on the same institutions across two episodes is the empirical core of the argument that the RBC rule is functioning as a regulatory earnings tax, not a prudential safeguard.
+**What you will see:** Panels A and B (capital outcomes) show similar patterns in both episodes — capital dips during the crisis and rises under the RBC rule, which is expected in both cases. The critical divergences are in Panels C and D. For loan growth (Panel C), the RBC navy line drops sharply at Q0 and stays depressed with no recovery; the crisis red line also drops but begins recovering by Q+4. For delinquency (Panel D), the crisis red line stays flat-to-positive and recovers, while the RBC navy line trends upward through the post-period. These opposite-sign patterns on the same institutions across two episodes confirm the regulatory channel: the rule is doing something to these institutions that a financial crisis did not.
 
 ```{r fig7, error=TRUE, results='asis', fig.cap="Parallel DiD comparing 2008 crisis vs. 2022 RBC rule. Capital responses are similar; profitability and portfolio show opposite-sign patterns — confirming a regulatory channel.", out.width="100%"}
 fig_include("Figure6_Crisis_vs_RBC_Capital.png")
@@ -656,9 +656,9 @@ When credit unions face stress, they adjust their portfolios. The critical quest
 
 ### Supporting Chart
 
-**How to read this chart:** This chart places the 2008 crisis and the RBC rule side by side to compare the *shape* of each outcome's response over time. The horizontal axis runs from several quarters before each event to several quarters after. The key visual test is simple: does the line return to its starting level (V-shape) or does it settle at a new, lower permanent level (step-change)?
+**How to read this chart:** Another 4-panel comparison figure — red triangles for the 2008 crisis, navy circles for the 2022 RBC rule. The four panels cover: A. Real Estate Share, B. Auto Loan Share, C. MBL Share, D. ROA. Each panel shows how each outcome evolved in the two episodes relative to Q0.
 
-**What you will see:** For auto loan share: under the 2008 crisis, the line dips and climbs back — a clear V-shape, fully reversing within about 10 quarters. Under the RBC rule, the line drops at implementation and flatlines there, with less than 10% of the decline reversed even after 2.5 years. For ROA: during the crisis, the line wobbles near zero and recovers; under the RBC rule, it slopes steadily downward with no floor in sight. This visual contrast between "V-shape" and "permanent step-down" is the most intuitive way to understand why the rule's effects are structural: the incentive that drove the change never turns off, so the change never reverses.
+**What you will see:** Panel B (Auto Loan Share) is the most striking. Under the 2008 crisis (red), auto loan share dips briefly and climbs back — a clear V-shape, fully reversing within about 10 quarters. Under the RBC rule (navy), the auto loan share drops at implementation and continues falling, with no reversal visible even after many quarters. Panel D (ROA) shows the opposite-sign result described in Finding 7: the crisis red line wobbles near zero and recovers; the RBC navy line slopes steadily downward. Panel A (Real Estate Share) shows the mirror of Panel B — under the RBC rule, institutions are shifting into real estate at the same time they are exiting auto loans, confirming the risk-weight arbitrage story. This four-panel view makes the structural vs. temporary distinction visually undeniable.
 
 ```{r fig8, error=TRUE, results='asis', fig.cap="Shape comparison: V-shapes under crisis, step-changes under RBC. The divergence in portfolio and profitability paths is the structural signature of regulatory-specific effects.", out.width="100%"}
 fig_include("Figure6b_Crisis_vs_RBC_Portfolio.png")
@@ -708,9 +708,9 @@ Recognizing that the 10% threshold might be too burdensome, NCUA created a simpl
 
 ### Supporting Chart
 
-**How to read this chart:** The chart shows three groups across time: non-complex credit unions (the control), complex credit unions that stayed on the full RBC framework, and complex credit unions that switched to the CCULR. If CCULR were working as designed, the CCULR-adopter line should sit between the control group and the full-RBC group — showing partial relief. Look also at the period *before* the rule takes effect: the CCULR-adopter line should run parallel to the others in that pre-period if the groups were comparable.
+**How to read this chart:** This is a 6-panel figure with three lines per panel: red triangles (full-RBC complex CUs), navy circles (CCULR adopters), and both measured relative to non-complex credit unions as a control. The six panels cover: A. Net Worth Ratio, B. Capital Buffer, C. Loan Growth, D. Delinquency Rate, E. ROA, F. Auto Loan Share. If CCULR were providing genuine relief, the navy CCULR line should sit between the red full-RBC line and the zero baseline — showing partial improvement.
 
-**What you will see:** Two things stand out. First, the CCULR adopters were already diverging from the other groups *before* the rule — their loan growth and profitability were already weaker heading into the implementation period. This tells us that CCULR adoption was driven by distress, not a free choice among equals. Second, after the rule takes effect, CCULR adopters perform *worse* than full-RBC credit unions on most metrics — not better. There is no relief visible in the chart. The CCULR line does not fall between the other two lines; it falls below them. This is the visual evidence of the self-selection failure: the institutions that needed relief the most were the least equipped to benefit from it.
+**What you will see:** Two things stand out across the panels. First, in the pre-period (left of quarter zero), the navy CCULR line is already diverging downward from the red full-RBC line — CCULR adopters were already weaker before the rule took effect. This pre-trend violation tells us that CCULR adoption was not a free choice among equals; distressed institutions self-selected into it. Second, in the post-period, the navy line performs worse than the red line in panels C (loan growth), E (ROA), and F (auto share) — CCULR adopters have lower profitability, more lending contraction, and no portfolio relief compared to full-RBC institutions. The CCULR line falls below, not between, the other lines.
 
 ```{r fig9, error=TRUE, results='asis', fig.cap="Three-group event study. CCULR adopters show pre-trend violations and worse outcomes — confirming negative selection rather than genuine relief.", out.width="100%"}
 fig_include("Figure7_CCULR_EventStudy.png")
@@ -863,6 +863,118 @@ fig_include("Figure11_8_Optimal_Threshold.png")
 <p style="margin:0 0 6px"><strong>Step 3 — Apply a partial credit for the 8.5% threshold.</strong> Institutions with capital ratios between 8.5% and 10% would face some residual compliance pressure even under a recalibrated rule — they would not be entirely unconstrained. We apply a 60% credit, meaning the freed institutions are assumed to recover approximately 60% of the welfare cost, consistent with the partial reversal trajectory modelled in the 3D repeal simulation under the Gradual scenario.</p>
 <p style="margin:0 0 6px"><strong>Step 4 — Multiply over a 4-year horizon.</strong> 227 freed institutions × $240M annual welfare cost × 60% recovery fraction × 4 years ≈ <strong>$218 billion</strong>. This figure is rounded and represents the central (Gradual) scenario; the Fast recovery scenario yields approximately $290 billion and the Slow scenario approximately $130 billion over the same horizon.</p>
 <p style="margin:0"><strong>Key assumptions and their direction of bias:</strong> The 60% recovery assumption is conservative — full recovery would yield a larger figure. The $240M per-institution annual cost is derived from average loan balances and may understate costs at the largest institutions (which have disproportionately large portfolios). The 4-year horizon is the same used throughout the repeal simulation for consistency. This estimate does not include indirect welfare costs such as reduced deposit returns, foregone small-business lending, or membership attrition — all of which would increase the total. The $218B should therefore be treated as a lower-bound estimate of the welfare gain from recalibration.</p>
+</div>
+
+
+---
+
+## Finding 12: Why the RBC Rule Hit Harder Than the 2008 Financial Crisis — Five Mechanisms {#finding12}
+
+<div style="border-left:6px solid #1B3A6B;background:#F4F6FA;padding:16px 20px;margin-bottom:20px;border-radius:0 6px 6px 0">
+<span style="background:#1B3A6B;color:white;font-size:10px;font-weight:700;padding:3px 10px;border-radius:3px;letter-spacing:1px;font-family:monospace">FINDING 12</span>&ensp;<span style="color:#1B3A6B;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px">Regulatory Mechanism</span>
+</div>
+
+### Context — Why This Question Matters
+
+Finding 7 and Finding 8 established an empirical puzzle: on several key dimensions — loan growth contraction, portfolio exit from auto loans, and profitability — the RBC rule produced effects that were larger and more persistent than the 2008 financial crisis, the worst economic shock of the modern era. This demands an explanation. A regulation imposed in peacetime, on a healthy industry, should not inflict more damage than a once-in-a-generation financial collapse. Understanding *why* it did is essential for designing better policy.
+
+The answer is not that the rule was poorly administered or that credit unions responded irrationally. It is that a regulation and an economic crisis operate through fundamentally different mechanisms — and those mechanisms have different implications for magnitude, duration, and reversibility. There are five distinct reasons why the RBC rule's effects were larger and more permanent than the 2008 crisis.
+
+---
+
+### Mechanism 1 — External Shock vs. Internal Cost Restructuring
+
+The 2008 financial crisis was an external shock: it originated outside credit unions, in housing markets and wholesale funding channels, and its intensity was determined by macroeconomic forces that credit unions had no control over and which eventually resolved. When the economy stabilized, the pressure lifted.
+
+The RBC rule is not a shock — it is a permanent restructuring of the internal cost of every loan on every complex credit union's balance sheet. From the moment it took effect, every mortgage required more capital backing, every auto loan carried a higher effective cost, and every dollar of new lending drew down the capital buffer. These costs do not resolve when the economy improves. They persist as long as the rule is in force. An external storm passes; a permanent change to a building's foundation does not.
+
+This is the primary reason every RBC-affected metric shows no V-shaped recovery through Q+10, while every 2008 crisis metric does. The shape of recovery tracks the nature of the shock: temporary shocks produce temporary effects; permanent cost changes produce permanent effects.
+
+---
+
+### Mechanism 2 — The Earnings Sign Reversal
+
+During the 2008 crisis, credit unions experienced something that partially offset their losses: interest margins *widened*. As risk premiums surged and funding costs fell relative to lending rates, the spread between what credit unions earned on loans and what they paid on deposits actually increased. This natural market adjustment cushioned the blow — even as loan losses rose, earnings on surviving loans improved.
+
+Under the RBC rule, the opposite happened. Net interest margin was compressed by 12 basis points, and ROA fell by 26 basis points. The rule introduced a permanent cost that reduced the return on every dollar of assets, with no offsetting market mechanism to compensate. During a crisis, the market compensates lenders for bearing risk; under a capital rule, there is no compensation — only constraint.
+
+The empirical signature of this difference is visible in the Wald test comparing the two episodes: the ROA differential between the crisis episode and the RBC episode is −0.49 percentage points, statistically significant at the 0.1% level. The rule was measurably worse for credit union profitability than the worst financial crisis in 80 years.
+
+---
+
+### Mechanism 3 — The Risk-Weight Arbitrage Channel (Unique to the Rule)
+
+The 2008 crisis did cause some portfolio reallocation — credit unions pulled back modestly on auto lending as delinquencies rose and risk appetite fell. But that adjustment was driven by demand conditions and reversed within about 10 quarters as the economy recovered.
+
+The RBC rule created a completely different incentive: it assigned different capital costs to different loan types, making auto loans (100% risk weight) far more expensive to hold than qualifying mortgages (50% risk weight). This is not a temporary economic signal — it is a permanent price embedded in regulation. Rational institutions responded by permanently exiting auto loans and rotating into mortgages. The auto share decline under RBC is 4.0 percentage points — more than double the 1.8 percentage-point decline seen during the 2008 crisis, and it has not reversed.
+
+This channel simply does not exist during an economic crisis. No financial shock creates a coded, permanent price differential between loan types. It is entirely regulatory in origin, which is why it produces effects that dwarf the crisis on this dimension. The 2.4 percentage-point Wald test difference (p < 0.001) confirms this channel is statistically distinguishable from anything the crisis produced.
+
+---
+
+### Mechanism 4 — The Self-Undermining Capital Mechanism
+
+Here the rule creates a genuine paradox that has no equivalent in the crisis experience. The rule's stated objective is to make credit unions hold more capital. Capital is built primarily through retained earnings — profits that are not distributed. But the rule reduces ROA by 26 basis points, which directly reduces the retained earnings available to build capital.
+
+The result is a treadmill: to comply with the capital requirement, an institution must retain more earnings; but the rule makes earnings harder to generate; so the institution must squeeze lending and raise rates even further to generate the earnings it needs; which reduces member welfare further, and may not even succeed in building capital if earnings compression is severe enough. This is precisely why the thin-buffer institutions — the ones most in need of capital-building — actually saw their capital ratios *fall* under the rule (Finding 1: −0.44pp for near-threshold credit unions), while the already-strong institutions saw their capital rise.
+
+The 2008 crisis had no such self-undermining mechanism. If anything, the crisis resolved the treadmill temporarily by widening margins.
+
+---
+
+### Mechanism 5 — Permanence of Institutional Adaptation
+
+When a crisis ends, institutions *know* it has ended. They can observe that economic conditions have normalized, risk premiums have compressed, and funding costs have returned to baseline. They resume their prior activities. This is why crisis-era portfolio changes reverse: the signal that drove them disappears.
+
+When a regulation changes the cost structure of lending, institutions adapt structurally — they exit products, reprice permanently, and reorganize their operations around the new cost environment. These adaptations are expensive to reverse even if the rule itself were changed. Loan officers who specialized in auto lending have moved to other roles. Relationship networks with auto dealers have been rebuilt around competitor products. Mortgage origination systems have been scaled up. The institution has, in effect, moved to a new equilibrium.
+
+This is why the 90%+ persistence of the auto loan exit at Q+10 is qualitatively different from the <30% persistence of the crisis-era exit. Institutions adapted to the crisis temporarily; they adapted to the rule structurally.
+
+---
+
+### Key Numbers
+
+<table style="width:100%;border-collapse:collapse;font-size:13px;border:1px solid #DDE3EE;border-radius:6px;overflow:hidden">
+<thead><tr style="background:#1B3A6B;color:white"><th style="padding:9px 13px;text-align:left">Mechanism</th><th style="padding:9px 13px;text-align:left">RBC Rule</th><th style="padding:9px 13px;text-align:left">2008 Crisis</th><th style="padding:9px 13px;text-align:left">Inference</th></tr></thead><tbody>
+<tr style="background:white"><td style="padding:9px 13px;font-weight:600">Nature of shock</td><td style="padding:9px 13px">Permanent cost restructuring</td><td style="padding:9px 13px">Temporary external shock</td><td><span style="display:inline-block;padding:1px 7px;border-radius:3px;background:#FFF0F0;color:#C94040;border:1px solid #C9404044;font-size:10px;font-weight:700;font-family:monospace">▼&nbsp;Concern</span><br><small style="color:#6B7A99">Rule effects are permanent by design</small></td></tr>
+<tr style="background:#FAFBFE"><td style="padding:9px 13px;font-weight:600">ROA direction</td><td style="padding:9px 13px">−26bp (compressed, worsening)</td><td style="padding:9px 13px">+7bp (flat to positive)</td><td><span style="display:inline-block;padding:1px 7px;border-radius:3px;background:#FFF0F0;color:#C94040;border:1px solid #C9404044;font-size:10px;font-weight:700;font-family:monospace">▼&nbsp;Concern</span><br><small style="color:#6B7A99">Opposite sign — 49bp Wald difference (p&lt;0.001)</small></td></tr>
+<tr style="background:white"><td style="padding:9px 13px;font-weight:600">NIM direction</td><td style="padding:9px 13px">−12bp (compressed)</td><td style="padding:9px 13px">+23bp (widened)</td><td><span style="display:inline-block;padding:1px 7px;border-radius:3px;background:#FFF0F0;color:#C94040;border:1px solid #C9404044;font-size:10px;font-weight:700;font-family:monospace">▼&nbsp;Concern</span><br><small style="color:#6B7A99">Crisis compensated lenders; rule penalises them</small></td></tr>
+<tr style="background:#FAFBFE"><td style="padding:9px 13px;font-weight:600">Loan growth contraction</td><td style="padding:9px 13px">−0.44pp/qtr (RBC-driven)</td><td style="padding:9px 13px">−0.30pp/qtr (crisis-driven)</td><td><span style="display:inline-block;padding:1px 7px;border-radius:3px;background:#FFF0F0;color:#C94040;border:1px solid #C9404044;font-size:10px;font-weight:700;font-family:monospace">▼&nbsp;Concern</span><br><small style="color:#6B7A99">RBC contraction 47% larger (p=0.001)</small></td></tr>
+<tr style="background:white"><td style="padding:9px 13px;font-weight:600">Auto loan exit</td><td style="padding:9px 13px">−4.0pp (permanent)</td><td style="padding:9px 13px">−1.8pp (temporary, reversed)</td><td><span style="display:inline-block;padding:1px 7px;border-radius:3px;background:#FFF0F0;color:#C94040;border:1px solid #C9404044;font-size:10px;font-weight:700;font-family:monospace">▼&nbsp;Concern</span><br><small style="color:#6B7A99">Risk-weight channel unique to regulatory design</small></td></tr>
+<tr style="background:#FAFBFE"><td style="padding:9px 13px;font-weight:600">Exit persistence at Q+10</td><td style="padding:9px 13px">&gt;90% of exit remains</td><td style="padding:9px 13px">&lt;30% of exit remains</td><td><span style="display:inline-block;padding:1px 7px;border-radius:3px;background:#FFF0F0;color:#C94040;border:1px solid #C9404044;font-size:10px;font-weight:700;font-family:monospace">▼&nbsp;Concern</span><br><small style="color:#6B7A99">Structural adaptation vs. temporary adjustment</small></td></tr>
+<tr style="background:white"><td style="padding:9px 13px;font-weight:600">Capital recovery shape</td><td style="padding:9px 13px">No V-shape — linear decline through Q+10</td><td style="padding:9px 13px">V-shape — recovered by Q+8</td><td><span style="display:inline-block;padding:1px 7px;border-radius:3px;background:#FFF0F0;color:#C94040;border:1px solid #C9404044;font-size:10px;font-weight:700;font-family:monospace">▼&nbsp;Concern</span><br><small style="color:#6B7A99">Permanent earnings tax vs. temporary shock</small></td></tr>
+<tr style="background:#FAFBFE"><td style="padding:9px 13px;font-weight:600">Self-undermining effect</td><td style="padding:9px 13px">ROA↓ → retained earnings↓ → capital harder to build</td><td style="padding:9px 13px">Absent — crisis widened margins</td><td><span style="display:inline-block;padding:1px 7px;border-radius:3px;background:#FFF0F0;color:#C94040;border:1px solid #C9404044;font-size:10px;font-weight:700;font-family:monospace">▼&nbsp;Concern</span><br><small style="color:#6B7A99">Rule undermines the mechanism it relies on</small></td></tr>
+</tbody></table>
+
+### Supporting Chart
+
+**How to read this chart:** This is the same parallel DiD figure shown in Finding 7, presented here with the five mechanisms as the interpretive lens. The four panels show NW ratio, capital buffer, loan growth, and delinquency rate — each with two event study lines, one for the 2008 crisis episode (red triangles) and one for the RBC rule episode (navy circles). The horizontal axis is quarters from the onset of each episode.
+
+**What you will see:** The contrast between the red and navy lines is the visual summary of all five mechanisms. Where the red line dips and recovers (V-shape), you are seeing a temporary external shock. Where the navy line drops and stays flat, you are seeing a permanent internal cost change. Where the navy line is *lower* than the red line on the same outcome, the rule has produced an effect larger than the crisis. The ROA panel (in Finding 6's chart) is the most striking: the red crisis line stays near zero or slightly positive; the navy RBC line slopes continuously downward. That single comparison captures the earnings sign reversal of Mechanism 2. The loan growth panel captures Mechanism 1. The auto share panel (in Finding 8's chart) captures Mechanism 3.
+
+```{r fig12, error=TRUE, results='asis', fig.cap="Parallel DiD: 2008 crisis vs. RBC rule — capital and lending channels. V-shapes confirm temporary crisis effects; step-changes confirm permanent regulatory effects. The ROA panel shows opposite-sign responses across the two episodes.", out.width="100%"}
+fig_include("Figure6_Crisis_vs_RBC_Capital.png")
+```
+
+### Statistical Model Results
+
+<div style="overflow-x:auto;border:1px solid #DDE3EE;border-radius:6px">
+<table style="width:100%;border-collapse:collapse;font-size:12px">
+<thead><tr style="background:#1B3A6B;color:white"><th style="padding:9px 11px;text-align:left">Comparison</th><th style="padding:9px 11px;text-align:left">RBC Estimate</th><th style="padding:9px 11px;text-align:left">Crisis Estimate</th><th style="padding:9px 11px;text-align:left">Wald Difference</th><th style="padding:9px 11px;text-align:left">p-value</th><th style="padding:9px 11px;text-align:left">Signal</th></tr></thead><tbody>
+<tr style="background:white"><td style="padding:8px 11px;font-weight:600">Loan growth contraction</td><td style="padding:8px 11px;font-family:monospace;color:#C94040;font-weight:700">−0.44pp/qtr</td><td style="padding:8px 11px;font-family:monospace;color:#1B3A6B">−0.30pp/qtr</td><td style="padding:8px 11px;font-family:monospace;font-weight:700">RBC 47% larger</td><td style="padding:8px 11px;font-family:monospace;color:#6B7A99">p=0.001</td><td style="padding:8px 11px;background:#FFF0F0;color:#C94040;font-family:monospace;font-weight:700;font-size:11px">▼ Concern</td></tr>
+<tr style="background:#FAFBFE"><td style="padding:8px 11px;font-weight:600">Auto share change</td><td style="padding:8px 11px;font-family:monospace;color:#C94040;font-weight:700">−4.0pp</td><td style="padding:8px 11px;font-family:monospace;color:#1B3A6B">−1.6pp</td><td style="padding:8px 11px;font-family:monospace;font-weight:700">−2.4pp larger</td><td style="padding:8px 11px;font-family:monospace;color:#6B7A99">p&lt;0.001</td><td style="padding:8px 11px;background:#FFF0F0;color:#C94040;font-family:monospace;font-weight:700;font-size:11px">▼ Concern</td></tr>
+<tr style="background:white"><td style="padding:8px 11px;font-weight:600">ROA impact</td><td style="padding:8px 11px;font-family:monospace;color:#C94040;font-weight:700">−0.26pp</td><td style="padding:8px 11px;font-family:monospace;color:#2E7D4F">+0.07pp</td><td style="padding:8px 11px;font-family:monospace;font-weight:700">−0.49pp (opp. sign)</td><td style="padding:8px 11px;font-family:monospace;color:#6B7A99">p&lt;0.001</td><td style="padding:8px 11px;background:#FFF0F0;color:#C94040;font-family:monospace;font-weight:700;font-size:11px">▼ Concern</td></tr>
+<tr style="background:#FAFBFE"><td style="padding:8px 11px;font-weight:600">NIM impact</td><td style="padding:8px 11px;font-family:monospace;color:#C94040;font-weight:700">−0.12pp</td><td style="padding:8px 11px;font-family:monospace;color:#2E7D4F">+0.23pp</td><td style="padding:8px 11px;font-family:monospace;font-weight:700">−0.40pp (opp. sign)</td><td style="padding:8px 11px;font-family:monospace;color:#6B7A99">p&lt;0.001</td><td style="padding:8px 11px;background:#FFF0F0;color:#C94040;font-family:monospace;font-weight:700;font-size:11px">▼ Concern</td></tr>
+<tr style="background:white"><td style="padding:8px 11px;font-weight:600">Auto exit persistence (Q+10)</td><td style="padding:8px 11px;font-family:monospace;color:#C94040;font-weight:700">&gt;90% remains</td><td style="padding:8px 11px;font-family:monospace;color:#2E7D4F">&lt;30% remains</td><td style="padding:8px 11px;font-family:monospace;font-weight:700">Structural vs. temporary</td><td style="padding:8px 11px;font-family:monospace;color:#6B7A99">3B analysis</td><td style="padding:8px 11px;background:#FFF0F0;color:#C94040;font-family:monospace;font-weight:700;font-size:11px">▼ Concern</td></tr>
+</tbody></table></div>
+
+### Bottom Line
+
+<div style="border:1px solid #1B3A6B;background:#1B3A6B0D;border-radius:8px;padding:22px 26px;margin-top:16px">
+<p style="font-size:10.5px;text-transform:uppercase;letter-spacing:2px;color:#1B3A6B;font-weight:700;margin-bottom:12px">Bottom Line</p>
+<p style="font-size:15px;line-height:1.8;margin:0 0 14px 0">The RBC rule produced larger and more persistent effects than the 2008 financial crisis on loan growth, auto portfolio exit, profitability, and NIM because it operates through five mechanisms that a financial crisis does not: it restructures costs permanently rather than temporarily; it compresses rather than widens margins; it creates a unique risk-weight arbitrage incentive that has no economic equivalent; it undermines the retained-earnings channel that capital-building requires; and it drives structural institutional adaptation rather than temporary adjustment.</p>
+<p style="font-size:15px;line-height:1.8;margin:0 0 14px 0">None of this means the rule was wrong in its intent. Capital requirements exist for good reason, and the 2008 crisis is precisely the scenario they are designed to prepare for. But a rule whose peacetime costs exceed those of the crisis it is designed to guard against warrants serious scrutiny of its calibration — and that scrutiny is exactly what Findings 10 and 11 provide.</p>
+<p style="font-size:15px;line-height:1.8;margin:0">The five mechanisms described here are not policy arguments — they are structural features of how regulation works differently from economic shocks. Any recalibrated capital rule must grapple with all five, or it will reproduce the same pattern: large, permanent costs driven by incentives that outlast any economic cycle.</p>
 </div>
 
 
@@ -1036,9 +1148,9 @@ fig_include("Figure11_1_NW_Distribution_Regimes.png")
 
 ### Chart 11.2 — Who Is Below Each Threshold Right Now?
 
-**What to look for:** Four grouped bar charts, one for each threshold (10%, 9%, 7%, 6%). At the meaningful 7% threshold, only 1.19% are below with the rule versus 0.14% pre-rule. Post-repeal, the 7% breach rate rises to 1.48% at 4Q and 1.78% at 8Q.
+**What to look for:** One chart with four threshold clusters side by side — Below 10% (RBC well-cap), Below 9% (CCULR threshold), Below 7% (legacy failure floor), Below 6% (undercapitalized). Within each cluster, bars show pre-rule, with-rule, and post-repeal regimes. Note the y-axis scales differ dramatically across clusters because breach rates vary enormously by threshold.
 
-**How to read it:** Each cluster of bars represents one capital threshold level. Within each cluster, four bars show the fraction of institutions currently below that level under each regime. Reading left to right within a cluster: pre-rule, with-rule, post-repeal 4Q, post-repeal 8Q. Focus on the 7% cluster — this is the failure threshold that triggers mandatory corrective action. The bars here are all very short: less than 2% of institutions are below 7% in any regime. This is the empirical foundation for why the stress test finds modest failure rates: most institutions have capital well above 7% before any stress is applied. The 10% threshold cluster tells a different story — nearly half of institutions currently fall below it in the pre-rule and post-repeal regimes, which is why compliance pressure is so widespread.
+**How to read it:** Focus on the contrast between the 10% cluster and the 7% cluster. At 10%, the bars are tall — 47.8% pre-rule, 43.5% with-rule — nearly half of all complex institutions fall below the well-capitalised bar. This is why compliance pressure is so widespread. At 7%, the bars are almost invisible — 0.14% pre-rule, 1.19% with-rule — meaning only a handful of institutions are anywhere near the actual failure floor. The post-repeal bars at 7% show 1.48% at 4Q and 1.78% at 8Q — still very low. This contrast is the empirical foundation for the entire cost-benefit argument: the rule constrains nearly half of all institutions to protect against a risk that affects less than 2%.
 
 ```{r fig11-2, error=TRUE, results='asis', fig.cap="Fraction of complex CUs below each capital threshold by regime. Most institutions are well above the 7% failure floor in all regimes — the tail risk is real but numerically modest."}
 fig_include("Figure11_2_Threshold_Breach_Rates.png")
@@ -1048,7 +1160,7 @@ fig_include("Figure11_2_Threshold_Breach_Rates.png")
 
 ### Chart 11.3 — What Did the 2008 Crisis Actually Do to Capital?
 
-**What to look for:** Panel A shows quarterly capital impact during 2008–2010. The worst quarter was 2009Q2 at approximately −2.4pp annualized. Panel B shows the cross-sectional distribution of total peak-to-trough drawdowns — concentrated near 1–2pp but with a right tail extending to 5pp for the most exposed institutions.
+**What to look for:** Panel A is a bar chart showing quarterly capital impact during 2008–2010 — each bar is one quarter, coloured red when capital fell. The worst quarter was approximately −2.4pp annualized around 2009Q2. Panel B is a histogram showing the distribution of total peak-to-trough capital drawdowns across the 634 institutions — blue bars concentrated near 1–2pp, with a red right tail extending to 5+ pp for the most exposed institutions.
 
 **How to read it:** Panel A is a time series — each point is a quarter during the crisis period, and the vertical axis shows how much capital the average complex credit union lost that quarter. The bar chart confirms that the worst damage happened in a concentrated window around 2009Q2, with the losses unwinding more gradually over 2009–2010. This timing is used to calibrate when we apply the drawdown shock in our stress test. Panel B is a distribution chart — each bar represents a bucket of institutions by how much total capital they lost from peak to trough. Most institutions cluster around 1–2 percentage points of total drawdown. But notice the right tail: a meaningful minority lost 3, 4, or even 5 percentage points. This is why the stress test is institution-specific: using only the mean drawdown would miss the tail — and it is the tail institutions that are most at risk.
 
