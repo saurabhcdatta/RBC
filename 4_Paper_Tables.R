@@ -1123,6 +1123,9 @@ figure_map <- list(
   # Source file                              → Output name
   list("fig_es_panel_capital.png",            "Figure3_EventStudy_Capital.png"),
   list("fig_es_panel_spreads.png",            "Figure4_EventStudy_Spreads.png"),
+  list("fig_es_loan_growth.png",             "Figure3b_EventStudy_LoanGrowth.png"),   # F3
+  list("fig_es_delinquency.png",             "Figure3c_EventStudy_Delinquency.png"),  # F5
+  list("fig_es_roa.png",                     "Figure3d_EventStudy_ROA.png"),          # F6
   list("fig_loan_portfolio_trends.png",       "Figure5_Portfolio_Trends.png"),
   list("3B_panel_A_capital_lending.png",      "Figure6_Crisis_vs_RBC_Capital.png"),
   list("3B_panel_B_portfolio_profitability.png",
@@ -1236,6 +1239,9 @@ figures_list <- c(
   "Figure1_NW_Distribution.png",
   "Figure2_PreTrend_Check.png",
   "Figure3_EventStudy_Capital.png",
+  "Figure3b_EventStudy_LoanGrowth.png",
+  "Figure3c_EventStudy_Delinquency.png",
+  "Figure3d_EventStudy_ROA.png",
   "Figure4_EventStudy_Spreads.png",
   "Figure5_Portfolio_Trends.png",
   "Figure6_Crisis_vs_RBC_Capital.png",
