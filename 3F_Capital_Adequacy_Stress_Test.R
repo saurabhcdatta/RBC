@@ -18,6 +18,8 @@
 #     Simulates post-repeal distribution by unwinding the +0.463pp RBC DiD
 #     effect (Gradual decay). Computes fraction below four thresholds:
 #       10% (RBC well-cap), 9% (CCULR), 7% (legacy well-cap), 6% (undercap)
+#     Chart 3F2 displays three thresholds (10%, 7%, 6%) — 9% excluded from
+#     chart due to NA post-repeal estimates; 9% data retained in CSV output.
 #     Compares: pre-rule vs. with-rule vs. post-repeal (4Q and 8Q)
 #
 #   Component B — Stress Loss Calibration from Actual Data
@@ -524,18 +526,18 @@ message("  Chart 3F1 saved.")
 message("-- Chart 3F2: Threshold breach rates")
 
 breach_long <- breach_rates |>
-  pivot_longer(cols = c(Pct_below_10, Pct_below_9, Pct_below_7, Pct_below_6),
+  pivot_longer(cols = c(Pct_below_10, Pct_below_7, Pct_below_6),
                names_to = "Threshold", values_to = "Pct_below") |>
   mutate(
     Threshold = case_when(
       Threshold == "Pct_below_10" ~ "Below 10%\n(RBC well-cap)",
-      Threshold == "Pct_below_9"  ~ "Below 9%\n(CCULR threshold)",
       Threshold == "Pct_below_7"  ~ "Below 7%\n(Legacy well-cap)",
       Threshold == "Pct_below_6"  ~ "Below 6%\n(Undercapitalized)"
     ),
     Threshold = factor(Threshold, levels = c(
-      "Below 10%\n(RBC well-cap)", "Below 9%\n(CCULR threshold)",
-      "Below 7%\n(Legacy well-cap)", "Below 6%\n(Undercapitalized)"
+      "Below 10%\n(RBC well-cap)",
+      "Below 7%\n(Legacy well-cap)",
+      "Below 6%\n(Undercapitalized)"
     )),
     Regime = factor(Regime, levels = REGIME_LEVELS)
   )
@@ -544,7 +546,7 @@ p3f2 <- ggplot(breach_long, aes(x = Regime, y = Pct_below, fill = Regime)) +
   geom_col(width = 0.65) +
   geom_text(aes(label = sprintf("%.1f%%", Pct_below)),
             vjust = -0.4, size = 3.2, fontface = "bold") +
-  facet_wrap(~Threshold, scales = "free_y", ncol = 4) +
+  facet_wrap(~Threshold, scales = "free_y", ncol = 3) +
   scale_fill_manual(values = c(
     "Pre-rule (2019-2021)"     = COL_PRERULE,
     "With rule (2024-2025)"    = COL_WITHRULE,
@@ -562,7 +564,7 @@ p3f2 <- ggplot(breach_long, aes(x = Regime, y = Pct_below, fill = Regime)) +
   theme(axis.text.x = element_text(size = 8), legend.position = "none")
 
 ggsave(file.path(FIGURE_PATH, "policy_3f2_threshold_breach_rates.png"),
-       p3f2, width = 14, height = 7, dpi = 300)
+       p3f2, width = 12, height = 7, dpi = 300)
 message("  Chart 3F2 saved.")
 
 
