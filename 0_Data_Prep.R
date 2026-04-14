@@ -204,8 +204,7 @@ pre_rbc_assets <- df |>
          q_period_num <= COMPLEX_AVG_END) |>
   group_by(cu_number) |>
   summarise(
-    avg_assets_pre = mean(assets_tot,     na.rm = TRUE),
-    avg_nw_pre     = mean(networth_ratio, na.rm = TRUE),  # pre-rule avg NW ratio
+    avg_assets_pre = mean(assets_tot, na.rm = TRUE),
     .groups = "drop"
   ) |>
   mutate(
@@ -219,7 +218,7 @@ message(sprintf("  Complex CUs (treatment)   : %s", n_complex))
 message(sprintf("  Non-complex CUs (control) : %s", n_noncomplex))
 
 df <- df |>
-  left_join(pre_rbc_assets |> select(cu_number, avg_assets_pre, avg_nw_pre, complex),
+  left_join(pre_rbc_assets |> select(cu_number, avg_assets_pre, complex),
             by = "cu_number") |>
   filter(!is.na(complex))   # drop CUs with no pre-period data
 
@@ -310,6 +309,37 @@ message(sprintf("  networth_ratio coverage : %s  ← PRIMARY",
                 nw_coverage$pct_nw_ratio_present))
 message(sprintf("  pcanetworth coverage    : %s  ← robustness only",
                 nw_coverage$pct_pca_present))
+
+
+# =============================================================================
+# 9B. PRE-RULE AVERAGE NET WORTH RATIO + THIN-BUFFER FLAG
+# =============================================================================
+# Now that networth_ratio exists, compute each CU's pre-rule average NW ratio
+# and create the thin_buffer flag (complex CUs with avg_nw_pre 9%–11%).
+# These are the institutions within 1pp of the 10% threshold on either side —
+# most exposed to the rule's compliance pressure.
+# Computed here (after Step 8) because networth_ratio did not exist at Step 6.
+
+message("── Step 8b: Pre-rule NW ratio average and thin-buffer flag ──────────")
+
+pre_nw_summary <- df |>
+  filter(q_period_num >= COMPLEX_AVG_START,
+         q_period_num <= COMPLEX_AVG_END) |>
+  group_by(cu_number) |>
+  summarise(
+    avg_nw_pre = mean(networth_ratio, na.rm = TRUE),
+    .groups    = "drop"
+  )
+
+df <- df |>
+  left_join(pre_nw_summary, by = "cu_number") |>
+  mutate(
+    # Thin-buffer flag: complex CUs with pre-rule avg NW ratio 9%–11%
+    thin_buffer = as.integer(complex == 1 & avg_nw_pre >= 9.0 & avg_nw_pre <= 11.0)
+  )
+
+n_thin <- df |> distinct(cu_number, thin_buffer) |> filter(thin_buffer == 1) |> nrow()
+message(sprintf("  Thin-buffer complex CUs (9%%–11%% pre-rule NW) : %s", n_thin))
 
 
 # =============================================================================
@@ -517,14 +547,8 @@ df <- df |>
     # Used for regression-discontinuity robustness check
     near_threshold = as.integer(
       avg_assets_pre >= 400e6 & avg_assets_pre <= 600e6
-    ),
-    # Thin-buffer capital flag: complex CUs with pre-rule avg NW ratio 9%–11%
-    # These are the institutions closest to the 10% well-cap threshold.
-    # Used for Panel B of the capital event study to show the paradox:
-    # full-sample average rises (Panel A) while thin-buffer CUs decline (Panel B).
-    thin_buffer = as.integer(
-      complex == 1 & avg_nw_pre >= 9.0 & avg_nw_pre <= 11.0
     )
+    # Note: thin_buffer flag already created in Step 8b after networth_ratio exists
   )
 
 message(sprintf("  Near-threshold CUs ($400M-$600M) : %s",
