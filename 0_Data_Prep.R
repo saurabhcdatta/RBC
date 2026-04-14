@@ -204,7 +204,8 @@ pre_rbc_assets <- df |>
          q_period_num <= COMPLEX_AVG_END) |>
   group_by(cu_number) |>
   summarise(
-    avg_assets_pre = mean(assets_tot, na.rm = TRUE),
+    avg_assets_pre = mean(assets_tot,     na.rm = TRUE),
+    avg_nw_pre     = mean(networth_ratio, na.rm = TRUE),  # pre-rule avg NW ratio
     .groups = "drop"
   ) |>
   mutate(
@@ -218,7 +219,7 @@ message(sprintf("  Complex CUs (treatment)   : %s", n_complex))
 message(sprintf("  Non-complex CUs (control) : %s", n_noncomplex))
 
 df <- df |>
-  left_join(pre_rbc_assets |> select(cu_number, avg_assets_pre, complex),
+  left_join(pre_rbc_assets |> select(cu_number, avg_assets_pre, avg_nw_pre, complex),
             by = "cu_number") |>
   filter(!is.na(complex))   # drop CUs with no pre-period data
 
@@ -516,6 +517,13 @@ df <- df |>
     # Used for regression-discontinuity robustness check
     near_threshold = as.integer(
       avg_assets_pre >= 400e6 & avg_assets_pre <= 600e6
+    ),
+    # Thin-buffer capital flag: complex CUs with pre-rule avg NW ratio 9%–11%
+    # These are the institutions closest to the 10% well-cap threshold.
+    # Used for Panel B of the capital event study to show the paradox:
+    # full-sample average rises (Panel A) while thin-buffer CUs decline (Panel B).
+    thin_buffer = as.integer(
+      complex == 1 & avg_nw_pre >= 9.0 & avg_nw_pre <= 11.0
     )
   )
 
@@ -539,7 +547,7 @@ df_panel <- df |>
 
     # ── Treatment & time indicators ───────────────────────────────────────
     complex, post_rbc, treat_post, event_time,
-    avg_assets_pre, asset_tier, near_threshold,
+    avg_assets_pre, avg_nw_pre, asset_tier, near_threshold, thin_buffer,
 
     # ── Controls / CU characteristics ────────────────────────────────────
     assets_tot, ln_assets, members,
