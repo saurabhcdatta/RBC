@@ -833,6 +833,16 @@ es_mort     <- run_event_study("spread_mortgage", data = df_rates_es)
 es_nauto    <- run_event_study("spread_nauto",    data = df_rates_es)
 es_comm     <- run_event_study("spread_comm_oth", data = df_rates_es)
 
+# Thin-buffer subgroup event study: complex CUs with pre-rule NW ratio 9%–11%
+# These institutions were closest to the 10% threshold — most exposed to the rule.
+# Running on networth_ratio within this subgroup shows the paradox directly:
+# the full-sample average rises while these institutions decline.
+df_es_thin <- df_es |>
+  filter(thin_buffer == 1 | complex == 0)   # thin-buffer treated + full control
+
+es_nw_thin  <- run_event_study("networth_ratio", data = df_es_thin)
+message("  Thin-buffer event study complete.")
+
 message("  Event studies complete.")
 
 
@@ -932,8 +942,10 @@ message("── Step 6: Saving event study plots ──────────�
 es_plot_list <- list(
   list(es_nw,       "Net Worth Ratio (%)",
        "fig_es_networth_ratio.png",     TRUE),
+  list(es_nw_thin,  "Net Worth Ratio — Near-Threshold CUs (9%–11% pre-rule)",
+       "fig_es_networth_thin_buffer.png", TRUE),   # NEW: replaces cap_buffer panel
   list(es_cap_buf,  "Capital Buffer vs 10% (pp)",
-       "fig_es_cap_buffer.png",         TRUE),
+       "fig_es_cap_buffer.png",         TRUE),     # retained for reference
   list(es_wellcap,  "Well-Capitalized (LPM)",
        "fig_es_well_capitalized.png",   FALSE),
   list(es_mbl_shr,  "MBL Share (%)",
@@ -942,7 +954,7 @@ es_plot_list <- list(
        "fig_es_re_share.png",           FALSE),
   list(es_auto_shr, "Auto Loan Share (%)",
        "fig_es_auto_share.png",         FALSE),
-  list(es_loan_gr,  lbl_loan_growth,           # [FIX 1]: canonical label
+  list(es_loan_gr,  lbl_loan_growth,
        "fig_es_loan_growth.png",        FALSE),
   list(es_dq,       "Delinquency Rate (%)",
        "fig_es_delinquency.png",        FALSE),
@@ -972,9 +984,12 @@ message("── Step 7: Combined event study panels ─────────�
 
 # Capital & Lending panel
 pA <- plot_event_study(es_nw,      "Net Worth Ratio (%)",
-                       add_trend_note = TRUE)  + labs(title = "A. Net Worth Ratio")
-pB <- plot_event_study(es_cap_buf, "Cap Buffer (pp)",
-                       add_trend_note = TRUE)  + labs(title = "B. Capital Buffer vs 10%")
+                       add_trend_note = TRUE)  + labs(title = "A. Net Worth Ratio (All Complex CUs)")
+pB <- plot_event_study(es_nw_thin, "Net Worth Ratio (%)",
+                       add_trend_note = TRUE)  + labs(
+                         title    = "B. Net Worth Ratio — Near-Threshold CUs Only",
+                         subtitle = "Complex CUs with pre-rule NW ratio 9%–11% (closest to 10% bar).\nNote: Non-parallel pre-trends — interpret with caution."
+                       )
 pC <- plot_event_study(es_wellcap, "Well-Capitalized") + labs(title = "C. Well-Capitalized")
 pD <- plot_event_study(es_loan_gr, lbl_loan_growth)    + labs(title = "D. Loan Growth")
 
@@ -1573,6 +1588,7 @@ for (f in c("fig_main_coef_plot.png",
             "fig_es_panel_spreads.png",
             "fig_heterogeneity_tier.png",
             "fig_es_networth_ratio.png",
+            "fig_es_networth_thin_buffer.png",  # NEW: near-threshold subgroup
             "fig_es_cap_buffer.png",
             "fig_es_loan_growth.png",
             "fig_es_delinquency.png",
