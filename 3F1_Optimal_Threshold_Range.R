@@ -280,12 +280,15 @@ crossing_raw <- all_curves |>
   ) |>
   slice_head(n = 1) |>
   ungroup() |>
-  mutate(thresh_cross = round(thresh_cross, 2)) |>
+  mutate(
+    thresh_cross = round(thresh_cross, 2),
+    no_crossing  = FALSE
+  ) |>
   select(scenario, short_label, multiplier,
          optimal_threshold = thresh_cross,
          pct_constrained_at_cross = pct_constrained,
          fail_rate_at_cross = fail_above_pct,
-         no_crossing = FALSE)
+         no_crossing)
 
 # For scenarios without a crossing: apply correct economic logic
 # No crossing means burden > failure at ALL thresholds in range =>
@@ -293,25 +296,23 @@ crossing_raw <- all_curves |>
 missing <- setdiff(STRESS_SCENARIOS$label, crossing_raw$scenario)
 
 if (length(missing) > 0) {
+  # Look up values at legacy floor for each missing scenario
+  floor_vals <- all_curves |>
+    filter(scenario %in% missing,
+           abs(threshold_pct - NW_WELLCAP_LEGACY) < 0.01) |>
+    select(scenario, short_label, multiplier,
+           pct_constrained_at_cross = pct_constrained,
+           fail_rate_at_cross       = fail_above_pct)
+
   no_cross_pts <- STRESS_SCENARIOS |>
     filter(label %in% missing) |>
+    left_join(floor_vals, by = c("label" = "scenario",
+                                  "short_label", "multiplier")) |>
     mutate(
-      # At 7.0%: burden is ~0%, failure is near-max for that severity
-      # Report threshold = legacy floor = 7.0%
       optimal_threshold        = NW_WELLCAP_LEGACY,
-      pct_constrained_at_cross = map_dbl(multiplier, function(m) {
-        d <- all_curves |>
-          filter(scenario == label[multiplier == m][1],
-                 threshold_pct == NW_WELLCAP_LEGACY)
-        if (nrow(d) > 0) d$pct_constrained[1] else 0
-      }),
-      fail_rate_at_cross = map_dbl(multiplier, function(m) {
-        d <- all_curves |>
-          filter(scenario == label[multiplier == m][1],
-                 threshold_pct == NW_WELLCAP_LEGACY)
-        if (nrow(d) > 0) d$fail_above_pct[1] else NA
-      }),
-      no_crossing = TRUE
+      pct_constrained_at_cross = replace_na(pct_constrained_at_cross, 0),
+      fail_rate_at_cross       = replace_na(fail_rate_at_cross, NA_real_),
+      no_crossing              = TRUE
     ) |>
     select(scenario = label, short_label, multiplier,
            optimal_threshold, pct_constrained_at_cross,
