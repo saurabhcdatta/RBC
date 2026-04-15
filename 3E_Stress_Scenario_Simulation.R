@@ -1365,10 +1365,10 @@ if (file.exists(net_benefit_path)) {
   for (i in seq_len(nrow(nb))) {
     cat(sprintf("  %-14s  $%-9.2fBN $%-13.1fBN %.0f:1
 ",
-                nb[i],
-                nb[i],
-                nb[i],
-                nb[i]))
+                nb$Scenario[i],
+                nb$NCUSIF_cost_exp_BN[i],
+                nb$Net_benefit_BN[i],
+                nb$Benefit_to_cost[i]))
   }
 }
 
