@@ -3,43 +3,73 @@
 # RBC Rule Impact Analysis — Publication-Ready Tables & Figures
 # NCUA Call Report (5300) Data
 #
-# Author  : [Your Name]
+# Author  : Saurabh C. Datta, Ph.D.
 # Created : 2026
 #
 # PURPOSE:
 #   Assembles all estimation results into publication-ready tables and
 #   figures suitable for journal submission. Reads from saved CSVs produced
-#   by scripts 0–3C so it can be run standalone without re-estimating.
+#   by scripts 0–3J and 3F_v2 so it can be run standalone without re-estimating.
 #
-# OUTPUT TABLES:
-#   Table 1  : Summary statistics (full panel, by treatment group)
-#   Table 2  : Balance table (pre-RBC characteristics)
-#   Table 3  : Main DiD results — capital outcomes
-#   Table 4  : Main DiD results — loan pricing (spreads)
-#   Table 5  : Main DiD results — portfolio, growth, credit quality
-#   Table 6  : Robustness checks
-#   Table 7  : 2008 crisis vs. RBC parallel comparison (from 3A)
-#   Table 8  : CCULR relief value (from 3C)
-#   Table 9A : Repeal simulation — recovery fractions by scenario (from 3D)
-#   Table 9B : Repeal simulation — cumulative member welfare savings (from 3D)
-#   Table A1 : Heterogeneity by asset tier
-#   Table A2 : Near-threshold subgroup
+# RUN ORDER (scripts must run before this):
+#   0_Data_Prep.R                    → analysis_panel_raw.rds
+#   0B_Crisis_Panel_Prep.R           → data/analysis_panel_full_raw.rds
+#   1_Descriptive_Stats.R            → Tables 1–2, bunching figure
+#   2_DiD_Estimation_v2.R            → Tables 3–6, event studies
+#   3A_2008_Crisis_Parallel_DiD.R    → Table 7, crisis comparison
+#   3B_2008_Crisis_EventStudy.R      → shape analysis figures
+#   3C_CCULR_Adoption.R              → Table 8, CCULR analysis
+#   3D_Repeal_Simulation.R           → Tables 9A/9B, repeal welfare + net benefit
+#   3E_Stress_Scenario_Simulation.R  → stress overlay charts
+#   3F_Capital_Adequacy_Stress_Test.R → Figure11_* capital stress charts
+#   3F_v2_Optimal_Threshold_Range.R  → Table11A, Figure_F11a–e threshold range
+#   3G_Disaggregated_Delinquency.R   → FigureA4, FigureA5
+#   3H_DQ_Mechanism_Tests.R          → Figure_F5a–c mechanism tests
+#   3I_Threshold_Calibration.R       → Figure_P5a–f asset threshold calibration
+#   3J_Stress_Calibrated_Threshold.R → Figure_P6a–c stress-calibrated range
 #
-# OUTPUT FIGURES (publication quality, 300dpi):
-#   Fig 1  : Net worth ratio distribution (threshold motivating figure)
-#   Fig 2  : Pre-trend check (parallel trends validation)
-#   Fig 3  : Main event study panel (capital + lending)
-#   Fig 4  : Loan spread event study panel
-#   Fig 5  : Portfolio reallocation event study panel
-#   Fig 6  : 2008 crisis vs. RBC comparison panel
-#   Fig 7  : CCULR three-group event study
-#   Fig A1 : Heterogeneity coefficient plot
+# OUTPUT TABLES (output/paper/tables/):
+#   Table 1    : Summary statistics (full panel, by treatment group)
+#   Table 2    : Balance table (pre-RBC characteristics)
+#   Table 3    : Main DiD results — capital outcomes
+#   Table 4    : Main DiD results — loan pricing (spreads)
+#   Table 5    : Main DiD results — portfolio, growth, credit quality
+#   Table 6    : Robustness checks
+#   Table 7    : 2008 crisis vs. RBC parallel comparison (3A)
+#   Table 8    : CCULR relief value (3C)
+#   Table 9A   : Repeal simulation — recovery fractions by scenario (3D)
+#   Table 9B   : Repeal simulation — cumulative member welfare savings (3D)
+#   Table 9C   : Net benefit analysis — cost side of repeal (3D)
+#   Table 11A  : Optimal capital threshold range across GFC severities (3F_v2)
+#   Table A1   : Heterogeneity by asset tier
+#   Table A2   : Near-threshold subgroup
 #
-# Input  : output/tables/*.csv  (from scripts 1–3D)
-#          output/figures/*.png (from scripts 1–3D)
-#          data/analysis_panel.rds
-# Output : output/paper/tables/  — formatted CSV + Word-ready
-#          output/paper/figures/ — final publication PNGs
+# OUTPUT FIGURES (output/paper/figures/):
+#   Fig 1      : Net worth ratio distribution
+#   Fig 2      : Pre-trend check (parallel trends validation)
+#   Fig 3      : Main event study — capital + lending
+#   Fig 4      : Loan spread event study
+#   Fig 5      : Portfolio reallocation event study
+#   Fig 6      : 2008 crisis vs. RBC comparison panel
+#   Fig 7      : CCULR three-group event study
+#   Fig 9_*    : Repeal simulation (9.1–9.9 including net benefit)
+#   Fig 10_*   : Stress scenario overlay (10.1–10.8)
+#   Fig 11_*   : Capital adequacy stress test (11.1–11.8)
+#   Fig F5a–c  : DQ mechanism tests (3H capacity channel)
+#   Fig F11a–e : Optimal capital threshold range (3F_v2)
+#   Fig P5a–f  : Asset threshold calibration (3I)
+#   Fig P6a–c  : Stress-calibrated threshold range (3J)
+#   Fig A1     : Heterogeneity coefficient plot
+#   Fig A2     : Bunching check at $500M
+#   Fig A3     : Crisis forest plot
+#   Fig A4     : DQ categories (3G)
+#   Fig A5     : DQ causal chain (3G)
+#
+# Input  : output/tables/*.csv  (from scripts 0–3J, 3F_v2)
+#          output/figures/*.png (from scripts 1–3J, 3F_v2)
+#          data/analysis_panel_raw.rds
+# Output : output/paper/tables/  — formatted CSV + HTML
+#          output/paper/figures/ — final publication PNGs (300dpi)
 # =============================================================================
 
 
@@ -861,6 +891,69 @@ if (!is.null(res_sim)) {
   message("  3D_simulation_summary.csv not found — Tables 9A/9B skipped.")
 }
 
+# =============================================================================
+# TABLE 9C — NET BENEFIT ANALYSIS (from 3D net benefit section)
+# =============================================================================
+
+message("── Table 9C: Net benefit analysis (cost side of repeal) ─────────────")
+
+net_benefit_csv <- file.path(TABLE_PATH, "3D_net_benefit_analysis.csv")
+
+if (file.exists(net_benefit_csv)) {
+  nb_raw <- read_csv(net_benefit_csv, show_col_types = FALSE)
+
+  t9c <- nb_raw |>
+    mutate(
+      `Cost Assumption`         = Scenario,
+      `Crisis Probability`      = paste0(round(Crisis_prob_pct, 0), "%"),
+      `NCUSIF Loss Rate`        = paste0(round(Loss_rate_pct, 0), "%"),
+      `Additional Failures`     = N_additional_fail,
+      `Conditional Cost ($BN)`  = sprintf("$%.1f", NCUSIF_cost_cond_BN),
+      `Expected Cost ($BN)`     = sprintf("$%.2f", NCUSIF_cost_exp_BN),
+      `Gross Benefit ($BN)`     = sprintf("$%.1f", Gross_benefit_BN),
+      `Net Benefit ($BN)`       = sprintf("$%.1f", Net_benefit_BN),
+      `Benefit-to-Cost Ratio`   = sprintf("%.0f:1", Benefit_to_cost)
+    ) |>
+    select(`Cost Assumption`, `Crisis Probability`, `NCUSIF Loss Rate`,
+           `Additional Failures`, `Expected Cost ($BN)`,
+           `Gross Benefit ($BN)`, `Net Benefit ($BN)`, `Benefit-to-Cost Ratio`)
+
+  write_csv(t9c, file.path(TABLE_OUT, "Table9C_Net_Benefit_Analysis.csv"))
+
+  # GT table
+  t9c_gt <- t9c |>
+    gt() |>
+    tab_header(
+      title    = "Table 9C. Net Benefit Analysis: Cost Side of Repeal",
+      subtitle = paste0(
+        "Gross member welfare benefit ($325.9BN, 4-year Gradual scenario) ",
+        "minus probability-weighted NCUSIF insurance cost. ",
+        "Additional failures from Part V (+3.4pp at 2008 GFC severity, ~24 institutions). ",
+        "Crisis probability = likelihood of GFC-severity event within 4-year window."
+      )
+    ) |>
+    tab_style(style = cell_fill(color = "#F0FFF5"),
+              locations = cells_body(rows = `Benefit-to-Cost Ratio` != "")) |>
+    tab_footnote(
+      footnote = paste0(
+        "NCUSIF loss rate: net cost to insurance fund after P&A recovery. ",
+        "Historical range: 10-20% of failed institution assets. ",
+        "Expected cost = conditional cost × crisis probability."
+      )
+    ) |>
+    opt_table_font(font = list(google_font("Source Sans Pro")))
+
+  gtsave(t9c_gt, file.path(TABLE_OUT, "Table9C_Net_Benefit_Analysis.html"))
+  message("  Table 9C saved: Table9C_Net_Benefit_Analysis.csv + .html")
+
+  cat("\n=== TABLE 9C: NET BENEFIT ANALYSIS ===\n")
+  print(t9c, n = Inf)
+
+} else {
+  message("  3D_net_benefit_analysis.csv not found — Table 9C skipped.")
+  message("  Run 3D_Repeal_Simulation.R (updated version) first.")
+}
+
 
 # =============================================================================
 # 12C. COPY REPEAL SIMULATION POLICY CHARTS (3D figures → paper/figures/)
@@ -991,6 +1084,87 @@ for (fm in stress_test_figure_map) {
 }
 message(sprintf("  3F figures: %d / %d copied.", n_3f_copied,
                 length(stress_test_figure_map)))
+
+# =============================================================================
+# 12F. THRESHOLD RANGE SUMMARY TABLE (from 3F_v2 results)
+# =============================================================================
+# This table is Table 11A in the paper — the key Finding 11 output.
+# It summarises the crossing-point results across four GFC stress scenarios.
+# Run 3F_v2_Optimal_Threshold_Range.R before this step to generate the CSV.
+
+message("-- Step 12F: Building Table 11A — threshold range summary")
+
+threshold_range_csv <- file.path(TABLE_PATH, "3Fv2_optimal_threshold_range.csv")
+welfare_range_csv   <- file.path(TABLE_PATH, "3Fv2_welfare_range.csv")
+
+if (file.exists(threshold_range_csv) && file.exists(welfare_range_csv)) {
+
+  thresh_raw   <- read_csv(threshold_range_csv, show_col_types = FALSE)
+  welfare_raw  <- read_csv(welfare_range_csv,   show_col_types = FALSE)
+
+  # Join into one display table
+  t11a <- thresh_raw |>
+    left_join(
+      welfare_raw |> select(scenario, multiplier,
+                            welfare_4yr_BN, per_member_annual_K,
+                            spread_mortgage_recovered_pp, roa_recovered_pp),
+      by = c("scenario", "multiplier")
+    ) |>
+    arrange(multiplier) |>
+    mutate(
+      Scenario          = short_label,
+      `Optimal Threshold (%)` = sprintf("%.1f%%", optimal_threshold),
+      `CUs Constrained`       = sprintf("%.1f%%", pct_constrained_at_cross),
+      `4-Year Welfare ($BN)`  = ifelse(is.na(welfare_4yr_BN), "—",
+                                        sprintf("$%.0f", welfare_4yr_BN)),
+      `Per-Member ($/yr)`     = ifelse(is.na(per_member_annual_K), "—",
+                                        sprintf("$%.0f", per_member_annual_K * 1000)),
+      `Mortgage Spread Cut`   = ifelse(is.na(spread_mortgage_recovered_pp), "—",
+                                        sprintf("%.2fpp", spread_mortgage_recovered_pp)),
+      `ROA Recovery`          = ifelse(is.na(roa_recovered_pp), "—",
+                                        sprintf("%.2fpp", roa_recovered_pp)),
+      Note = case_when(
+        no_crossing ~ "No crossing — legacy floor sufficient",
+        optimal_threshold < 7.5 ~ "Curves cross near legacy floor",
+        optimal_threshold < 8.0 ~ "Clear crossing — moderate stress",
+        TRUE ~ "Clear crossing — full GFC calibration"
+      )
+    ) |>
+    select(Scenario, `Optimal Threshold (%)`, `CUs Constrained`,
+           `4-Year Welfare ($BN)`, `Per-Member ($/yr)`,
+           `Mortgage Spread Cut`, `ROA Recovery`, Note)
+
+  # Add current rule row at top for comparison
+  current_rule_row <- tibble(
+    Scenario              = "Current rule (10%)",
+    `Optimal Threshold (%)` = "10.0% (current)",
+    `CUs Constrained`     = "47.6%",
+    `4-Year Welfare ($BN)` = "$325.9BN cost",
+    `Per-Member ($/yr)`   = "$0 savings",
+    `Mortgage Spread Cut` = "0.75pp imposed",
+    `ROA Recovery`        = "0.26pp imposed",
+    Note                  = "Baseline — all costs imposed"
+  )
+
+  t11a_full <- bind_rows(current_rule_row, t11a)
+
+  write_csv(t11a_full,
+            file.path(TABLE_OUT, "Table11A_Threshold_Range_Summary.csv"))
+  message("  Table 11A saved: Table11A_Threshold_Range_Summary.csv")
+
+  # Print to console for verification
+  cat("\n=== TABLE 11A: OPTIMAL CAPITAL THRESHOLD RANGE ===\n")
+  print(t11a_full |> select(Scenario, `Optimal Threshold (%)`,
+                             `CUs Constrained`, `4-Year Welfare ($BN)`,
+                             `Per-Member ($/yr)`), n = Inf)
+  cat(sprintf("\n  Range: %s to %s (mild to full GFC)\n",
+              thresh_raw$optimal_threshold[thresh_raw$multiplier == min(thresh_raw$multiplier)],
+              thresh_raw$optimal_threshold[thresh_raw$multiplier == max(thresh_raw$multiplier)]))
+
+} else {
+  message(sprintf("  WARNING: 3F_v2 CSV files not found. Run 3F_v2_Optimal_Threshold_Range.R first."))
+  message(sprintf("  Expected: %s", threshold_range_csv))
+}
 
 message("── Step 12: Figure 1 — NW ratio distribution ────────────────────────")
 
@@ -1140,7 +1314,27 @@ figure_map <- list(
   list("policy_3h4_capacity_channel.png",     "Figure_F5c_Capacity_Channel.png"),
   # Finding 5 supplementary: disaggregated DQ overview (3G)
   list("policy_3g1_dq_available_categories.png", "FigureA4_DQ_Categories.png"),
-  list("policy_3g7_mechanism_summary.png",    "FigureA5_DQ_Causal_Chain.png")
+  list("policy_3g7_mechanism_summary.png",    "FigureA5_DQ_Causal_Chain.png"),
+  # Part 5: Asset threshold calibration (3I)
+  list("policy_3i1_rd_discontinuity.png",     "Figure_P5a_RD_Discontinuity.png"),
+  list("policy_3i2_complexity_gradient.png",  "Figure_P5b_Complexity_Gradient.png"),
+  list("policy_3i3_threshold_frontier.png",   "Figure_P5c_Threshold_Frontier.png"),
+  list("policy_3i4_optimal_threshold.png",    "Figure_P5d_Optimal_Threshold.png"),
+  list("policy_3i5_threshold_comparison.png", "Figure_P5e_Threshold_Comparison.png"),
+  list("policy_3i6_dual_calibration.png",     "Figure_P5f_Dual_Calibration.png"),
+  # Part VI extension: stress-calibrated threshold range (3J)
+  list("policy_3j1_stress_threshold_curves.png", "Figure_P6a_Stress_Threshold_Curves.png"),
+  list("policy_3j2_threshold_range.png",         "Figure_P6b_Threshold_Range.png"),
+  list("policy_3j3_threshold_range_summary.png", "Figure_P6c_Threshold_Summary.png"),
+  # Finding 11 update: capital threshold range (3F_v2)
+  # 3D net benefit analysis (new cost-side chart — belongs with repeal section)
+  list("policy_3d9_net_benefit_analysis.png",   "Figure9_9_Net_Benefit_Analysis.png"),
+  # Finding 11 update: capital threshold range (3F_v2)
+  list("policy_3fv2_1_threshold_range_curves.png", "Figure_F11a_Threshold_Range_Curves.png"),
+  list("policy_3fv2_2_optimal_range_summary.png",  "Figure_F11b_Optimal_Range_Summary.png"),
+  list("policy_3fv2_3_welfare_range.png",          "Figure_F11c_Welfare_Range.png"),
+  list("policy_3fv2_4_per_member_range.png",       "Figure_F11d_PerMember_Range.png"),
+  list("policy_3fv2_5_combined_policy.png",        "Figure_F11e_Combined_Policy.png")
 )
 
 for (fm in figure_map) {
@@ -1234,7 +1428,16 @@ tables_list <- c(
   "TableA1_Heterogeneity.csv",
   "TableA1_Heterogeneity.html",
   "TableA2_NearThreshold.csv",
-  "TableA2_NearThreshold.html"
+  "TableA2_NearThreshold.html",
+  # 3D net benefit analysis
+  "3D_net_benefit_analysis.csv",
+  "Table9C_Net_Benefit_Analysis.csv",
+  "Table9C_Net_Benefit_Analysis.html",
+  # Finding 11 threshold range (3F_v2) — raw CSVs
+  "3Fv2_optimal_threshold_range.csv",
+  "3Fv2_welfare_range.csv",
+  # Finding 11 summary table
+  "Table11A_Threshold_Range_Summary.csv"
 )
 for (t in tables_list) {
   flag <- if (file.exists(file.path(TABLE_OUT, t))) "✓" else "–"
@@ -1270,6 +1473,7 @@ figures_list <- c(
   "Figure9_6_Horizon_Comparison.png",
   "Figure9_7_Loan_Volume_Restored.png",
   "Figure9_8_Cost_of_Delay.png",
+  "Figure9_9_Net_Benefit_Analysis.png",
   # 3E: Section 10B stress scenario figures (NEW)
   "Figure10_1_Stress_Capital.png",
   "Figure10_2_Stress_Lending.png",
@@ -1290,6 +1494,23 @@ figures_list <- c(
   "Figure11_6_Rule_Effect_vs_Tailrisk.png",
   "Figure11_7_Thin_Buffer_Zoom.png",
   "Figure11_8_Optimal_Threshold.png",
+  # Part VI: Asset threshold calibration (3I)
+  "Figure_P5a_RD_Discontinuity.png",
+  "Figure_P5b_Complexity_Gradient.png",
+  "Figure_P5c_Threshold_Frontier.png",
+  "Figure_P5d_Optimal_Threshold.png",
+  "Figure_P5e_Threshold_Comparison.png",
+  "Figure_P5f_Dual_Calibration.png",
+  # Part VI: Stress-calibrated threshold range (3J)
+  "Figure_P6a_Stress_Threshold_Curves.png",
+  "Figure_P6b_Threshold_Range.png",
+  "Figure_P6c_Threshold_Summary.png",
+  # Finding 11: capital threshold range (3F_v2)
+  "Figure_F11a_Threshold_Range_Curves.png",
+  "Figure_F11b_Optimal_Range_Summary.png",
+  "Figure_F11c_Welfare_Range.png",
+  "Figure_F11d_PerMember_Range.png",
+  "Figure_F11e_Combined_Policy.png",
   # Appendix
   "FigureA1_Heterogeneity.png",
   "FigureA2_Bunching.png",
