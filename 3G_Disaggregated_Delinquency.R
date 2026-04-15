@@ -229,12 +229,24 @@ run_es <- function(outcome, data = df_es, ctrl = controls) {
   )
 }
 
+# Canonical empty tibble for extract_did — used when model is NULL or fails
+empty_did_row <- function(label) {
+  tibble(
+    label   = label,
+    beta    = NA_real_, se    = NA_real_,
+    ci_lo   = NA_real_, ci_hi = NA_real_,
+    p_value = NA_real_, stars = "",
+    n_obs   = NA_integer_
+  )
+}
+
 extract_did <- function(model, label, term = "treat_post") {
-  if (is.null(model)) return(NULL)
+  # Guard: NULL model or all-NA outcome → return empty row, never NULL
+  if (is.null(model)) return(empty_did_row(label))
   tryCatch({
     td  <- tidy(model, conf.int = TRUE)
     row <- td[td$term == term, ]
-    if (nrow(row) == 0) return(NULL)
+    if (nrow(row) == 0) return(empty_did_row(label))
     tibble(
       label   = label,
       beta    = round(row$estimate,  4),
@@ -250,11 +262,11 @@ extract_did <- function(model, label, term = "treat_post") {
       ),
       n_obs = nobs(model)
     )
-  }, error = function(e) NULL)
+  }, error = function(e) empty_did_row(label))
 }
 
 extract_es <- function(model, label) {
-  if (is.null(model)) return(NULL)
+  if (is.null(model)) return(tibble())   # empty tibble — plot_es handles nrow==0
   tryCatch({
     coefs <- tidy(model, conf.int = TRUE) |>
       filter(str_detect(term, "event_time::")) |>
@@ -269,7 +281,7 @@ extract_es <- function(model, label) {
       arrange(event_time) |>
       mutate(label  = label,
              period = if_else(event_time < 0, "Pre-RBC", "Post-RBC"))
-  }, error = function(e) NULL)
+  }, error = function(e) tibble())
 }
 
 plot_es <- function(es_data, lbl, color = COL_COMPLEX,
@@ -446,32 +458,43 @@ df_low_re   <- df |> filter(high_re_shift == 0  | complex == 0)
 df_high_ae  <- df |> filter(high_auto_exit == 1 | complex == 0)
 df_low_ae   <- df |> filter(high_auto_exit == 0 | complex == 0)
 
-# DQ models by RE-shift subgroup
-m_dq_hi_re  <- run_did("dq_rate_var", data = df_high_re)
-m_dq_lo_re  <- run_did("dq_rate_var", data = df_low_re)
-m_mbl_hi_re <- run_did("dq_mbl_rate_var", data = df_high_re)
-m_mbl_lo_re <- run_did("dq_mbl_rate_var", data = df_low_re)
+# DQ models by RE-shift and auto-exit subgroups are run inside safe_run_did below,
+# which adds coverage guards and attaches group/outcome columns atomically.
 
 # DQ models by auto-exit subgroup
-m_dq_hi_ae  <- run_did("dq_rate_var", data = df_high_ae)
-m_dq_lo_ae  <- run_did("dq_rate_var", data = df_low_ae)
+# (also handled inside safe_run_did below)
+
+# Helper: run_did only if outcome has enough non-NA obs in the data
+safe_run_did <- function(outcome, data, label, group_val, outcome_val,
+                          ctrl = controls, min_obs = 100) {
+  n_valid <- sum(!is.na(data[[outcome]]), na.rm = TRUE)
+  if (n_valid < min_obs) {
+    message(sprintf("  SKIP: %s in '%s' — only %d non-NA obs (need %d)",
+                    outcome, group_val, n_valid, min_obs))
+    return(empty_did_row(label) |>
+             mutate(group = group_val, outcome = outcome_val))
+  }
+  m <- run_did(outcome, data = data, ctrl = ctrl)
+  extract_did(m, label) |>
+    mutate(group = group_val, outcome = outcome_val)
+}
 
 re_results <- bind_rows(
-  extract_did(m_dq_hi_re,  "Overall DQ") |>
-    mutate(group = "Above-median RE shift",  outcome = "Overall DQ"),
-  extract_did(m_dq_lo_re,  "Overall DQ") |>
-    mutate(group = "Below-median RE shift",  outcome = "Overall DQ"),
-  extract_did(m_mbl_hi_re, "MBL DQ")     |>
-    mutate(group = "Above-median RE shift",  outcome = "MBL DQ"),
-  extract_did(m_mbl_lo_re, "MBL DQ")     |>
-    mutate(group = "Below-median RE shift",  outcome = "MBL DQ")
+  safe_run_did("dq_rate_var",     df_high_re, "Overall DQ",
+               "Above-median RE shift", "Overall DQ"),
+  safe_run_did("dq_rate_var",     df_low_re,  "Overall DQ",
+               "Below-median RE shift", "Overall DQ"),
+  safe_run_did("dq_mbl_rate_var", df_high_re, "MBL DQ",
+               "Above-median RE shift", "MBL DQ"),
+  safe_run_did("dq_mbl_rate_var", df_low_re,  "MBL DQ",
+               "Below-median RE shift", "MBL DQ")
 ) |> filter(!is.na(beta))
 
 ae_results <- bind_rows(
-  extract_did(m_dq_hi_ae, "Above-median auto exit") |>
-    mutate(group = "Above-median auto exit (exited most)"),
-  extract_did(m_dq_lo_ae, "Below-median auto exit") |>
-    mutate(group = "Below-median auto exit (retained most)")
+  safe_run_did("dq_rate_var", df_high_ae, "Above-median auto exit",
+               "Above-median auto exit (exited most)", "Overall DQ"),
+  safe_run_did("dq_rate_var", df_low_ae,  "Below-median auto exit",
+               "Below-median auto exit (retained most)", "Overall DQ")
 ) |> filter(!is.na(beta))
 
 interaction_results <- bind_rows(
@@ -624,14 +647,13 @@ if (all(c("thin_buffer", "avg_nw_pre") %in% names(df))) {
     list("chgoff_ratio",     "Charge-off")
   )
 
+  lbl_thin    <- sprintf("Thin-buffer (9-11%% pre-rule, n=%d)", n_thin_cx)
+  lbl_wellcap <- sprintf("Well-capitalized (>11%% pre-rule, n=%d)", n_wellcap_cx)
+
   het_results <- map_dfr(het_dq, function(s) {
-    m_t <- run_did(s[[1]], data = df_thin)
-    m_w <- run_did(s[[1]], data = df_wellcap)
     bind_rows(
-      extract_did(m_t, s[[2]]) |>
-        mutate(group = sprintf("Thin-buffer (9-11%% pre-rule, n=%d)", n_thin_cx)),
-      extract_did(m_w, s[[2]]) |>
-        mutate(group = sprintf("Well-capitalized (>11%% pre-rule, n=%d)", n_wellcap_cx))
+      safe_run_did(s[[1]], df_thin,    s[[2]], lbl_thin,    s[[2]]),
+      safe_run_did(s[[1]], df_wellcap, s[[2]], lbl_wellcap, s[[2]])
     )
   }) |> filter(!is.na(beta))
 
@@ -652,11 +674,11 @@ if (all(c("thin_buffer", "avg_nw_pre") %in% names(df))) {
       hjust = -0.25, size = 2.9,
       position = position_dodgev(height = 0.55)
     ) +
-    scale_color_manual(values = c(
-      setNames(COL_CONCERN, unique(het_results$group)[1]),
-      setNames(COL_NEUTRAL, unique(het_results$group)[2])
+    scale_color_manual(values = setNames(
+      c(COL_CONCERN, COL_NEUTRAL),
+      c(lbl_thin, lbl_wellcap)
     )) +
-    scale_shape_manual(values = c(16, 17)) +
+    scale_shape_manual(values = setNames(c(16, 17), c(lbl_thin, lbl_wellcap))) +
     scale_x_continuous(
       limits = function(x) c(min(x) - 1, max(x) + 3),
       labels = function(x) paste0(x, "bp")
