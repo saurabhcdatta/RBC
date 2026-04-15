@@ -1,7 +1,7 @@
 ---
 title: "The 2022 NCUA Risk-Based Capital Rule"
 subtitle: "Empirical Findings from an Analysis of Complex Credit Unions"
-author: "NCUA Office of the Chief Economist"
+author: "Saurabh C. Datta, Ph.D. -- Senior Economist, NCUA Office of the Chief Economist"
 date: "April 2026"
 output:
   revealjs::revealjs_presentation:
@@ -38,12 +38,7 @@ fig_include <- function(path, caption = "") {
     knitr::include_graphics(path)
   } else {
     fname <- basename(path)
-    cat(sprintf(
-      '<div class="fig-placeholder"><span class="fig-label">FIGURE</span>'
-      '<span class="fig-name">%s</span>'
-      '<span class="fig-caption">%s</span></div>',
-      fname, caption
-    ))
+    cat(sprintf("<div class=\"fig-placeholder\"><span class=\"fig-label\">FIGURE</span><span class=\"fig-name\">%s</span><span class=\"fig-caption\">%s</span></div>", fname, caption))
   }
 }
 
