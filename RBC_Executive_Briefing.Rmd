@@ -143,7 +143,7 @@ h3 { color: #2A3A5E; font-size: 14px; text-transform: uppercase;
 </div>
 </div>
 
-Before the rule took effect, the average complex credit union — that is, any credit union with more than $500 million in assets, of which there were 696 — held a net worth ratio of 10.72%. The RBC rule required these institutions to maintain at least 10% to be classified as "well-capitalized." That left the average institution with a buffer of just 72 basis points (less than three-quarters of one percent) above the new threshold. Nearly half (47.6%) of complex credit unions were already below 10%, meaning they entered the rule period already falling short of the new standard and facing immediate pressure to build capital. This thin buffer is what gave the rule its bite — and explains both why some institutions struggled to comply and why compliance was so costly.
+Before the rule took effect, the average complex credit union — that is, any credit union with more than $500 million in average assets during 2021, of which there were **696** at the time of classification — held a net worth ratio of 10.72%. This count of 696 is fixed throughout the analysis: each institution is classified as complex or non-complex based solely on its pre-rule asset size (2021Q1–Q4 average), and that classification does not change even as institutions grow, shrink, or merge during the study period. In practice, the actual number of credit unions above $500M shifts modestly over time — some grow past the threshold, some merge — but holding the classification fixed at its pre-rule value is essential for clean causal identification: it prevents institutions from switching groups in response to the rule itself. The RBC rule required these 696 institutions to maintain at least 10% to be classified as "well-capitalized." That left the average institution with a buffer of just 72 basis points (less than three-quarters of one percent) above the new threshold. Nearly half (47.6%) of complex credit unions were already below 10%, meaning they entered the rule period already falling short of the new standard and facing immediate pressure to build capital. This thin buffer is what gave the rule its bite — and explains both why some institutions struggled to comply and why compliance was so costly.
 
 *→ See [Finding 1: Capital Built — But Many Institutions Still Can't Cross the Bar](#finding1)*
 
@@ -658,7 +658,7 @@ The comparison is decisive: for loan growth contraction, the RBC effect is 47% *
 
 **How to read this chart:** This is a 4-panel figure showing two overlapping event studies per panel — red triangles for the 2008 crisis episode and navy circles for the 2022 RBC episode. The x-axis in each panel is time measured from the onset of each episode (Q0 = 2008Q3 for crisis, Q0 = 2022Q1 for RBC). The four panels show: A. Net Worth Ratio, B. Capital Buffer (vs 10% threshold), C. Loan Growth, D. Delinquency Rate. Stars mark statistically significant quarters.
 
-**What you will see:** Panels A and B (capital outcomes) show similar patterns in both episodes — capital dips during the crisis and rises under the RBC rule, which is expected in both cases. The critical divergences are in Panels C and D. For loan growth (Panel C), the RBC navy line drops sharply at Q0 and stays depressed with no recovery; the crisis red line also drops but begins recovering by Q+4. For delinquency (Panel D), the crisis red line stays flat-to-positive and recovers, while the RBC navy line trends upward through the post-period. These opposite-sign patterns on the same institutions across two episodes confirm the regulatory channel: the rule is doing something to these institutions that a financial crisis did not.
+**What you will see:** Panels A and B (capital outcomes) show similar patterns in both episodes — capital dips during the crisis and rises under the RBC rule, which is expected in both cases. The critical divergences are in Panels C and D. For loan growth (Panel C), the RBC navy line drops sharply at Q0 and stays depressed with no recovery; the crisis red line also drops but begins recovering by Q+4. For delinquency (Panel D), the crisis red line stays **flat-to-negative** — meaning complex credit unions actually had *equal or better* delinquency performance relative to non-complex peers during and after the 2008 crisis — and recovers toward zero. The RBC navy line, by contrast, trends upward through the post-period, meaning complex CUs developed *worse* relative delinquency under the rule. A financial crisis did not cause these institutions to deteriorate on credit quality relative to their peers; the RBC rule did. These opposite-sign patterns on the same institutions across two episodes confirm the regulatory channel: the rule is doing something to these institutions that a financial crisis did not.
 
 ```{r fig7, error=TRUE, results='asis', fig.cap="Parallel DiD comparing 2008 crisis vs. 2022 RBC rule. Capital responses are similar; profitability and portfolio show opposite-sign patterns — confirming a regulatory channel.", out.width="100%"}
 fig_include("Figure6_Crisis_vs_RBC_Capital.png")
@@ -711,7 +711,7 @@ When credit unions face stress, they adjust their portfolios. The critical quest
 
 **How to read this chart:** Another 4-panel comparison figure — red triangles for the 2008 crisis, navy circles for the 2022 RBC rule. The four panels cover: A. Real Estate Share, B. Auto Loan Share, C. MBL Share, D. ROA. Each panel shows how each outcome evolved in the two episodes relative to Q0.
 
-**What you will see:** Panel B (Auto Loan Share) is the most striking. Under the 2008 crisis (red), auto loan share dips briefly and climbs back — a clear V-shape, fully reversing within about 10 quarters. Under the RBC rule (navy), the auto loan share drops at implementation and continues falling, with no reversal visible even after many quarters. Panel D (ROA) shows the opposite-sign result described in Finding 7: the crisis red line wobbles near zero and recovers; the RBC navy line slopes steadily downward. Panel A (Real Estate Share) shows the mirror of Panel B — under the RBC rule, institutions are shifting into real estate at the same time they are exiting auto loans, confirming the risk-weight arbitrage story. This four-panel view makes the structural vs. temporary distinction visually undeniable.
+**What you will see:** Panel B (Auto Loan Share) is the most striking. Under the 2008 crisis (red), auto loan share dips briefly and climbs back — a clear V-shape, fully reversing within about 10 quarters. Under the RBC rule (navy), the auto loan share drops at implementation and continues falling, with no reversal visible even after many quarters. Panel D (ROA) shows the opposite-sign result described in Finding 6: the crisis red line wobbles near zero and recovers; the RBC navy line slopes steadily downward. Panel A (Real Estate Share) shows the mirror of Panel B — under the RBC rule, institutions are shifting into real estate at the same time they are exiting auto loans, confirming the risk-weight arbitrage story. This four-panel view makes the structural vs. temporary distinction visually undeniable. Note also that delinquency (shown in the parallel DiD chart above) is flat-to-negative under the crisis — complex CUs performed at least as well as peers — while it rises persistently under the rule, confirming the rule created credit quality stress that a financial crisis did not.
 
 ```{r fig8, error=TRUE, results='asis', fig.cap="Shape comparison: V-shapes under crisis, step-changes under RBC. The divergence in portfolio and profitability paths is the structural signature of regulatory-specific effects.", out.width="100%"}
 fig_include("Figure6b_Crisis_vs_RBC_Portfolio.png")
@@ -899,36 +899,30 @@ The crossing-point method tests every possible threshold level from 6.5% to 10.5
 <tr><td style="padding:10px 13px;font-weight:600">Per-member annual savings range</td><td style="padding:10px 13px;font-weight:700;color:#C94040">$0</td><td style="padding:10px 13px;font-weight:700;color:#2E7D4F">$675 – $823 per year</td><td><span style="display:inline-block;padding:2px 8px;border-radius:3px;background:#F0FFF5;color:#2E7D4F;border:1px solid #2E7D4F44;font-size:10px;font-weight:700;font-family:monospace">▲&nbsp;Positive</span><br><small style="color:#6B7A99">Conservative (100% GFC) to upper-bound (25% GFC) — range reflects stress calibration uncertainty</small></td></tr>
 </tbody></table>
 
-### Supporting Chart
+### Supporting Charts
 
-**How to read this chart:** Two curves are plotted against the same horizontal axis — the capital threshold level, ranging from 6.5% on the left to 10.5% on the right. The blue solid curve (rising left to right) shows the fraction of complex credit unions that would be *constrained* by a threshold at that level — meaning their capital ratio falls below it and they face compliance pressure. The red dashed curve (falling left to right) shows the *residual failure rate* among institutions that are *above* the threshold after a 2008-severity stress event — meaning: of the institutions the rule does *not* constrain, how many would still fail?
+**How to read Chart F11a (primary):** Four panels — one per GFC stress severity (25%, 50%, 75%, 100%). In each panel, the navy solid curve is the compliance burden (rising left to right) and the colored dashed curve is the residual failure rate among unconstrained institutions (falling left to right). The green vertical line is the crossing point — the empirically optimal threshold for that scenario. The red dashed line is the current 10% threshold. At 25% GFC severity, the curves never cross within the policy-relevant range — the legacy 7% floor is sufficient. As severity rises, the crossing point moves rightward: 7.5% at 50% GFC, 7.8% at 75% GFC, **8.1%** at full GFC. In every panel, the current 10% threshold sits far to the right of the crossing point.
 
-**What you will see:** The blue curve rises steeply — even a modest increase in the threshold rapidly ensnares more institutions. At 7%, almost no one is constrained; at 10%, nearly half are. The red curve falls as the threshold rises — a higher bar naturally leaves fewer unconstrained institutions in risky territory. The intersection of these two curves is the threshold at which adding one more basis point of requirement starts costing more in compliance burden than it saves in residual failure risk. That crossing point is approximately **8.1%** (using the pre-rule NW ratio distribution — the correct counterfactual). The current 10% threshold sits far to the right of the crossing point — in the zone where the blue curve has already flattened but the compliance burden is at its highest. Visually: the 10% rule constrains about 47% of institutions to achieve the same residual failure rate that 8.1% achieves while constraining only 10.4%.
-
-```{r fig11b, error=TRUE, results='asis', fig.cap="Threshold calibration: compliance burden (blue solid, rising) vs. residual failure risk among unconstrained CUs (red dashed, falling). The curves cross at approximately 8.1% under full GFC stress (using pre-rule NW ratios). The current 10% rule sits far to the right of the crossing point.", out.width="100%"}
-fig_include("Figure11_8_Optimal_Threshold.png")
-```
-
-### Range Analysis: Four Stress Scenarios
-
-The chart above uses only the full 2008 GFC drawdown. The following charts show what happens when we run the same analysis at 25%, 50%, 75%, and 100% of the 2008 shock magnitude. The crossing point shifts with stress severity — giving a defensible range rather than a single point estimate.
-
-**How to read Chart F11a:** Each panel corresponds to one stress scenario. The navy solid line is the compliance burden (rising) and the colored dashed line is the residual failure rate (falling). The green vertical line is the crossing point — the empirically optimal threshold for that scenario. As stress severity rises from 25% to 100% of the GFC, the crossing point moves rightward — meaning more severe shocks justify a somewhat higher capital requirement.
-
-```{r fig11_range1, error=TRUE, results='asis', fig.cap="Crossing-point analysis at four GFC stress severities. The optimal threshold ranges from 7.0% (mild stress — legacy floor) to 8.1% (full GFC) — well below the current 10% in all scenarios.", out.width="100%"}
+```{r fig11_range1, error=TRUE, results='asis', fig.cap="Primary chart: crossing-point analysis at four GFC stress severities. Optimal threshold ranges from 7.0% (mild) to 8.1% (full GFC). Current 10% sits far right of crossing in all panels.", out.width="100%"}
 fig_include("Figure_F11a_Threshold_Range_Curves.png")
 ```
 
-**How to read Chart F11b:** Each dot is one scenario's optimal threshold. Error bars show ±0.2pp estimation uncertainty. The green band spans the full data-justified range. In every scenario — from mild recession to full GFC — the optimal threshold is substantially below the current 10%.
+**How to read Chart F11b:** Each dot is one scenario's optimal threshold. Error bars show ±0.2pp estimation uncertainty. The green band spans the full data-justified range. All four crossing points are well below 10%.
 
-```{r fig11_range2, error=TRUE, results='asis', fig.cap="Summary: optimal capital threshold range across GFC stress scenarios. All four crossing points fall well below the current 10% rule.", out.width="100%"}
+```{r fig11_range2, error=TRUE, results='asis', fig.cap="Summary: optimal capital threshold range across GFC stress scenarios. Green band = data-justified range (7.0%–8.1%). All four points well below current 10%.", out.width="100%"}
 fig_include("Figure_F11b_Optimal_Range_Summary.png")
 ```
 
-**Chart F11c — Welfare as a range:** Member welfare savings from recalibration expressed as a fan chart across all four scenarios. The green band is the uncertainty range. The navy line is the midpoint. The red dashed line is the current single-scenario $325.9BN estimate — which corresponds to the 100% GFC scenario and should be understood as the upper bound of the range.
+**Chart F11c — Welfare as a range:** Member welfare savings from recalibration expressed as a fan chart. Green band = uncertainty range across all four scenarios. Navy line = midpoint. Red dashed = current single-scenario $325.9BN upper bound.
 
-```{r fig11_range3, error=TRUE, results='asis', fig.cap="Cumulative member welfare savings across stress scenarios — shown as a fan chart. The $325.9BN figure corresponds to the 100% GFC scenario (upper bound). The midpoint across scenarios is lower.", out.width="100%"}
+```{r fig11_range3, error=TRUE, results='asis', fig.cap="Cumulative member welfare savings across stress scenarios. $325.9BN = 100% GFC upper bound. Midpoint across scenarios is lower but all lines substantially positive.", out.width="100%"}
 fig_include("Figure_F11c_Welfare_Range.png")
+```
+
+**Reference chart (single scenario):** The chart below shows the original single-scenario crossing-point analysis using the full 2008 GFC drawdown. Note: this version used post-repeal projected NW ratios as starting capital — giving a crossing at approximately 8.5%. The primary analysis above uses pre-rule NW ratios (the correct counterfactual for asking what the rule *should have been set to*), which gives 8.1%. Both confirm the same conclusion: 10% is not justified.
+
+```{r fig11b, error=TRUE, results='asis', fig.cap="Reference: single-scenario crossing-point chart (100% GFC, post-repeal NW ratios). Crossing at ~8.5%. Primary analysis using pre-rule NW ratios gives 8.1% — see Chart F11a above.", out.width="100%"}
+fig_include("Figure11_8_Optimal_Threshold.png")
 ```
 
 ### Statistical Evidence — Full Scenario Results
@@ -1376,7 +1370,7 @@ fig_include("Figure11_7_Thin_Buffer_Zoom.png")
 
 **The key finding:** The curves cross at approximately **8.1%** (full GFC scenario), not 10%. At 8.1%, only 10.4% of complex CUs face compliance pressure vs. 47% at 10%. Across all four stress scenarios, the range is 7.0%–8.1% — all substantially below 10%.
 
-```{r fig11-8, error=TRUE, results='asis', fig.cap="Threshold calibration: compliance burden (blue, rising) vs. residual failure risk (red, falling). Curves cross at 7.0%–8.1% across stress scenarios. Current 10% rule constrains 47% of CUs vs. 2%–10% at the empirically optimal threshold."}
+```{r fig11-8, error=TRUE, results='asis', fig.cap="Threshold calibration: single-scenario reference chart (100% GFC, post-repeal NW ratios, crossing ~8.5%). Primary analysis using pre-rule NW ratios gives range 7.0%–8.1% — see Finding 11 charts F11a and F11b.", out.width="100%"}
 fig_include("Figure11_8_Optimal_Threshold.png")
 ```
 
@@ -1516,7 +1510,7 @@ fig_include("Figure_P5f_Dual_Calibration.png")
 
 **Data:** NCUA Call Report (Form 5300), 2000Q1–2025Q4. Raw file: `call_report.rds`. Clean analysis panel: `data/analysis_panel.rds` (156,121 observations, 5,184 credit unions, 83 variables). Full time-series panel: `data/analysis_panel_full_raw.rds` (2000–2025, 634 complex CUs with 2008 crisis data).
 
-**Treatment group:** 696 complex credit unions with average assets ≥ $500M in 2021Q1–Q4 (pre-treatment, time-invariant classification).
+**Treatment group:** 696 complex credit unions with average assets ≥ $500M in 2021Q1–Q4 (pre-treatment, time-invariant classification). This count is fixed at 696 throughout the analysis regardless of subsequent asset growth, mergers, or exits — preserving clean identification by preventing endogenous group-switching in response to the rule.
 
 **Control group:** 4,488 non-complex credit unions with average assets < $500M.
 
