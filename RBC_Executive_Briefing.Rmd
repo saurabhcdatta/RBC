@@ -116,7 +116,7 @@ h3 { color: #2A3A5E; font-size: 14px; text-transform: uppercase;
 <div class="score-row"><div class="score-card" style="border-top-color:#C94040"><div class="score-val">+73bp</div><div class="score-lbl">Mortgage spread increase over Treasury benchmarks</div></div><div class="score-card" style="border-top-color:#C94040"><div class="score-val">$325.9B</div><div class="score-lbl">Foregone 4-year member welfare under repeal baseline</div></div><div class="score-card" style="border-top-color:#1B3A6B"><div class="score-val">&#x2212;26bp</div><div class="score-lbl">Return on assets decline (31% of pre-rule mean)</div></div><div class="score-card" style="border-top-color:#E8A838"><div class="score-val">&#x2212;0.3pp</div><div class="score-lbl">Rule&#39;s actual protection at 2008-crisis stress level</div></div></div>
 <div class="legend-row"><span class="leg-lbl">Inference key:</span><span style="background:#FFF0F0;color:#C94040;border:1px solid #C9404033;padding:3px 10px;border-radius:3px;font-size:10.5px;font-weight:700;font-family:monospace">&#x25BC; Concern</span><span style="background:#FFFBF0;color:#B8821A;border:1px solid #E8A83833;padding:3px 10px;border-radius:3px;font-size:10.5px;font-weight:700;font-family:monospace">&#x25C6; Mixed</span><span style="background:#F0FFF5;color:#2E7D4F;border:1px solid #2E7D4F33;padding:3px 10px;border-radius:3px;font-size:10.5px;font-weight:700;font-family:monospace">&#x25B2; Positive</span><span style="background:#F0F5FF;color:#2A5A9B;border:1px solid #4A7CB533;padding:3px 10px;border-radius:3px;font-size:10.5px;font-weight:700;font-family:monospace">&#x25CF; Baseline</span><span style="background:#FFF8F0;color:#8B4513;border:1px solid #8B451333;padding:3px 10px;border-radius:3px;font-size:10.5px;font-weight:700;font-family:monospace">&#x2717; No effect</span><span style="font-size:11px;color:#6B7A99;font-style:italic;margin-left:4px">&#8212; appears in every Key Numbers and Model Results table</span></div>
 
-**Central finding:** The rule imposed large, persistent costs on member-borrowers through higher loan rates, reduced credit availability, and deteriorating profitability — while providing only marginal protective benefit over and above what existed before the rule. An empirically calibrated threshold of **8.5%**, rather than 10%, would deliver equivalent protection against institutional failure at approximately one-third the compliance burden. Finding 12 explains *why* the rule's effects were larger and more persistent than the 2008 financial crisis itself — through five structural mechanisms that distinguish permanent regulatory cost changes from temporary economic shocks.
+**Central finding:** The rule imposed large, persistent costs on member-borrowers through higher loan rates, reduced credit availability, and deteriorating profitability — while providing only marginal protective benefit over and above what existed before the rule. An empirically calibrated threshold in the range of **7.0%–8.1%** (depending on assumed future stress severity), rather than 10%, would deliver equivalent or greater protection against institutional failure at a fraction of the current compliance burden. Finding 12 explains *why* the rule's effects were larger and more persistent than the 2008 financial crisis itself — through five structural mechanisms that distinguish permanent regulatory cost changes from temporary economic shocks.
 
 ---
 
@@ -235,17 +235,19 @@ Loan growth fell by approximately 0.44 percentage points per quarter — equival
 <div style="display:flex;gap:14px;margin-bottom:16px;flex-wrap:wrap">
 <div style="flex:1;min-width:260px;border-left:5px solid #2E7D4F;background:#F4F6FA;padding:14px 18px;border-radius:0 6px 6px 0">
 <p style="font-size:9.5px;text-transform:uppercase;letter-spacing:1.5px;color:#6B7A99;font-weight:700;margin:0 0 4px">Answer</p>
-<p style="font-family:Georgia,serif;font-size:15px;font-weight:700;color:#1A2035;margin:0">Some risk — but the threshold calibration shows 8.5% achieves the same protection at one-third the cost</p>
+<p style="font-family:Georgia,serif;font-size:15px;font-weight:700;color:#1A2035;margin:0">Some risk — but the threshold calibration shows 7.0%–8.1% achieves the same protection at a fraction of the current burden</p>
 </div>
 <div style="background:#FFFBF0;border:1px solid #E8A83844;padding:14px 18px;border-radius:6px;min-width:200px">
 <p style="font-size:11px;font-weight:700;color:#B8821A;font-family:monospace;margin:0 0 4px">◆&nbsp;Mixed</p>
-<p style="font-size:11px;color:#B8821A;margin:0;line-height:1.4">Repeal adds 3.4pp failure risk, but 8.5% threshold delivers equivalent protection to only 15% of CUs vs. 47% today</p>
+<p style="font-size:11px;color:#B8821A;margin:0;line-height:1.4">Repeal adds 3.4pp failure risk, but 8.1% threshold (full GFC calibration) delivers equivalent protection to only 10% of CUs vs. 47% today</p>
 </div>
 </div>
 
-Empirical stress tests using actual 2008 crisis data for 634 complex credit unions show that full repeal would increase the number of institutions falling below minimum capital requirements by 3.4 percentage points — approximately 23 additional institutions crossing into regulatory distress territory. However, this is not an argument for maintaining the current rule unchanged. The threshold calibration analysis (Finding 11) shows that a well-capitalized threshold of 8.5% would provide equivalent protection against institutional failure while constraining only 15% of complex credit unions — one-third the burden of the current 47%. The answer to whether repeal risk is acceptable depends entirely on which version of the rule is under consideration.
+Empirical stress tests using actual 2008 crisis data for 634 complex credit unions show that full repeal would increase the number of institutions falling below minimum capital requirements by 3.4 percentage points — approximately 23 additional institutions crossing into regulatory distress territory. However, this is not an argument for maintaining the current rule unchanged. The threshold calibration analysis (Finding 11) shows that a well-capitalized threshold of 8.1% (full GFC calibration) would provide equivalent protection against institutional failure while constraining only 10.4% of complex credit unions — less than one-quarter the burden of the current 47%. Under moderate stress assumptions, the optimal threshold falls to 7.5%–7.8%, constraining as few as 4%–7% of institutions. The answer to whether repeal risk is acceptable depends entirely on which version of the rule is under consideration.
 
-*→ See [Finding 11: The 10% Threshold Was Never Empirically Justified — The Data Say 8.5%](#finding11)*
+A complete cost-benefit accounting confirms this conclusion. The expected NCUSIF insurance cost of the additional failure risk from repeal is $0.36BN–$2.17BN (probability-weighted across crisis probability and loss rate assumptions). The gross member welfare benefit of repeal is $325.9BN — producing a benefit-to-cost ratio of 150:1 to 900:1. Even under a moderate recession overlay, net benefit remains approximately $284BN. No plausible combination of costs produces a negative net benefit.
+
+*→ See [Finding 11: The 10% Threshold Was Never Empirically Justified — The Data Support a Range of 7.0%–8.1%](#finding11)*
 
 
 ---
@@ -854,7 +856,7 @@ fig_include("Figure11_4_Survival_Frontier.png")
 
 ---
 
-## Finding 11: The 10% Threshold Was Never Empirically Justified — The Data Say 8.5% {#finding11}
+## Finding 11: The 10% Threshold Was Never Empirically Justified — The Data Support a Range of 7.0%–8.1% {#finding11}
 
 <div style="border-left:6px solid #2E7D4F;background:#F4F6FA;padding:16px 20px;margin-bottom:20px;border-radius:0 6px 6px 0">
 <span style="background:#2E7D4F;color:white;font-size:10px;font-weight:700;padding:3px 10px;border-radius:3px;letter-spacing:1px;font-family:monospace">FINDING 11</span>&ensp;<span style="color:#2E7D4F;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px">Threshold Calibration</span>
@@ -864,62 +866,113 @@ fig_include("Figure11_4_Survival_Frontier.png")
 
 This finding is the most operationally actionable result in the entire study. Every other finding documents what the rule costs and what it protects against. This finding answers the question that logically follows: *if we accept that some capital threshold is necessary, what should it be?*
 
-The answer to that question was never derived empirically when the rule was designed. The 10% well-capitalized threshold was chosen by regulatory judgment — a round number set above the existing 7% legacy threshold to create a meaningful buffer. That is not a criticism; most capital rules are designed this way. But it means we do not actually know whether 10% is the right number. It could be set too high, imposing unnecessary costs on a large number of institutions without a commensurate gain in safety. Only a data-driven analysis can answer that.
+The answer to that question was never derived empirically when the rule was designed. The 10% well-capitalized threshold was chosen by regulatory judgment — a round number set above the existing 7% legacy threshold to create a meaningful buffer. That is not a criticism; most capital rules are designed this way. But it means we do not actually know whether 10% is the right number. Only a data-driven analysis can answer that.
 
-What we can do is test every possible threshold level from 6.5% to 10.5% and ask two questions simultaneously: how many institutions would be constrained by a threshold at that level, and how many institutions that are *above* that threshold would still fail if a 2008-severity crisis struck? The first number rises as we raise the threshold — a higher bar constrains more institutions. The second falls — a higher bar means fewer unconstrained institutions are in risky territory. The point where these two curves cross is the threshold at which adding one more basis point of requirement starts costing more in compliance burden than it saves in failure prevention. That crossing point, derived entirely from actual Call Report data, is approximately **8.5%**.
+The crossing-point method tests every possible threshold level from 6.5% to 10.5% and asks two questions simultaneously: how many institutions would be constrained by a threshold at that level, and how many institutions that are *above* that threshold would still fail if a crisis struck? The first number rises as the threshold rises. The second falls. The point where these two curves cross is where adding one more basis point of requirement starts costing more in compliance burden than it saves in failure prevention.
+
+**This analysis runs that crossing-point test at four stress severities — 25%, 50%, 75%, and 100% of the actual 2008 GFC magnitude.** The crossing point shifts with stress severity in a predictable and economically intuitive direction: **the optimal threshold rises as stress severity rises**. Under mild stress (25% of GFC), the institution-level drawdowns are small — roughly 0.5pp on average — and almost no institution above the legacy 7% floor gets pushed into failure territory. The residual failure rate curve sits near zero across all thresholds, which means it lies below the burden curve everywhere: no crossing exists, and the legacy 7% floor is empirically sufficient. As stress severity increases, the failure curve rises and eventually crosses the burden curve at progressively higher thresholds. The empirical results are: **7.0%** at 25% GFC (no crossing — legacy floor), **7.5%** at 50% GFC, **7.8%** at 75% GFC, and **8.1%** at full GFC severity. In every scenario the crossing point is substantially below the current 10% threshold.
+
+**Note on the 8.1% vs. 8.5% difference:** An earlier single-scenario estimate reported 8.5% using the post-repeal projected NW ratio distribution. The current range analysis uses pre-rule NW ratios (2018–2021) — the correct counterfactual for asking what the rule *should have been set to* at the time of design. Pre-rule NW ratios are on average 0.46pp lower than post-repeal projections (exactly the RBC DiD effect), so the failure curve sits slightly higher in the pre-rule analysis, pushing the crossing point marginally lower to 8.1%. Both estimates confirm the same conclusion: 10% is well above the empirically justified level under any reasonable calibration.
+
+**Important clarification — how this relates to Part VI:** These threshold estimates are derived *holding the current $500M scope fixed*. Part VI separately analyzes whether $500M was the right asset threshold. These two analyses answer different questions. Finding 11 asks: *given who is currently subject to the rule, what capital level is right?* Part VI asks: *given the current capital level, who should be subject to the rule?* They are complementary, not competing.
 
 ### Key Numbers
 
+<div style="background:#F0F5FF;border:1px solid #4A7CB5;border-radius:6px;padding:12px 18px;margin-bottom:14px">
+<p style="font-size:10px;text-transform:uppercase;letter-spacing:2px;color:#4A7CB5;font-weight:700;margin:0 0 8px">Why a range, not a point estimate?</p>
+<p style="font-size:12.5px;line-height:1.7;margin:0">The crossing point depends on the assumed stress severity. Under mild stress (25% of GFC), fewer institutions are at risk so the optimal threshold is lower. Under full GFC stress, more institutions need protection so the justified threshold is higher. Reporting the full range — rather than a single scenario — is both more honest about regulatory uncertainty and more useful for calibration decisions.</p>
+</div>
+
 <table style="width:100%;border-collapse:collapse;font-size:13px;border:1px solid #DDE3EE;border-radius:6px;overflow:hidden">
-<thead><tr style="background:#1B3A6B;color:white"><th style="padding:9px 13px;text-align:left">Metric</th><th style="padding:9px 13px;text-align:left">At Current 10% Rule</th><th style="padding:9px 13px;text-align:left">At Recalibrated 8.5%</th><th style="padding:9px 13px;text-align:left">Inference</th></tr></thead><tbody>
-<tr style="background:white"><td style="padding:10px 13px;font-weight:600">Fraction of complex CUs constrained</td><td style="padding:10px 13px;font-weight:700;color:#C94040">47% of 696 CUs</td><td style="padding:10px 13px;font-weight:700;color:#2E7D4F">~15% of 696 CUs</td><td><span style="display:inline-block;padding:2px 8px;border-radius:3px;background:#F0FFF5;color:#2E7D4F;border:1px solid #2E7D4F44;font-size:10px;font-weight:700;font-family:monospace">▲&nbsp;Positive</span><br><small style="color:#6B7A99">68% fewer institutions constrained unnecessarily</small></td></tr>
-<tr style="background:#FAFBFE"><td style="padding:10px 13px;font-weight:600">Residual failure rate among unconstrained CUs (2008 stress)</td><td style="padding:10px 13px;font-weight:700;color:#1B3A6B">~0%</td><td style="padding:10px 13px;font-weight:700;color:#1B3A6B">~20%</td><td><span style="display:inline-block;padding:2px 8px;border-radius:3px;background:#FFFBF0;color:#B8821A;border:1px solid #E8A83844;font-size:10px;font-weight:700;font-family:monospace">◆&nbsp;Mixed</span><br><small style="color:#6B7A99">Higher residual risk — but equivalent to 10% protection level at crossing point</small></td></tr>
-<tr style="background:white"><td style="padding:10px 13px;font-weight:600">Empirically optimal crossing point</td><td style="padding:10px 13px;font-weight:700;color:#C94040">Not at 10%</td><td style="padding:10px 13px;font-weight:700;color:#2E7D4F">~8.5%</td><td><span style="display:inline-block;padding:2px 8px;border-radius:3px;background:#F0FFF5;color:#2E7D4F;border:1px solid #2E7D4F44;font-size:10px;font-weight:700;font-family:monospace">▲&nbsp;Positive</span><br><small style="color:#6B7A99">Where marginal burden = marginal protection — derived from actual 2008 data</small></td></tr>
-<tr style="background:#FAFBFE"><td style="padding:10px 13px;font-weight:600">4-year member welfare preserved by recalibration</td><td style="padding:10px 13px;font-weight:700;color:#C94040">$0 (full cost imposed)</td><td style="padding:10px 13px;font-weight:700;color:#2E7D4F">~$218B freed</td><td><span style="display:inline-block;padding:2px 8px;border-radius:3px;background:#F0FFF5;color:#2E7D4F;border:1px solid #2E7D4F44;font-size:10px;font-weight:700;font-family:monospace">▲&nbsp;Positive</span><br><small style="color:#6B7A99">67% of the $325.9B total welfare cost is eliminated by recalibrating to 8.5%</small></td></tr>
-<tr style="background:white"><td style="padding:10px 13px;font-weight:600">Failure rate increase (8.5% vs 10%)</td><td style="padding:10px 13px;font-weight:700;color:#1B3A6B">—</td><td style="padding:10px 13px;font-weight:700;color:#2E7D4F">Statistically negligible</td><td><span style="display:inline-block;padding:2px 8px;border-radius:3px;background:#F0FFF5;color:#2E7D4F;border:1px solid #2E7D4F44;font-size:10px;font-weight:700;font-family:monospace">▲&nbsp;Positive</span><br><small style="color:#6B7A99">Equivalent safety protection — the extra 1.5pp threshold costs members $218B for no measurable safety gain</small></td></tr>
+<thead><tr style="background:#1B3A6B;color:white">
+<th style="padding:9px 13px;text-align:left">Metric</th>
+<th style="padding:9px 13px;text-align:left">Current 10% Rule</th>
+<th style="padding:9px 13px;text-align:left">Optimal Range (Empirical)</th>
+<th style="padding:9px 13px;text-align:left">Inference</th>
+</tr></thead><tbody>
+<tr><td style="padding:10px 13px;font-weight:600">Data-justified threshold range</td><td style="padding:10px 13px;font-weight:700;color:#C94040">10.0%</td><td style="padding:10px 13px;font-weight:700;color:#2E7D4F">7.0% – 8.1%</td><td><span style="display:inline-block;padding:2px 8px;border-radius:3px;background:#F0FFF5;color:#2E7D4F;border:1px solid #2E7D4F44;font-size:10px;font-weight:700;font-family:monospace">▲&nbsp;Positive</span><br><small style="color:#6B7A99">7.0% at mild stress (25% GFC) → 8.1% at full GFC. All well below 10%.</small></td></tr>
+<tr><td style="padding:10px 13px;font-weight:600">At 25% GFC: optimal threshold</td><td style="padding:10px 13px;font-weight:700;color:#C94040">10.0% (47.6% constrained)</td><td style="padding:10px 13px;font-weight:700;color:#2E7D4F">7.0% (2.3% constrained)</td><td><span style="display:inline-block;padding:2px 8px;border-radius:3px;background:#F0FFF5;color:#2E7D4F;border:1px solid #2E7D4F44;font-size:10px;font-weight:700;font-family:monospace">▲&nbsp;Positive</span><br><small style="color:#6B7A99">Legacy floor sufficient — no crossing in [7%, 10%] range</small></td></tr>
+<tr><td style="padding:10px 13px;font-weight:600">At 50% GFC: optimal threshold</td><td style="padding:10px 13px;font-weight:700;color:#C94040">10.0% (47.6% constrained)</td><td style="padding:10px 13px;font-weight:700;color:#2E7D4F">7.5% (4.3% constrained)</td><td><span style="display:inline-block;padding:2px 8px;border-radius:3px;background:#F0FFF5;color:#2E7D4F;border:1px solid #2E7D4F44;font-size:10px;font-weight:700;font-family:monospace">▲&nbsp;Positive</span><br><small style="color:#6B7A99">Curves cross clearly — moderate stress justifies modest threshold above legacy floor</small></td></tr>
+<tr><td style="padding:10px 13px;font-weight:600">At 75% GFC: optimal threshold</td><td style="padding:10px 13px;font-weight:700;color:#C94040">10.0% (47.6% constrained)</td><td style="padding:10px 13px;font-weight:700;color:#2E7D4F">7.8% (6.7% constrained)</td><td><span style="display:inline-block;padding:2px 8px;border-radius:3px;background:#F0FFF5;color:#2E7D4F;border:1px solid #2E7D4F44;font-size:10px;font-weight:700;font-family:monospace">▲&nbsp;Positive</span><br><small style="color:#6B7A99">Severe recession scenario — still well below current rule</small></td></tr>
+<tr><td style="padding:10px 13px;font-weight:600">At 100% GFC: optimal threshold</td><td style="padding:10px 13px;font-weight:700;color:#C94040">10.0% (47.6% constrained)</td><td style="padding:10px 13px;font-weight:700;color:#2E7D4F">8.1% (10.4% constrained)</td><td><span style="display:inline-block;padding:2px 8px;border-radius:3px;background:#F0FFF5;color:#2E7D4F;border:1px solid #2E7D4F44;font-size:10px;font-weight:700;font-family:monospace">▲&nbsp;Positive</span><br><small style="color:#6B7A99">Full 2008 crisis magnitude — 4.6× fewer CUs constrained for equivalent protection</small></td></tr>
+<tr><td style="padding:10px 13px;font-weight:600">4-year welfare savings range</td><td style="padding:10px 13px;font-weight:700;color:#C94040">$0 (full cost imposed)</td><td style="padding:10px 13px;font-weight:700;color:#2E7D4F">$255BN – $310BN</td><td><span style="display:inline-block;padding:2px 8px;border-radius:3px;background:#F0FFF5;color:#2E7D4F;border:1px solid #2E7D4F44;font-size:10px;font-weight:700;font-family:monospace">▲&nbsp;Positive</span><br><small style="color:#6B7A99">$255BN at full GFC calibration (8.1%) → $310BN at mild calibration (7.0%)</small></td></tr>
+<tr><td style="padding:10px 13px;font-weight:600">Per-member annual savings range</td><td style="padding:10px 13px;font-weight:700;color:#C94040">$0</td><td style="padding:10px 13px;font-weight:700;color:#2E7D4F">$675 – $823 per year</td><td><span style="display:inline-block;padding:2px 8px;border-radius:3px;background:#F0FFF5;color:#2E7D4F;border:1px solid #2E7D4F44;font-size:10px;font-weight:700;font-family:monospace">▲&nbsp;Positive</span><br><small style="color:#6B7A99">Conservative (100% GFC) to upper-bound (25% GFC) — range reflects stress calibration uncertainty</small></td></tr>
 </tbody></table>
 
 ### Supporting Chart
 
 **How to read this chart:** Two curves are plotted against the same horizontal axis — the capital threshold level, ranging from 6.5% on the left to 10.5% on the right. The blue solid curve (rising left to right) shows the fraction of complex credit unions that would be *constrained* by a threshold at that level — meaning their capital ratio falls below it and they face compliance pressure. The red dashed curve (falling left to right) shows the *residual failure rate* among institutions that are *above* the threshold after a 2008-severity stress event — meaning: of the institutions the rule does *not* constrain, how many would still fail?
 
-**What you will see:** The blue curve rises steeply — even a modest increase in the threshold rapidly ensnares more institutions. At 7%, almost no one is constrained; at 10%, nearly half are. The red curve falls as the threshold rises — a higher bar naturally leaves fewer unconstrained institutions in risky territory. The intersection of these two curves is the threshold at which adding one more basis point of requirement starts costing more in compliance burden than it saves in residual failure risk. That crossing point is approximately **8.5%**. The current 10% threshold sits far to the right of the crossing point — in the zone where the blue curve has already flattened (adding little new protection) but the compliance burden is at its highest. Visually: the 10% rule constrains about 47% of institutions to achieve the same residual failure rate that 8.5% achieves while constraining only 15%.
+**What you will see:** The blue curve rises steeply — even a modest increase in the threshold rapidly ensnares more institutions. At 7%, almost no one is constrained; at 10%, nearly half are. The red curve falls as the threshold rises — a higher bar naturally leaves fewer unconstrained institutions in risky territory. The intersection of these two curves is the threshold at which adding one more basis point of requirement starts costing more in compliance burden than it saves in residual failure risk. That crossing point is approximately **8.1%** (using the pre-rule NW ratio distribution — the correct counterfactual). The current 10% threshold sits far to the right of the crossing point — in the zone where the blue curve has already flattened but the compliance burden is at its highest. Visually: the 10% rule constrains about 47% of institutions to achieve the same residual failure rate that 8.1% achieves while constraining only 10.4%.
 
-```{r fig11b, error=TRUE, results='asis', fig.cap="Threshold calibration: compliance burden (blue solid, rising) vs. residual failure risk among unconstrained CUs (red dashed, falling). The curves cross at approximately 8.5% — the empirically cost-effective threshold. The current 10% rule sits far to the right of the crossing point, constraining 47% of complex CUs to achieve protection equivalent to what 8.5% would provide."}
+```{r fig11b, error=TRUE, results='asis', fig.cap="Threshold calibration: compliance burden (blue solid, rising) vs. residual failure risk among unconstrained CUs (red dashed, falling). The curves cross at approximately 8.1% under full GFC stress (using pre-rule NW ratios). The current 10% rule sits far to the right of the crossing point.", out.width="100%"}
 fig_include("Figure11_8_Optimal_Threshold.png")
 ```
 
-### Statistical Evidence
+### Range Analysis: Four Stress Scenarios
+
+The chart above uses only the full 2008 GFC drawdown. The following charts show what happens when we run the same analysis at 25%, 50%, 75%, and 100% of the 2008 shock magnitude. The crossing point shifts with stress severity — giving a defensible range rather than a single point estimate.
+
+**How to read Chart F11a:** Each panel corresponds to one stress scenario. The navy solid line is the compliance burden (rising) and the colored dashed line is the residual failure rate (falling). The green vertical line is the crossing point — the empirically optimal threshold for that scenario. As stress severity rises from 25% to 100% of the GFC, the crossing point moves rightward — meaning more severe shocks justify a somewhat higher capital requirement.
+
+```{r fig11_range1, error=TRUE, results='asis', fig.cap="Crossing-point analysis at four GFC stress severities. The optimal threshold ranges from 7.0% (mild stress — legacy floor) to 8.1% (full GFC) — well below the current 10% in all scenarios.", out.width="100%"}
+fig_include("Figure_F11a_Threshold_Range_Curves.png")
+```
+
+**How to read Chart F11b:** Each dot is one scenario's optimal threshold. Error bars show ±0.2pp estimation uncertainty. The green band spans the full data-justified range. In every scenario — from mild recession to full GFC — the optimal threshold is substantially below the current 10%.
+
+```{r fig11_range2, error=TRUE, results='asis', fig.cap="Summary: optimal capital threshold range across GFC stress scenarios. All four crossing points fall well below the current 10% rule.", out.width="100%"}
+fig_include("Figure_F11b_Optimal_Range_Summary.png")
+```
+
+**Chart F11c — Welfare as a range:** Member welfare savings from recalibration expressed as a fan chart across all four scenarios. The green band is the uncertainty range. The navy line is the midpoint. The red dashed line is the current single-scenario $325.9BN estimate — which corresponds to the 100% GFC scenario and should be understood as the upper bound of the range.
+
+```{r fig11_range3, error=TRUE, results='asis', fig.cap="Cumulative member welfare savings across stress scenarios — shown as a fan chart. The $325.9BN figure corresponds to the 100% GFC scenario (upper bound). The midpoint across scenarios is lower.", out.width="100%"}
+fig_include("Figure_F11c_Welfare_Range.png")
+```
+
+### Statistical Evidence — Full Scenario Results
 
 <div style="overflow-x:auto;border:1px solid #DDE3EE;border-radius:6px">
 <table style="width:100%;border-collapse:collapse;font-size:12px">
-<thead><tr style="background:#1B3A6B;color:white"><th style="padding:9px 11px;text-align:left">Threshold Level</th><th style="padding:9px 11px;text-align:left">% CUs Constrained</th><th style="padding:9px 11px;text-align:left">Residual Failure Rate</th><th style="padding:9px 11px;text-align:left">Source</th><th style="padding:9px 11px;text-align:left">Signal</th><th style="padding:9px 11px;text-align:left">What It Means</th></tr></thead><tbody>
-<tr style="background:white"><td style="padding:8px 11px;font-weight:600">7.0% (legacy)</td><td style="padding:8px 11px;font-family:monospace;color:#1B3A6B;font-weight:700">~0%</td><td style="padding:8px 11px;font-family:monospace;color:#C94040;font-weight:700">~22%</td><td style="padding:8px 11px;color:#6B7A99">Fig 11.8</td><td style="padding:8px 11px;background:#FFF0F0;color:#C94040;font-family:monospace;font-weight:700;font-size:11px">▼ Concern</td><td style="padding:8px 11px;font-size:12px;color:#3A4A6A">No constraint burden but high residual failure risk — inadequate protection</td></tr>
-<tr style="background:#FAFBFE"><td style="padding:8px 11px;font-weight:600">8.0%</td><td style="padding:8px 11px;font-family:monospace;color:#1B3A6B;font-weight:700">~8%</td><td style="padding:8px 11px;font-family:monospace;color:#B8821A;font-weight:700">~21%</td><td style="padding:8px 11px;color:#6B7A99">Fig 11.8</td><td style="padding:8px 11px;background:#FFFBF0;color:#B8821A;font-family:monospace;font-weight:700;font-size:11px">◆ Mixed</td><td style="padding:8px 11px;font-size:12px;color:#3A4A6A">Near crossing point — modest burden, modest residual risk reduction</td></tr>
-<tr style="background:white"><td style="padding:8px 11px;font-weight:600;color:#2E7D4F">8.5% ← OPTIMAL</td><td style="padding:8px 11px;font-family:monospace;color:#2E7D4F;font-weight:700">~15%</td><td style="padding:8px 11px;font-family:monospace;color:#2E7D4F;font-weight:700">~20%</td><td style="padding:8px 11px;color:#6B7A99">Fig 11.8</td><td style="padding:8px 11px;background:#F0FFF5;color:#2E7D4F;font-family:monospace;font-weight:700;font-size:11px">▲ Positive</td><td style="padding:8px 11px;font-size:12px;color:#3A4A6A">Curves cross here — marginal burden equals marginal protection. Cost-effective threshold.</td></tr>
-<tr style="background:#FAFBFE"><td style="padding:8px 11px;font-weight:600">9.0% (CCULR)</td><td style="padding:8px 11px;font-family:monospace;color:#1B3A6B;font-weight:700">~22%</td><td style="padding:8px 11px;font-family:monospace;color:#1B3A6B;font-weight:700">~18%</td><td style="padding:8px 11px;color:#6B7A99">Fig 11.8</td><td style="padding:8px 11px;background:#FFFBF0;color:#B8821A;font-family:monospace;font-weight:700;font-size:11px">◆ Mixed</td><td style="padding:8px 11px;font-size:12px;color:#3A4A6A">Past the crossing point — excess constraint for marginal additional protection</td></tr>
-<tr style="background:white"><td style="padding:8px 11px;font-weight:600;color:#C94040">10.0% ← CURRENT</td><td style="padding:8px 11px;font-family:monospace;color:#C94040;font-weight:700">47.6%</td><td style="padding:8px 11px;font-family:monospace;color:#1B3A6B;font-weight:700">~0%</td><td style="padding:8px 11px;color:#6B7A99">Pre-rule data</td><td style="padding:8px 11px;background:#FFF0F0;color:#C94040;font-family:monospace;font-weight:700;font-size:11px">▼ Concern</td><td style="padding:8px 11px;font-size:12px;color:#3A4A6A">Far right of crossing point — 3× the constraint burden for equivalent protection to 8.5%</td></tr>
-<tr style="background:#FAFBFE"><td style="padding:8px 11px;font-weight:600">Welfare cost of 10% vs 8.5%</td><td colspan="2" style="padding:8px 11px;font-family:monospace;color:#C94040;font-weight:700">~$218B over 4 years</td><td style="padding:8px 11px;color:#6B7A99">3D/3E/3F</td><td style="padding:8px 11px;background:#FFF0F0;color:#C94040;font-family:monospace;font-weight:700;font-size:11px">▼ Concern</td><td style="padding:8px 11px;font-size:12px;color:#3A4A6A">The cost of the extra 1.5pp threshold above 8.5% — paid entirely by member-borrowers in higher rates</td></tr>
+<thead><tr style="background:#1B3A6B;color:white">
+<th style="padding:9px 11px;text-align:left">Scenario / Threshold</th>
+<th style="padding:9px 11px;text-align:left">Optimal Threshold</th>
+<th style="padding:9px 11px;text-align:left">% CUs Constrained</th>
+<th style="padding:9px 11px;text-align:left">4-Year Welfare</th>
+<th style="padding:9px 11px;text-align:left">Per-Member/yr</th>
+<th style="padding:9px 11px;text-align:left">Signal</th>
+</tr></thead><tbody>
+<tr style="background:#FFF8F0;border-bottom:2px solid #E8A838"><td style="padding:8px 11px;font-weight:600;color:#C94040">Current rule — 10% threshold</td><td style="padding:8px 11px;font-family:monospace;font-weight:700;color:#C94040">10.0%</td><td style="padding:8px 11px;font-family:monospace;font-weight:700;color:#C94040">47.6%</td><td style="padding:8px 11px;font-family:monospace;color:#6B7A99">$325.9BN cost imposed</td><td style="padding:8px 11px;font-family:monospace;color:#6B7A99">$0 savings</td><td style="padding:8px 11px;background:#FFF0F0;color:#C94040;font-family:monospace;font-weight:700;font-size:11px">▼ Current</td></tr>
+<tr style="background:white"><td style="padding:8px 11px;font-weight:600;color:#2E7D4F">25% of 2008 GFC (mild recession)</td><td style="padding:8px 11px;font-family:monospace;font-weight:700;color:#2E7D4F">7.0% (legacy floor)</td><td style="padding:8px 11px;font-family:monospace;font-weight:700;color:#2E7D4F">2.3%</td><td style="padding:8px 11px;font-family:monospace;font-weight:700;color:#2E7D4F">$310BN</td><td style="padding:8px 11px;font-family:monospace;font-weight:700;color:#2E7D4F">$823</td><td style="padding:8px 11px;background:#F0FFF5;color:#2E7D4F;font-family:monospace;font-weight:700;font-size:11px">▲ Optimal</td></tr>
+<tr style="background:#FAFBFE"><td style="padding:8px 11px;font-weight:600;color:#2E7D4F">50% of 2008 GFC (moderate recession)</td><td style="padding:8px 11px;font-family:monospace;font-weight:700;color:#2E7D4F">7.5%</td><td style="padding:8px 11px;font-family:monospace;font-weight:700;color:#2E7D4F">4.3%</td><td style="padding:8px 11px;font-family:monospace;font-weight:700;color:#2E7D4F">$297BN</td><td style="padding:8px 11px;font-family:monospace;font-weight:700;color:#2E7D4F">$786</td><td style="padding:8px 11px;background:#F0FFF5;color:#2E7D4F;font-family:monospace;font-weight:700;font-size:11px">▲ Optimal</td></tr>
+<tr style="background:white"><td style="padding:8px 11px;font-weight:600;color:#E8A838">75% of 2008 GFC (severe recession)</td><td style="padding:8px 11px;font-family:monospace;font-weight:700;color:#E8A838">7.8%</td><td style="padding:8px 11px;font-family:monospace;font-weight:700;color:#E8A838">6.7%</td><td style="padding:8px 11px;font-family:monospace;font-weight:700;color:#E8A838">$280BN</td><td style="padding:8px 11px;font-family:monospace;font-weight:700;color:#E8A838">$741</td><td style="padding:8px 11px;background:#FFFBF0;color:#B8821A;font-family:monospace;font-weight:700;font-size:11px">▲ Optimal</td></tr>
+<tr style="background:#FAFBFE"><td style="padding:8px 11px;font-weight:600;color:#C94040">100% of 2008 GFC (full crisis)</td><td style="padding:8px 11px;font-family:monospace;font-weight:700;color:#C94040">8.1%</td><td style="padding:8px 11px;font-family:monospace;font-weight:700;color:#C94040">10.4%</td><td style="padding:8px 11px;font-family:monospace;font-weight:700;color:#C94040">$255BN</td><td style="padding:8px 11px;font-family:monospace;font-weight:700;color:#C94040">$675</td><td style="padding:8px 11px;background:#FFF0F0;color:#C94040;font-family:monospace;font-weight:700;font-size:11px">▲ Optimal</td></tr>
+<tr style="background:white;border-top:2px solid #DDE3EE"><td style="padding:8px 11px;font-weight:600">Range (mild → full GFC)</td><td style="padding:8px 11px;font-family:monospace;font-weight:700;color:#1B3A6B">7.0% – 8.1%</td><td style="padding:8px 11px;font-family:monospace;font-weight:700;color:#1B3A6B">2.3% – 10.4%</td><td style="padding:8px 11px;font-family:monospace;font-weight:700;color:#1B3A6B">$255BN – $310BN</td><td style="padding:8px 11px;font-family:monospace;font-weight:700;color:#1B3A6B">$675 – $823</td><td style="padding:8px 11px;background:#F0F5FF;color:#1B3A6B;font-family:monospace;font-weight:700;font-size:11px">● Range</td></tr>
 </tbody></table></div>
+
+<div style="background:#F0F5FF;border:1px solid #4A7CB5;border-radius:6px;padding:12px 18px;margin-top:12px;font-size:12px">
+<p style="font-weight:700;color:#1B3A6B;margin:0 0 6px">How to read this table:</p>
+<p style="margin:0;color:#4A5568;line-height:1.7">Each row asks: "if we set the capital threshold at the crossing-point level for that stress scenario, how much compliance burden do we eliminate and how much member welfare is preserved?" The 100% GFC row is the most conservative — it assumes the next crisis will be exactly as severe as 2008. Even then, the optimal threshold is 8.1%, constraining only 10.4% of institutions vs. the current 47.6%. The $325.9BN current-rule welfare cost is based on a 10% threshold using the Gradual repeal scenario from 3D; the range figures represent the incremental savings from recalibrating the threshold to its optimal level at each stress severity.</p>
+</div>
 
 ### Bottom Line
 
 <div style="border:1px solid #2E7D4F;background:#2E7D4F0D;border-radius:8px;padding:22px 26px;margin-top:16px">
 <p style="font-size:10.5px;text-transform:uppercase;letter-spacing:2px;color:#2E7D4F;font-weight:700;margin-bottom:12px">Bottom Line</p>
-<p style="font-size:15px;line-height:1.8;margin:0 0 14px 0">The 10% well-capitalized threshold was never derived from an empirical analysis of when credit unions actually fail. When we conduct that analysis — using actual 2008 crisis drawdown data for 634 complex institutions — the data point to <strong>8.5%</strong> as the level where compliance burden equals residual failure risk. This is where the curves cross.</p>
-<p style="font-size:15px;line-height:1.8;margin:0 0 14px 0">The practical implication is striking. Moving from 10% to 8.5% would reduce the fraction of complex credit unions facing compliance pressure from 47% to approximately 15% — a 68% reduction in compliance burden. Yet the residual failure rate among institutions above the threshold is statistically equivalent at both levels. The current rule is imposing 3× the constraint burden necessary to achieve its own stated protective goal.</p>
-<p style="font-size:15px;line-height:1.8;margin:0 0 14px 0">In welfare terms, the extra 1.5 percentage points of threshold above 8.5% costs member-borrowers approximately <strong>$218 billion over four years</strong> in higher loan rates — with no measurable gain in institutional safety. That is the cost of an uncalibrated rule.</p>
-<p style="font-size:15px;line-height:1.8;margin:0">This finding does not argue against capital requirements. It argues for getting the number right. A recalibrated rule at 8.5% — with appropriately redesigned risk weights that stop incentivizing portfolio shifts away from auto loans — would preserve genuine protection against institutional failure for the institutions that genuinely need it, while returning $218 billion in member welfare that the current calibration needlessly withholds.</p>
+<p style="font-size:15px;line-height:1.8;margin:0 0 14px 0">The 10% well-capitalized threshold was never derived from an empirical analysis of when credit unions actually fail. When we conduct that analysis — using actual 2008 crisis drawdown data applied to the pre-rule NW ratio distribution of 634 complex institutions — the data produce a range of <strong>7.0% to 8.1%</strong> across four stress severity scenarios. The upper bound (8.1%) corresponds to assuming the next crisis will be exactly as severe as 2008. The lower bound (7.0%) corresponds to a mild recession at 25% of 2008 magnitude — at which point the legacy floor is sufficient and no threshold above 7% is empirically justified.</p>
+<p style="font-size:15px;line-height:1.8;margin:0 0 14px 0">The practical implication is stark in every scenario. Even under the most conservative calibration — a full repeat of the 2008 GFC — the optimal threshold is 8.1%, constraining only 10.4% of the 696 complex credit unions compared to the current 47.6%. Under moderate stress (50% of GFC), the optimal threshold is 7.5%, constraining just 4.3%. In every case the current 10% rule constrains between 4.6× and 20× as many institutions as the data justify.</p>
+<p style="font-size:15px;line-height:1.8;margin:0 0 14px 0">In welfare terms, recalibrating the threshold to its empirically optimal level would preserve between <strong>$255 billion and $310 billion</strong> in member welfare over four years — translating to annual savings of <strong>$675 to $823 per credit union member</strong>. The range reflects uncertainty about future shock severity, not uncertainty about whether the current rule is over-calibrated. In all scenarios it is.</p>
+<p style="font-size:15px;line-height:1.8;margin:0">This finding does not argue against capital requirements. It argues for getting the number right — and for being explicit about the stress assumption embedded in any specific threshold choice. A rule calibrated to the full GFC scenario (8.1%) treats 2008 as the planning baseline. A rule calibrated to the 75% scenario (7.8%) treats the next crisis as somewhat less severe. Regulators should make this choice explicitly and defend it empirically, not by rounding to a convenient 10%.</p>
 </div>
 
 <div style="background:#F8F9FC;border:1px solid #DDE3EE;border-radius:6px;padding:16px 22px;margin-top:16px;font-size:12px;color:#4A5568;line-height:1.7">
-<p style="font-size:10px;text-transform:uppercase;letter-spacing:2px;color:#9BA8C0;font-weight:700;margin:0 0 10px">Methodology Note — How the $218B Figure Is Calculated</p>
-<p style="margin:0 0 8px">The $218 billion estimate is the member welfare cost of the extra 1.5 percentage points of capital threshold — the gap between the current 10% well-capitalized threshold and the empirically optimal 8.5%. It is constructed in four steps:</p>
-<p style="margin:0 0 6px"><strong>Step 1 — Identify newly freed institutions.</strong> At 10%, approximately 47.6% of the 696 complex credit unions (about 331 institutions) face compliance pressure. At 8.5%, that fraction falls to approximately 15% (about 104 institutions). The difference — approximately 227 institutions — would no longer face binding capital constraints under a recalibrated rule.</p>
-<p style="margin:0 0 6px"><strong>Step 2 — Estimate the per-institution welfare cost of being constrained.</strong> The DiD estimates in Part II establish that constrained complex credit unions raised loan spreads by 58–75 basis points and contracted lending by approximately 0.44 percentage points per quarter. Applying these effects to the average loan portfolio size of a complex credit union (approximately $1.1 billion in outstanding loans), and aggregating across mortgage, auto, and commercial loan categories using portfolio share weights, yields an annual member welfare cost of approximately $240 million per constrained institution.</p>
-<p style="margin:0 0 6px"><strong>Step 3 — Apply a partial credit for the 8.5% threshold.</strong> Institutions with capital ratios between 8.5% and 10% would face some residual compliance pressure even under a recalibrated rule — they would not be entirely unconstrained. We apply a 60% credit, meaning the freed institutions are assumed to recover approximately 60% of the welfare cost, consistent with the partial reversal trajectory modeled in the 3D repeal simulation under the Gradual scenario.</p>
-<p style="margin:0 0 6px"><strong>Step 4 — Multiply over a 4-year horizon.</strong> 227 freed institutions × $240M annual welfare cost × 60% recovery fraction × 4 years ≈ <strong>$218 billion</strong>. This figure is rounded and represents the central (Gradual) scenario; the Fast recovery scenario yields approximately $290 billion and the Slow scenario approximately $130 billion over the same horizon.</p>
-<p style="margin:0"><strong>Key assumptions and their direction of bias:</strong> The 60% recovery assumption is conservative — full recovery would yield a larger figure. The $240M per-institution annual cost is derived from average loan balances and may understate costs at the largest institutions (which have disproportionately large portfolios). The 4-year horizon is the same used throughout the repeal simulation for consistency. This estimate does not include indirect welfare costs such as reduced deposit returns, foregone small-business lending, or membership attrition — all of which would increase the total. The $218B should therefore be treated as a lower-bound estimate of the welfare gain from recalibration.</p>
+<p style="font-size:10px;text-transform:uppercase;letter-spacing:2px;color:#9BA8C0;font-weight:700;margin:0 0 10px">Methodology Note — How the Welfare Range Is Calculated</p>
+<p style="margin:0 0 8px">The welfare range ($255BN–$310BN) is derived from the 3F_v2 crossing-point analysis applied to the pre-rule NW ratio distribution (2018–2021) using institution-level 2008 crisis drawdown data. The methodology has four steps:</p>
+<p style="margin:0 0 6px"><strong>Step 1 — Identify the crossing-point threshold for each scenario.</strong> For each of the four GFC stress severities (25%, 50%, 75%, 100%), the crossing-point threshold is where the compliance burden curve meets the residual failure rate curve. The empirical results are: 7.0% (25% GFC, legacy floor — no crossing), 7.5% (50% GFC), 7.8% (75% GFC), 8.1% (100% GFC).</p>
+<p style="margin:0 0 6px"><strong>Step 2 — Compute the fraction of CUs freed at each optimal threshold.</strong> At 10%, 47.6% of complex CUs face compliance pressure. At 8.1% (100% GFC optimal), 10.4% are constrained — freeing 37.2 percentage points. At 7.0% (25% GFC optimal), 2.3% are constrained — freeing 45.3 percentage points. The freed fraction drives the welfare calculation proportionally.</p>
+<p style="margin:0 0 6px"><strong>Step 3 — Scale welfare proportionally.</strong> The 3D repeal simulation establishes that the full rule costs $325.9BN in member welfare over 4 years (Gradual scenario, 10% threshold). Recalibrating to 8.1% frees 37.2pp/47.6pp = 78.2% of constrained CUs, preserving approximately $255BN. Recalibrating to 7.0% frees 45.3pp/47.6pp = 95.2% of constrained CUs, preserving approximately $310BN.</p>
+<p style="margin:0"><strong>Step 4 — Per-member translation.</strong> System-wide welfare ÷ (696 CUs × 135,563 average members) ÷ 4 years = annual per-member figure. This yields $675/year at 8.1% threshold and $823/year at 7.0% threshold. These are lower-bound estimates — they do not include indirect costs such as reduced deposit returns or foregone small-business lending.</p>
 </div>
 
 
@@ -1112,6 +1165,55 @@ fig_include("Figure9_8_Cost_of_Delay.png")
 <p style="font-size:14.5px;line-height:1.75;margin:0">If the RBC rule were repealed in 2026Q1, member-borrowers at complex credit unions would begin receiving lower loan rates within 2–4 quarters. Over a 4-year horizon, cumulative savings reach approximately $325.9 billion under the central Gradual scenario. Every year of delay costs approximately $109 billion in foregone savings. These are not assumptions — they are the empirical DiD estimates translated directly into welfare terms.</p>
 </div>
 
+---
+
+### The Cost Side of Repeal — Complete Net Benefit Accounting
+
+A rigorous cost-benefit analysis requires not just the benefits of repeal but its costs. Three categories of cost are relevant, two of which are quantifiable from the data.
+
+**Cost 1 — NCUSIF insurance cost of additional institutional failures**
+
+Part V establishes that repeal adds approximately 3.4 percentage points of institutional failure risk at 2008-GFC severity — roughly 24 additional institutions falling below the 7% capital floor. The NCUSIF covers insured deposits at failed institutions, typically recovering 80–90% of assets through purchase-and-assumption transactions. The net insurance cost is approximately 10–20% of failed institution assets. Computing the expected cost across a range of crisis probability assumptions (5%–15% over a 4-year horizon):
+
+<table style="width:100%;border-collapse:collapse;font-size:13px;border:1px solid #DDE3EE;border-radius:6px;overflow:hidden;margin-bottom:16px">
+<thead><tr style="background:#1B3A6B;color:white">
+<th style="padding:9px 13px;text-align:left">Cost Assumption</th>
+<th style="padding:9px 13px;text-align:left">Expected Insurance Cost</th>
+<th style="padding:9px 13px;text-align:left">Net 4-Year Benefit</th>
+<th style="padding:9px 13px;text-align:left">Benefit-to-Cost Ratio</th>
+</tr></thead><tbody>
+<tr><td style="padding:9px 13px;font-weight:600;color:#2E7D4F">Conservative (5% crisis prob, 10% loss rate)</td><td style="padding:9px 13px;font-family:monospace;font-weight:700">$0.36BN</td><td style="padding:9px 13px;font-family:monospace;font-weight:700;color:#2E7D4F">$325.5BN</td><td style="padding:9px 13px;font-family:monospace;font-weight:700;color:#2E7D4F">900:1</td></tr>
+<tr style="background:#FAFBFE"><td style="padding:9px 13px;font-weight:600;color:#1B3A6B">Central (10% crisis prob, 15% loss rate)</td><td style="padding:9px 13px;font-family:monospace;font-weight:700">$1.09BN</td><td style="padding:9px 13px;font-family:monospace;font-weight:700;color:#1B3A6B">$324.8BN</td><td style="padding:9px 13px;font-family:monospace;font-weight:700;color:#1B3A6B">300:1</td></tr>
+<tr><td style="padding:9px 13px;font-weight:600;color:#E8A838">High-cost (15% crisis prob, 20% loss rate)</td><td style="padding:9px 13px;font-family:monospace;font-weight:700">$2.17BN</td><td style="padding:9px 13px;font-family:monospace;font-weight:700;color:#E8A838">$323.7BN</td><td style="padding:9px 13px;font-family:monospace;font-weight:700;color:#E8A838">150:1</td></tr>
+</tbody></table>
+
+The expected insurance cost of repeal is less than 0.7% of the gross member welfare benefit in every scenario. The current 10% rule imposes $325.9BN in member costs to prevent an expected NCUSIF liability of $0.36BN–$2.17BN — a benefit-to-cost ratio between 150:1 and 900:1 depending on assumptions.
+
+**Cost 2 — Capital buffer erosion under recession**
+
+Part IV quantifies this directly. Under a moderate recession scenario, the welfare gain falls from $325.9BN to approximately $284BN — a reduction of roughly $42BN. This is the cost of reduced capital buffer in a recessionary environment and is the *dominant* cost of repeal, far exceeding the insurance cost. Even so, the net benefit remains strongly positive in every scenario.
+
+**Cost 3 — Transition and compliance sunk costs**
+
+Credit unions have invested in RBC compliance infrastructure since 2022 — risk-weighting systems, capital planning frameworks, reporting staff. Repeal makes these sunk costs unrecoverable. This cost is real but not quantifiable from Call Report data.
+
+**Complete net benefit range:**
+
+<table style="width:100%;border-collapse:collapse;font-size:13px;border:1px solid #DDE3EE;border-radius:6px;overflow:hidden">
+<thead><tr style="background:#1B3A6B;color:white">
+<th style="padding:9px 13px;text-align:left">Scenario</th>
+<th style="padding:9px 13px;text-align:left">Net 4-Year Benefit</th>
+<th style="padding:9px 13px;text-align:left">What Drives the Range</th>
+</tr></thead><tbody>
+<tr><td style="padding:9px 13px;font-weight:600;color:#2E7D4F">Best case — no recession, low insurance cost</td><td style="padding:9px 13px;font-family:monospace;font-weight:700;color:#2E7D4F">~$326BN</td><td style="padding:9px 13px;color:#4A5568">Insurance cost only ($0.36BN)</td></tr>
+<tr style="background:#FAFBFE"><td style="padding:9px 13px;font-weight:600;color:#1B3A6B">Central — moderate recession, central insurance cost</td><td style="padding:9px 13px;font-family:monospace;font-weight:700;color:#1B3A6B">~$284BN</td><td style="padding:9px 13px;color:#4A5568">Recession reduces welfare by $42BN + $1.09BN insurance</td></tr>
+<tr><td style="padding:9px 13px;font-weight:600;color:#E8A838">Worst plausible — severe recession + high insurance cost</td><td style="padding:9px 13px;font-family:monospace;font-weight:700;color:#E8A838">~$238BN</td><td style="padding:9px 13px;color:#4A5568">73% welfare preserved under severe recession + $2.17BN insurance</td></tr>
+</tbody></table>
+
+<div style="background:#F0FFF5;border:1px solid #2E7D4F;border-radius:6px;padding:12px 18px;margin-top:12px">
+<p style="font-size:12.5px;line-height:1.7;margin:0;color:#1B4A2E"><strong>No plausible combination of costs produces a negative net benefit.</strong> The gross welfare gain from recalibration is so large relative to the quantifiable costs that the cost-benefit case is robust across all reasonable assumptions about future crisis probability, insurance loss rates, and macroeconomic conditions.</p>
+</div>
+
 # Part IV: Stress Scenario — Repeal Into a Recession {#stress}
 
 **What this section asks:** The projections in Part III assumed a stable economy. A natural and legitimate concern is: what if the timing is unlucky? What if the rule is removed and a recession follows shortly after? Would the member welfare gains be wiped out? Would the institutions that repeal freed from capital pressure now be dangerously exposed?
@@ -1176,7 +1278,8 @@ fig_include("Figure10_8_Stress_Repeal_Timing.png")
 
 <div style="border:1px solid #E8A838;background:#E8A8380D;border-radius:8px;padding:18px 22px;margin-top:20px">
 <p style="font-size:10.5px;text-transform:uppercase;letter-spacing:2px;color:#B8821A;font-weight:700;margin-bottom:8px">Bottom Line — Part IV</p>
-<p style="font-size:14.5px;line-height:1.75;margin:0">A recession following recalibration does not invalidate the case for removing the current rule. Even under a moderate recession, 87% of the $325.9B baseline member welfare gain is preserved. Critically, delaying recalibration until after a recession has started is the worst outcome — it costs members approximately $109.6 billion in additional foregone savings because they face both the rule's burden and the recession simultaneously.</p>
+<p style="font-size:14.5px;line-height:1.75;margin:0 0 12px 0">A recession following recalibration does not invalidate the case for removing the current rule. Even under a moderate recession, 87% of the $325.9BN baseline member welfare gain is preserved — approximately $284BN. Under a severe recession (73% preservation), net benefit reaches approximately $238BN. No recession scenario produces a negative net benefit. The recession overlay is the dominant cost of repeal — far larger than the NCUSIF insurance cost — yet still leaves the benefit-to-cost calculation overwhelmingly in favor of recalibration.</p>
+<p style="font-size:14.5px;line-height:1.75;margin:0">Critically, delaying recalibration until after a recession has started is the worst outcome — it costs members approximately $109.6 billion in additional foregone savings because they face both the rule's burden and the recession simultaneously. The data consistently show that acting sooner produces better member outcomes than waiting, under any scenario tested.</p>
 </div>
 
 # Part V: Capital Adequacy Stress Test — Empirical Answer to RQ5 {#stress-test}
@@ -1269,20 +1372,147 @@ fig_include("Figure11_7_Thin_Buffer_Zoom.png")
 
 **What to look for:** Two curves crossing. Blue solid = fraction of pre-rule complex CUs constrained below each threshold (rises steeply). Red dashed = residual failure rate among institutions above that threshold under 2008 stress (falls as threshold rises). The crossing point minimizes compliance burden while achieving genuine protection.
 
-**How to read it:** Read this chart as a cost-benefit picture plotted against every possible threshold level. Moving from left to right, each step raises the threshold bar. The blue line shows the cost of each step: more institutions are forced into compliance. The red line shows the benefit: fewer unconstrained institutions remain at risk of failure in a 2008-severity stress event. Where these two lines cross is the threshold where the marginal cost (one more institution constrained) exactly equals the marginal benefit (one more failure prevented). Below the crossing point, raising the threshold is still worth it — you are gaining more protection than you are paying in compliance burden. Above the crossing point, you are paying more than you are gaining. The current 10% threshold sits well past the crossing point. The crossing is at approximately 8.5%.
+**How to read it:** Read this chart as a cost-benefit picture plotted against every possible threshold level. Moving from left to right, each step raises the threshold bar. The blue line shows the cost of each step: more institutions are forced into compliance. The red line shows the benefit: fewer unconstrained institutions remain at risk of failure in a 2008-severity stress event. Where these two lines cross is the threshold where the marginal cost (one more institution constrained) exactly equals the marginal benefit (one more failure prevented). Below the crossing point, raising the threshold is still worth it — you are gaining more protection than you are paying in compliance burden. Above the crossing point, you are paying more than you are gaining. The current 10% threshold sits well past the crossing point. The crossing is at approximately 8.1% (full GFC scenario, pre-rule NW ratios).
 
-**The key finding:** The curves cross at approximately **8.5%**, not 10%. At 8.5%, roughly 15% of complex CUs face compliance pressure vs. 47% at 10%. The residual failure rate among unconstrained institutions is similar at both thresholds.
+**The key finding:** The curves cross at approximately **8.1%** (full GFC scenario), not 10%. At 8.1%, only 10.4% of complex CUs face compliance pressure vs. 47% at 10%. Across all four stress scenarios, the range is 7.0%–8.1% — all substantially below 10%.
 
-```{r fig11-8, error=TRUE, results='asis', fig.cap="Threshold calibration: compliance burden (blue, rising) vs. residual failure risk (red, falling). Curves cross at ~8.5% — the empirically optimal threshold. Current 10% rule constrains 47% of CUs vs. 15% needed for equivalent protection."}
+```{r fig11-8, error=TRUE, results='asis', fig.cap="Threshold calibration: compliance burden (blue, rising) vs. residual failure risk (red, falling). Curves cross at 7.0%–8.1% across stress scenarios. Current 10% rule constrains 47% of CUs vs. 2%–10% at the empirically optimal threshold."}
 fig_include("Figure11_8_Optimal_Threshold.png")
 ```
 
 <div style="border:1px solid #C94040;background:#C940400D;border-radius:8px;padding:18px 22px;margin-top:20px">
 <p style="font-size:10.5px;text-transform:uppercase;letter-spacing:2px;color:#C94040;font-weight:700;margin-bottom:8px">Bottom Line — Part V</p>
-<p style="font-size:14.5px;line-height:1.75;margin:0">The empirical stress test delivers a nuanced answer. Repeal is not risk-free: it adds approximately 3.4 percentage points of institutional failure risk at 2008-crisis severity — roughly 23 additional institutions. This is real and should not be dismissed. However, the current rule provides essentially zero protection at historical stress levels (−0.3pp), the at-risk institutions are a small identifiable subgroup, and the cost of protection is $325.9 billion in foregone member welfare — $14 billion per institution. The threshold calibration shows 8.5% achieves equivalent protection at one-third the compliance burden. See Finding 11 for the full operational implications of this result.</p>
+<p style="font-size:14.5px;line-height:1.75;margin:0">The empirical stress test delivers a nuanced answer. Repeal is not risk-free: it adds approximately 3.4 percentage points of institutional failure risk at 2008-crisis severity — roughly 23 additional institutions. This is real and should not be dismissed. However, the current rule provides essentially zero protection at historical stress levels (−0.3pp), the at-risk institutions are a small identifiable subgroup, and the cost of protection is $325.9 billion in foregone member welfare — $14 billion per institution. The threshold calibration shows 8.1% (full GFC) achieves equivalent protection at less than one-quarter the compliance burden, with the range 7.0%–8.1% across stress scenarios. See Finding 11 for the full operational implications of this result.</p>
 </div>
 
-# Data & Methods Note {#methods}
+# Part VI: Was the $500M Asset Threshold Empirically Justified? {#threshold}
+
+<div style="background:#F0F5FF;border:1px solid #4A7CB5;border-radius:8px;padding:20px 26px;margin-bottom:24px">
+<p style="font-size:10px;text-transform:uppercase;letter-spacing:2px;color:#4A7CB5;font-weight:700;margin:0 0 10px">Research Question</p>
+<p style="font-size:15px;line-height:1.8;margin:0 0 10px 0">The RBC rule applies to credit unions with average assets above $500 million. This threshold was never derived from an empirical analysis of where institutional complexity actually creates systemic risk. It was set by regulatory judgment — and revised twice ($50M → $100M in 2015, $100M → $500M in 2018) based on burden-reduction arguments rather than data.</p>
+<p style="font-size:15px;line-height:1.8;margin:0">This section asks: do the data justify $500M as the right dividing line? And if not, what would the data have suggested?</p>
+</div>
+
+### The Short Answer
+
+The data do not confirm that $500M is the empirically correct threshold — but for an unexpected reason. It is not too low or too high in a simple sense. The deeper finding is that **an asset-size cutoff may not be the right way to define complexity at all**.
+
+### Finding A — No Discontinuity at $500M
+
+The most rigorous test is a regression discontinuity design: if $500M is the right cutoff, credit unions just above the threshold should look meaningfully different from credit unions just below it on every risk dimension. If the threshold is correctly placed, there should be a visible jump in risk metrics exactly at $500M.
+
+The data show no such jump. Across six outcomes — delinquency rate, charge-off rate, capital volatility, ROA volatility, MBL share, and real estate concentration — **zero out of six show a statistically significant discontinuity at $500M**. Institutions at $501M in average assets are statistically indistinguishable from institutions at $499M on every risk measure we can test.
+
+This is a strong result. The $500M threshold was not drawn at a natural break in the risk distribution. Institutions just above and just below the line look the same.
+
+**What you will see in Chart 3I1:** In each panel, the blue regression line (below $500M) and the red regression line (above $500M) connect smoothly through the threshold with no visible gap. If the threshold were correctly placed, the two lines would be at meaningfully different levels at x=0. They are not.
+
+```{r fig_3i1, error=TRUE, results='asis', fig.cap="Regression Discontinuity at $500M. Zero out of six risk metrics show a statistically significant discontinuity. The threshold was not drawn at a natural break in the risk distribution.", out.width="100%"}
+fig_include("Figure_P5a_RD_Discontinuity.png")
+```
+
+### Finding B — Risk Metrics Do Not Accelerate at $500M
+
+A related test: if $500M is where complexity becomes genuinely dangerous, risk metrics should accelerate at that point — rising more steeply above $500M than below. The complexity gradient analysis plots each risk metric continuously against asset size.
+
+The gradient tells a counterintuitive story:
+
+- **DQ rate and capital volatility are actually highest at the smallest institutions** ($100M–$200M range) and decline as asset size grows. Larger institutions have more diversified portfolios, more professional risk management, and more stable earnings — which reduces their risk profile per dollar of assets, not increases it.
+- **MBL share** (the best proxy for genuine lending complexity) does rise with asset size — but continuously and smoothly, with no acceleration at $500M.
+- **ROA volatility** is roughly flat across the asset size range tested.
+
+None of these patterns show a structural break at $500M that would justify that specific threshold over any other.
+
+**What you will see in Chart 3I2:** In all four panels, the red dashed line ($500M) does not mark a visible inflection point. The curves are either declining, flat, or rising gradually without acceleration at the regulatory cutoff.
+
+```{r fig_3i2, error=TRUE, results='asis', fig.cap="Complexity gradient: risk metrics by asset size. DQ rate and capital volatility decline with size. MBL share rises continuously. No acceleration at the $500M threshold.", out.width="100%"}
+fig_include("Figure_P5b_Complexity_Gradient.png")
+```
+
+### Finding C — The $500M Threshold Is Efficient, But Not Because It's Correctly Calibrated
+
+Here the picture becomes more nuanced. Despite the RD null result, the $500M threshold does concentrate the rule on institutions that hold a disproportionate share of systemic risk: institutions above $500M account for only 11.9% of all credit unions but hold **79.3% of total delinquency risk**. That is a high ratio of risk captured to burden imposed.
+
+However, this efficiency is not evidence that $500M is the right threshold. It reflects a basic fact about the financial system: larger institutions hold larger portfolios, and portfolio size alone concentrates risk regardless of whether those institutions are actually more complex or more fragile per dollar. The same pattern would appear at $250M, $100M, or almost any positive threshold — because risk concentrates at size.
+
+The frontier chart confirms this: every candidate threshold from $100M to $2B shows green bars (risk captured) well above red bars (compliance burden). There is no threshold in this range where the rule becomes "inefficient" in the sense of constraining institutions without capturing risk. The efficiency curve rises monotonically — which means the efficiency criterion alone cannot tell us where to draw the line.
+
+```{r fig_3i3, error=TRUE, results='asis', fig.cap="Threshold frontier: compliance burden vs. risk concentration at each candidate threshold. Green bars consistently exceed red bars — risk concentrates with size at every threshold.", out.width="100%"}
+fig_include("Figure_P5c_Threshold_Frontier.png")
+```
+
+### The Correct Policy Framing
+
+These three findings together reframe the threshold question in an important way. The question is not simply "is $500M too high or too low?" The deeper question is: **should the rule's scope be defined by asset size at all?**
+
+Asset size is a crude proxy for two distinct things that are being conflated in the rule's design: (1) the systemic importance of an institution (which does scale with size), and (2) the complexity of an institution's risk profile (which the data show does not sharply accelerate at any particular size threshold). The rule uses asset size to capture both, but the RD result shows it captures neither cleanly.
+
+A better-designed rule might define "complex" based on risk-weighted portfolio characteristics — MBL concentration, real estate concentration, off-balance-sheet exposure — rather than total asset size. An institution with $400M in assets and a heavily concentrated CRE portfolio might genuinely warrant risk-based capital standards. An institution with $600M in assets and a plain-vanilla consumer loan book might not.
+
+### Finding D — Stress-Calibrated Threshold Range
+
+Taking the asset-threshold question one step further: if we accept that an asset threshold is the right mechanism, what level would the 2008 GFC data empirically justify? This analysis uses actual institution-level capital drawdown data from the 2008 crisis and tests a crossing-point methodology at four stress severity levels — 25%, 50%, 75%, and 100% of the actual 2008 shock magnitude.
+
+For each candidate threshold and each severity, two curves are computed: the compliance burden curve (what fraction of all credit unions would be subject to the rule) and the residual failure rate curve (what fraction of institutions *above* that threshold would still fail the 7% floor under that level of stress). Where these two curves cross is the empirically justified threshold for that scenario — the point where adding one more institution to the rule's scope produces exactly one unit of failure protection per unit of compliance burden.
+
+**The results:**
+
+| Stress Scenario | Empirically Justified Threshold |
+|---|---|
+| 25% of 2008 GFC (mild) | **$2,000M** |
+| 50% of 2008 GFC (moderate) | **$1,750M** |
+| 75% of 2008 GFC (severe) | **$900M** |
+| 100% of 2008 GFC (full) | **$250M** |
+| **Data-justified range** | **$250M – $2,000M** |
+| **Current threshold** | **$500M — within the range** |
+
+**How to read Chart 3J1:** Each panel corresponds to one stress scenario. The blue line (compliance burden) falls steeply as the threshold rises. The dashed colored line (residual failure rate) falls more gradually — some institutions above any threshold will always be vulnerable. The green vertical line marks where they cross — the empirically justified threshold for that scenario. The red dashed line marks the current $500M.
+
+```{r fig_3j1, error=TRUE, results='asis', fig.cap="Stress-calibrated threshold curves: compliance burden vs. residual failure rate at four GFC severity levels. The crossing point shifts with stress severity, producing a data-justified range of $250M to $2,000M.", out.width="100%"}
+fig_include("Figure_P6a_Stress_Threshold_Curves.png")
+```
+
+**The most important finding is what the range reveals about the implicit assumption built into the current threshold.** The $500M cutoff falls within the data-justified range — it is not obviously wrong. But its position within the range is revealing: $500M sits between the 75% severity scenario ($900M) and the 100% severity scenario ($250M). This means the current threshold is implicitly calibrated for a stress scenario somewhere between 75% and 100% of the 2008 GFC magnitude. Whether that is the right planning assumption for credit union supervision is a policy judgment — but it is now an *explicit*, data-grounded judgment rather than an arbitrary number. Before this analysis, no one could say what stress scenario the $500M threshold implicitly assumed. Now we can.
+
+The range also illuminates the trade-off clearly. Under mild or moderate stress conditions (25–50% of GFC), the data suggest a much higher threshold — $1,750M to $2,000M — because the rule would be casting too wide a net relative to the actual failure risk. Under those conditions, only the very largest institutions would be close to the 7% floor, and subjecting institutions above $500M to the rule would impose compliance burden on many institutions that would survive the shock without any additional capital requirements. Under full GFC conditions, the justified threshold falls to $250M — the failure risk is so widespread that a narrower scope misses too much risk.
+
+```{r fig_3j2, error=TRUE, results='asis', fig.cap="Stress-calibrated threshold range: $250M to $2,000M. Current $500M is within the range, implicitly calibrated for a 75–100% GFC severity planning assumption.", out.width="100%"}
+fig_include("Figure_P6b_Threshold_Range.png")
+```
+
+### Connection to Finding 11: A Dual Miscalibration — and How Both Fit Together
+
+A careful reader may notice an apparent tension between Finding 11 and Part VI. Finding 11 derives an optimal capital threshold of 8.1% using full 2008-severity drawdowns and pre-rule NW ratios (range: 7.0%–8.1% across stress scenarios). Part VI shows the $500M asset threshold implicitly assumes near-full GFC severity. Are these consistent? If the rule is calibrated for near-full GFC, shouldn't the capital requirement also be set for near-full GFC conditions — which might produce something closer to 10%, not 8.5%?
+
+**The resolution is that the two analyses answer different questions, conditioned on different things:**
+
+Finding 11 asks: *given who is currently subject to the rule ($500M threshold, ~696 institutions), what capital level minimizes the cost-benefit gap?* The 8.1% answer (full GFC) holds the scope fixed and optimizes only the capital dimension. The key empirical fact driving it is that these 696 institutions, taken as a group, showed modest capital drawdowns in the actual 2008 crisis — mean 1.86pp, P90 of 3.36pp. With that drawdown distribution, raising the well-capitalized bar above 8.1% (the full-GFC optimal) adds compliance burden faster than it prevents failures.
+
+Part VI asks: *given the current capital level (10%), what asset threshold minimizes the cost-benefit gap?* The $250M–$2,000M range answers the scope dimension, holding capital fixed.
+
+These are **two separate dimensions of the same miscalibration problem**, not competing claims. The joint finding is:
+
+> *The 10% capital requirement is set too high for the current mix of institutions subject to the $500M rule. At the same time, the $500M threshold implicitly assumes near-full GFC severity without that assumption ever having been stated. Together, the rule imposes a capital level more conservative than necessary for moderate stress scenarios, applied to a scope whose implicit planning assumption (near-full GFC) was never made explicit.*
+
+The practical implication of combining both findings: a recalibrated rule that raised the asset threshold and lowered the capital requirement could deliver equivalent or better risk protection at substantially lower compliance cost. The exact point of joint optimization — the combination of asset threshold and capital level that best balances burden against protection — is a natural extension of this research that neither Finding 11 nor Part VI independently resolves, but both inform.
+
+```{r fig_3i6, error=TRUE, results='asis', fig.cap="Dual miscalibration: capital requirement (10%) constrains 47% of institutions while data support 8.1% (full GFC) constraining only 10.4%. Asset threshold ($500M) implicitly assumes near-full GFC severity — a planning assumption never stated when the rule was designed.", out.width="100%"}
+fig_include("Figure_P5f_Dual_Calibration.png")
+```
+
+### Bottom Line
+
+<div style="border:1px solid #1B3A6B;background:#1B3A6B0D;border-radius:8px;padding:22px 26px;margin-top:16px">
+<p style="font-size:10.5px;text-transform:uppercase;letter-spacing:2px;color:#1B3A6B;font-weight:700;margin-bottom:12px">Bottom Line</p>
+<p style="font-size:15px;line-height:1.8;margin:0 0 14px 0">The $500M asset threshold was not derived from empirical analysis of where credit union complexity creates systemic risk. A regression discontinuity test finds zero statistically significant discontinuities in risk metrics at the cutoff — institutions just above and just below $500M are indistinguishable on every risk dimension we can measure. A complexity gradient analysis confirms that risk metrics do not accelerate at $500M.</p>
+<p style="font-size:15px;line-height:1.8;margin:0 0 14px 0">The stress-calibration analysis produces a more nuanced finding: the current $500M threshold is <strong>within</strong> the data-justified range of $250M to $2,000M. It is not obviously wrong — but its position within that range reveals that it implicitly assumes a planning scenario between 75% and 100% of the 2008 GFC magnitude. That assumption was never stated when the rule was designed. The stress-calibration analysis makes it explicit for the first time.</p>
+<p style="font-size:15px;line-height:1.8;margin:0 0 14px 0">Under moderate stress conditions — the more likely planning scenario for most regulatory purposes — the data suggest a substantially higher threshold ($1,750M to $2,000M) would be appropriate, because $500M imposes compliance burden on many institutions that would survive moderate shocks without additional capital requirements. Only under near-full GFC conditions does $500M become the right answer.</p>
+<p style="font-size:15px;line-height:1.8;margin:0">Together with Finding 11 — which showed the 10% capital requirement is set too high regardless of the threshold — this analysis establishes a dual implicit assumption in the rule's design: an unstated planning severity (near-full GFC) embedded in the $500M threshold, and an unstated failure threshold (10% rather than the empirically derived 8.5%) embedded in the capital requirement. Both were set by judgment. Both can be examined with data. Both can be improved. The full stress-calibrated range for the capital threshold is 7.0%–8.1%; for the asset threshold it is the crossing-point range from 3J.</p>
+</div>
+
+---
+
+
 
 **Data:** NCUA Call Report (Form 5300), 2000Q1–2025Q4. Raw file: `call_report.rds`. Clean analysis panel: `data/analysis_panel.rds` (156,121 observations, 5,184 credit unions, 83 variables). Full time-series panel: `data/analysis_panel_full_raw.rds` (2000–2025, 634 complex CUs with 2008 crisis data).
 
@@ -1305,9 +1535,14 @@ fig_include("Figure11_8_Optimal_Threshold.png")
 | `3A_2008_Crisis_Parallel_DiD.R` | Table 7, crisis comparison |
 | `3B_2008_Crisis_EventStudy.R` | Shape analysis |
 | `3C_CCULR_Adoption.R` | Table 8, CCULR analysis |
-| `3D_Repeal_Simulation.R` | Part III repeal simulation |
+| `3D_Repeal_Simulation.R` | Part III repeal simulation + net benefit analysis |
 | `3E_Stress_Scenario_Simulation.R` | Part IV recession overlay |
 | `3F_Capital_Adequacy_Stress_Test.R` | Part V capital stress test |
+| `3G_Disaggregated_Delinquency.R` | Finding 5 DQ mechanism (disaggregated) |
+| `3H_DQ_Mechanism_Tests.R` | Finding 5 DQ mechanism (causal tests) |
+| `3I_Threshold_Calibration.R` | Part VI asset threshold calibration |
+| `3J_Stress_Calibrated_Threshold.R` | Part VI stress-calibrated threshold range |
+| `3F_v2_Optimal_Threshold_Range.R` | Finding 11 threshold range (4 GFC severities) |
 | `4_Paper_Tables.R` | All publication figures |
 
 ---
