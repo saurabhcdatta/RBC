@@ -1384,7 +1384,7 @@ cat(sprintf("  P(crisis in 4yr) = %.0f%%: $%.2fBN expected\n",
 # Cost 2: Capital buffer erosion (from 3E)
 # 3E shows that under moderate recession, welfare falls to ~87% of baseline
 # The difference = cost of reduced capital buffer
-WELFARE_BASELINE_BN <- gradual_4yr   # from 3D computation above
+WELFARE_BASELINE_BN <- 325.9   # hardcoded from 3D Gradual scenario 4-year cumulative
 welfare_under_recession_pct <- 0.87  # from 3E analysis
 cost_2_recession <- WELFARE_BASELINE_BN * (1 - welfare_under_recession_pct)
 
