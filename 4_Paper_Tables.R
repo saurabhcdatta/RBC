@@ -1133,7 +1133,14 @@ figure_map <- list(
   list("3C_main_panel_3group.png",            "Figure7_CCULR_EventStudy.png"),
   list("fig_heterogeneity_tier.png",          "FigureA1_Heterogeneity.png"),
   list("fig_bunching_500m.png",               "FigureA2_Bunching.png"),
-  list("3A_forest_plot_crisis_vs_rbc.png",    "FigureA3_Crisis_Forest.png")
+  list("3A_forest_plot_crisis_vs_rbc.png",    "FigureA3_Crisis_Forest.png"),
+  # Finding 5 mechanism tests (3H) — confirm why DQ increased
+  list("policy_3h1_dq_mechanism_decomp.png",  "Figure_F5a_DQ_Mechanism_Tests.png"),
+  list("policy_3h2_dollar_dq_test.png",       "Figure_F5b_Dollar_vs_Rate_DQ.png"),
+  list("policy_3h4_capacity_channel.png",     "Figure_F5c_Capacity_Channel.png"),
+  # Finding 5 supplementary: disaggregated DQ overview (3G)
+  list("policy_3g1_dq_available_categories.png", "FigureA4_DQ_Categories.png"),
+  list("policy_3g7_mechanism_summary.png",    "FigureA5_DQ_Causal_Chain.png")
 )
 
 for (fm in figure_map) {
@@ -1247,6 +1254,13 @@ figures_list <- c(
   "Figure6_Crisis_vs_RBC_Capital.png",
   "Figure6b_Crisis_vs_RBC_Portfolio.png",
   "Figure7_CCULR_EventStudy.png",
+  # Finding 5 mechanism tests (3H)
+  "Figure_F5a_DQ_Mechanism_Tests.png",
+  "Figure_F5b_Dollar_vs_Rate_DQ.png",
+  "Figure_F5c_Capacity_Channel.png",
+  # Appendix: supplementary DQ analysis (3G)
+  "FigureA4_DQ_Categories.png",
+  "FigureA5_DQ_Causal_Chain.png",
   # 3D: Section 10A repeal simulation figures
   "Figure9_1_Spread_Fan_Chart.png",
   "Figure9_2_Recovery_Dashboard.png",
