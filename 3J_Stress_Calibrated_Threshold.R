@@ -496,151 +496,100 @@ ggsave(file.path(FIGURE_PATH, "policy_3j2_threshold_range.png"),
 message("  Chart 3J2 saved.")
 
 # =============================================================================
-# 7. CHART 3J3 — COMBINED: ASSET THRESHOLD + CAPITAL THRESHOLD RANGES
+# 7. CHART 3J3 — THRESHOLD RANGE SUMMARY (clean standalone version)
 # =============================================================================
 
-# Combine with Finding 11 capital threshold range for the dual-calibration story
-
-# Capital threshold data from Finding 11 (8.5% optimal)
-cap_data <- tibble(
-  label      = c("Capital threshold\n(Finding 11)",
-                 "Capital threshold\n(Finding 11)"),
-  setting    = c("Current (10% NW ratio)", "Optimal (8.5% NW ratio)"),
-  value      = c(10.0, 8.5),
-  pct_constrained = c(47.6, 15.0),
-  is_current = c(TRUE, FALSE),
-  dimension  = "Capital Level\n(Finding 11)"
-)
-
-# Asset threshold data (this analysis)
-asset_data <- tibble(
-  label      = c("Asset threshold\n(This analysis)", rep("", nrow(crossing_points) - 1)),
-  setting    = c("Current ($500M)", crossing_points$short_label),
-  value      = c(500, crossing_points$threshold_rounded),
-  pct_constrained = c(
-    all_curves$burden_pct[all_curves$threshold_m == 500 &
-                           all_curves$multiplier == 1.0][1],
-    crossing_points$burden_at_cross
-  ),
-  is_current = c(TRUE, rep(FALSE, nrow(crossing_points))),
-  dimension  = "Asset Threshold\n(This Analysis)"
-)
-
-# Summary comparison chart
-p3j3 <- ggplot() +
-  # Capital threshold bars
-  geom_col(
-    data = cap_data,
-    aes(x = setting, y = pct_constrained, fill = is_current),
-    width = 0.6
-  ) +
-  geom_text(
-    data = cap_data,
-    aes(x = setting, y = pct_constrained,
-        label = paste0(round(pct_constrained, 1), "%")),
-    vjust = -0.4, size = 3.5, fontface = "bold"
-  ) +
-  # Asset threshold points with range
-  new_scale_fill_workaround <- NULL  # handled via facets
-
-  facet_wrap(~dimension, scales = "free_x") +
-  scale_fill_manual(
-    values = c("TRUE" = COL_CONCERN, "FALSE" = COL_POSITIVE),
-    labels = c("TRUE" = "Current (mis-calibrated)",
-               "FALSE" = "Empirically optimal range"),
-    name = NULL
-  ) +
-  scale_y_continuous(limits = c(0, 60),
-                     labels = function(x) paste0(x, "%")) +
-  labs(
-    title    = "Dual Mis-Calibration: Both the Capital Requirement and Asset Threshold",
-    subtitle = paste0(
-      "Left: Finding 11 — capital threshold of 10% is too high; data support 8.5%.\n",
-      "Right: This analysis — $500M asset threshold range under different GFC scenarios.\n",
-      "Both dimensions were set by regulatory judgment. Both can be data-calibrated."
-    ),
-    x = NULL,
-    y = "% of Complex Credit Unions Subject to Binding Constraint",
-    caption = "Capital threshold from 3F/Finding 11. Asset threshold range from 3J stress-calibration."
-  ) +
-  theme_rbc() +
-  theme(legend.position = "bottom",
-        axis.text.x = element_text(angle = 15, hjust = 1, size = 8))
-
-# Note: the combined chart requires careful layout — save as a clean version
-# using the crossing_points data directly
+# p3j3_clean: a horizontal dot-plot showing the crossing-point range
+# against the current $500M threshold — clean and self-contained
 
 p3j3_clean <- ggplot() +
-  geom_segment(
-    data = tibble(
-      x    = range_min,
-      xend = range_max,
-      y    = 1, yend = 1
-    ),
-    aes(x = x, xend = xend, y = y, yend = yend),
-    color = COL_POSITIVE, linewidth = 6, alpha = 0.4,
-    lineend = "round"
-  ) +
+  # Green band showing the full justified range
+  annotate("rect",
+           xmin = range_min - 50, xmax = range_max + 50,
+           ymin = 0.6, ymax = 4.4,
+           fill = COL_POSITIVE, alpha = 0.08) +
+  # Current $500M vertical reference
+  geom_vline(xintercept = 500, color = COL_CONCERN,
+             linetype = "dashed", linewidth = 1.2) +
+  # Crossing-point dots, one per scenario
   geom_point(
     data = crossing_points,
-    aes(x = threshold_rounded, y = 1, color = short_label),
-    size = 5
+    aes(x = threshold_rounded,
+        y = multiplier * 4,   # spread vertically by scenario
+        color = short_label),
+    size = 6
   ) +
-  geom_point(
-    data = tibble(x = 500, y = 1),
-    aes(x = x, y = y), shape = 18, size = 7, color = COL_CONCERN
+  # Error bars ±$100M uncertainty
+  geom_errorbarh(
+    data = crossing_points,
+    aes(xmin = threshold_rounded - 100,
+        xmax = threshold_rounded + 100,
+        y    = multiplier * 4,
+        color = short_label),
+    height = 0.15, linewidth = 0.9
+  ) +
+  # Labels
+  geom_text(
+    data = crossing_points,
+    aes(x = threshold_rounded,
+        y = multiplier * 4,
+        label = paste0("$", threshold_rounded, "M")),
+    vjust = -1.2, size = 3.5, fontface = "bold"
   ) +
   geom_text(
     data = crossing_points,
-    aes(x = threshold_rounded, y = 1,
-        label = paste0(short_label, "\n$", threshold_rounded, "M")),
-    vjust = -1.2, size = 2.8
+    aes(x = threshold_rounded - 150,
+        y = multiplier * 4,
+        label = short_label),
+    hjust = 1, size = 3, color = "gray30"
   ) +
-  annotate("text", x = 500, y = 1,
-           label = "Current\n$500M", vjust = 2.0, size = 3,
-           color = COL_CONCERN, fontface = "bold") +
+  # Current threshold annotation
+  annotate("text", x = 520, y = 4.5,
+           label = "Current $500M", color = COL_CONCERN,
+           size = 3.5, hjust = 0, fontface = "bold") +
+  # Range annotation
   annotate("text",
-           x = range_mid, y = 1.3,
-           label = sprintf("Justified range: $%dM to $%dM",
+           x = mean(c(range_min, range_max)),
+           y = 0.35,
+           label = sprintf("Data-justified range: $%dM – $%dM",
                            range_min, range_max),
-           size = 4, fontface = "bold", color = COL_POSITIVE) +
+           color = COL_POSITIVE, size = 4, fontface = "bold") +
   scale_color_manual(
     values = setNames(STRESS_SCENARIOS$color, STRESS_SCENARIOS$short_label),
-    name = "Stress scenario"
+    name   = "GFC stress scenario"
   ) +
   scale_x_continuous(
-    limits = c(50, range_max + 300),
-    labels = function(x) paste0("$", ifelse(x >= 1000, x/1000, x),
+    limits = c(0, range_max + 400),
+    labels = function(x) paste0("$",
+                                ifelse(x >= 1000, x / 1000, x),
                                 ifelse(x >= 1000, "B", "M")),
     breaks = c(100, 250, 500, 750, 1000, 1500, 2000)
   ) +
-  scale_y_continuous(limits = c(0.5, 1.8)) +
+  scale_y_continuous(limits = c(0, 5)) +
   labs(
-    title = "Stress-Calibrated Threshold Range: $500M in Context",
+    title    = "Stress-Calibrated Threshold Range: Where the Data Say the Line Should Be",
     subtitle = paste0(
-      "Green segment = range of empirically justified thresholds across GFC stress scenarios.\n",
-      "Red diamond = current $500M threshold. Colored dots = crossing-point threshold per scenario.\n",
-      "The current threshold may fall outside or at the boundary of the data-justified range."
+      "Each dot = the empirically justified asset threshold at that stress severity.\n",
+      "Error bars = ±$100M estimation uncertainty. Green shaded region = full justified range.\n",
+      "Current $500M threshold (red dashed) shown for reference."
     ),
-    x = "Asset Threshold ($M)",
+    x = "Empirically Justified Asset Threshold",
     y = NULL,
     caption = paste0(
-      "Crossing point = threshold where compliance burden curve meets residual failure rate curve.\n",
-      "Starting NW ratios: pre-rule period 2018–2021. Drawdowns: 2008 crisis data."
+      "Crossing point = where compliance burden curve meets residual failure rate curve.\n",
+      "Starting NW ratios: pre-rule period 2018–2021. Drawdowns: 2008 GFC data (or calibrated fallback).\n",
+      "Source: NCUA Call Report (5300)."
     )
   ) +
   theme_rbc() +
-  theme(axis.text.y = element_blank(),
+  theme(axis.text.y  = element_blank(),
         axis.ticks.y = element_blank(),
         panel.grid.major.y = element_blank(),
         legend.position = "right")
 
-ggsave(file.path(FIGURE_PATH, "policy_3j2_threshold_range.png"),
-       p3j2, width = 12, height = 7, dpi = 300)
-
 ggsave(file.path(FIGURE_PATH, "policy_3j3_threshold_range_summary.png"),
        p3j3_clean, width = 13, height = 6, dpi = 300)
-message("  Charts 3J2 and 3J3 saved.")
+message("  Chart 3J3 saved.")
 
 # =============================================================================
 # 8. FINAL SUMMARY
