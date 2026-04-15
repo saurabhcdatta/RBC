@@ -597,7 +597,16 @@ message("  Chart 3G4 saved.")
 message("\n-- Approach 3b: Charge-off event studies ----------------------------")
 
 es_co_total <- run_es("chgoff_ratio")
-es_co_mbl   <- run_es("chgoff_mbl_ratio")
+
+# chgoff_mbl_ratio has low coverage — guard before running event study
+n_mbl_co <- sum(!is.na(df_es$chgoff_mbl_ratio), na.rm = TRUE)
+es_co_mbl <- if (n_mbl_co >= 100) {
+  message(sprintf("  Running MBL charge-off event study (%d obs)", n_mbl_co))
+  run_es("chgoff_mbl_ratio")
+} else {
+  message(sprintf("  SKIP: chgoff_mbl_ratio has only %d non-NA obs — omitting Panel B", n_mbl_co))
+  NULL
+}
 
 pCO1 <- plot_es(extract_es(es_co_total, "Total Charge-off"),
                 "Total Charge-off", "gray30",
@@ -613,7 +622,9 @@ p3g5 <- (pCO1 + pCO2) +
     title   = "Charge-off Rate Event Studies: Delinquency Progressing to Loss",
     subtitle = paste0(
       "Charge-offs confirm WHICH delinquencies became actual losses.\n",
-      "A larger MBL-specific effect confirms that commercial/CRE loans are the problem category."
+      "Panel A: total charge-off rate across all loan types. ",
+      "Panel B: MBL-specific (shown only if sufficient coverage; otherwise blank).\n",
+      "A larger MBL-specific effect confirms that commercial/CRE loans drove the deterioration."
     ),
     caption = "Two-way FE (CU + quarter-year). SE clustered at CU. Reference = Q-1."
   )
@@ -665,14 +676,14 @@ if (all(c("thin_buffer", "avg_nw_pre") %in% names(df))) {
     geom_errorbarh(
       aes(xmin = ci_lo * 100, xmax = ci_hi * 100),
       height = 0.25, linewidth = 0.8,
-      position = position_dodgev(height = 0.55)
+      position = position_dodge2(width = 0.55, padding = 0.1)
     ) +
     geom_point(size = 3.8,
-               position = position_dodgev(height = 0.55)) +
+               position = position_dodge2(width = 0.55, padding = 0.1)) +
     geom_text(
       aes(label = paste0(sprintf("%+.2f", beta * 100), "bp", stars)),
       hjust = -0.25, size = 2.9,
-      position = position_dodgev(height = 0.55)
+      position = position_dodge2(width = 0.55, padding = 0.1)
     ) +
     scale_color_manual(values = setNames(
       c(COL_CONCERN, COL_NEUTRAL),
