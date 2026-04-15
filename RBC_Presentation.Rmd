@@ -1,0 +1,392 @@
+---
+title: "The 2022 NCUA Risk-Based Capital Rule"
+subtitle: "Empirical Findings from an Analysis of Complex Credit Unions"
+author: "Saurabh C. Datta, Ph.D. | Senior Economist, NCUA Office of the Chief Economist"
+date: "April 2026"
+output:
+  html_document:
+    theme: flatly
+    highlight: tango
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    toc_depth: 2
+    self_contained: true
+    css: rbc_pres.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+fig_dir <- "output/paper/figures/"
+fig_include <- function(path, caption = "") {
+  if (file.exists(path)) {
+    knitr::include_graphics(path)
+  } else {
+    cat(paste0('<div class="fig-ph"><span>Figure: ', basename(path), '</span></div>'))
+  }
+}
+```
+
+<div class="cover-slide">
+<div class="cover-org">NCUA &middot; Office of the Chief Economist</div>
+<div class="cover-title">The 2022 NCUA Risk-Based Capital Rule</div>
+<div class="cover-sub">Empirical Findings from an Analysis of Complex Credit Unions</div>
+<div class="cover-rule"></div>
+<div class="cover-meta">Saurabh C. Datta, Ph.D. &middot; Senior Economist<br>NCUA Call Report Data, 2000&ndash;2025 &middot; April 2026</div>
+</div>
+
+---
+
+## What We Studied {.slide-section}
+
+<div class="two-col">
+<div class="col-l">
+
+<div class="lbl">The Data</div>
+
+- **696 complex credit unions** &mdash; average assets above $500M, classified using 2021 data
+- **~4,488 non-complex credit unions** as the comparison group
+- **150,000+ CU-quarters** of NCUA Call Report data, 2000&ndash;2025
+- **12 outcomes** measured: capital, loan rates, lending volume, portfolio mix, profitability, and loan quality
+
+<div class="lbl" style="margin-top:12px;">The Method: Difference-in-Differences (DiD)</div>
+
+<div class="method-row">
+<div class="mbox"><strong>Change in complex CUs</strong><br><small>Before vs. after rule</small></div>
+<div class="mop">&minus;</div>
+<div class="mbox"><strong>Change in non-complex CUs</strong><br><small>Same time window</small></div>
+<div class="mop">=</div>
+<div class="mres"><strong>The Rule's Effect</strong><br><small>What changed because of the rule, not the economy</small></div>
+</div>
+
+<div class="cb"><strong>Why this works:</strong> Non-complex credit unions faced the same economic conditions but were not subject to the RBC rule. Any difference in outcomes between the two groups, after accounting for pre-existing trends, isolates the rule's effect.</div>
+
+</div>
+<div class="col-r">
+
+<div class="lbl">How to Read the Event Study Charts</div>
+
+<div class="ib">
+- **Horizontal axis:** quarters relative to the rule's effective date (Q0). Left = before; right = after.
+- **Vertical axis:** the estimated gap between complex and non-complex CUs, above any pre-existing difference.
+- **Before Q0:** dots near zero confirm the two groups moved together &mdash; the parallel trends check.
+- **After Q0:** a persistent move up or down is the rule's estimated effect. The shaded band is the 95% confidence interval.
+- **If the band crosses zero** at a given quarter, the effect is not statistically distinguishable from no effect.
+</div>
+
+<svg viewBox="0 0 300 100" style="width:100%;border:1px solid #ddd;border-radius:4px;background:#fff;margin-top:8px;">
+<line x1="20" y1="55" x2="285" y2="55" stroke="#ccc" stroke-width="0.8" stroke-dasharray="3,2"/>
+<line x1="155" y1="8" x2="155" y2="90" stroke="#c8972a" stroke-width="1.2" stroke-dasharray="3,2"/>
+<polygon points="60,50 105,52 155,55 198,43 240,38 282,36 282,48 240,50 198,55 155,62 105,60 60,62" fill="#1a2744" opacity="0.12"/>
+<polyline points="60,51 105,53 155,55 198,44 240,39 282,37" fill="none" stroke="#1a2744" stroke-width="2"/>
+<circle cx="60" cy="51" r="3" fill="#1a2744"/><circle cx="105" cy="53" r="3" fill="#1a2744"/>
+<circle cx="155" cy="55" r="3" fill="#1a2744"/><circle cx="198" cy="44" r="3" fill="#1a2744"/>
+<circle cx="240" cy="39" r="3" fill="#1a2744"/><circle cx="282" cy="37" r="3" fill="#1a2744"/>
+<text x="60" y="100" font-size="8" text-anchor="middle" fill="#888" font-family="Arial">-4Q</text>
+<text x="105" y="100" font-size="8" text-anchor="middle" fill="#888" font-family="Arial">-2Q</text>
+<text x="155" y="100" font-size="8" text-anchor="middle" fill="#888" font-family="Arial">0</text>
+<text x="198" y="100" font-size="8" text-anchor="middle" fill="#888" font-family="Arial">+2Q</text>
+<text x="240" y="100" font-size="8" text-anchor="middle" fill="#888" font-family="Arial">+4Q</text>
+<text x="282" y="100" font-size="8" text-anchor="middle" fill="#888" font-family="Arial">+6Q</text>
+<text x="158" y="20" font-size="7.5" fill="#c8972a" font-family="Arial">Rule effective</text>
+<text x="62" y="45" font-size="7.5" fill="#555" font-family="Arial">Flat pre-period</text>
+<text x="162" y="38" font-size="7.5" fill="#1a2744" font-family="Arial">Persistent effect</text>
+</svg>
+<p style="font-size:10px;color:#aaa;text-align:center;margin-top:4px;">Schematic only &mdash; actual charts appear in each section below</p>
+
+</div>
+</div>
+
+---
+
+## RQ 1 &mdash; Pre-Rule Capital Buffer {.slide-section}
+
+<span class="bdg-rq">Research Question 1</span>
+
+**How much capital buffer did complex credit unions hold before the rule?**
+
+<div class="abar">Answer: The average complex credit union entered the rule with a buffer of just <strong>72 basis points</strong> above the new 10% threshold &mdash; critically thin.</div>
+
+<div class="two-col">
+<div class="col-l">
+
+<div class="lbl">What the Data Show</div>
+
+- The 696 complex CUs were nominally compliant before the rule &mdash; but with very little margin to absorb a new, higher threshold
+- A **72 basis point buffer** means holding 10.72% net worth when the definition of well-capitalized shifted upward simultaneously
+- Capital was **tightly clustered just above the old threshold** &mdash; a large mass barely on the compliant side
+- This thin margin directly explains why the rule had such large downstream effects &mdash; institutions had to act immediately
+
+</div>
+<div class="col-r">
+
+<div class="cb"><strong>What is a basis point?</strong> One basis point (bp) equals one one-hundredth of a percentage point. A 72bp buffer means a credit union holding 10.72% capital against a 10.00% threshold.</div>
+
+<div class="stat-row">
+<div class="stat-card"><div class="sn">72bp</div><div class="sl">Average pre-rule buffer above the 10% threshold</div></div>
+<div class="stat-card red"><div class="sn">696</div><div class="sl">Complex CUs subject to the rule (fixed 2021 classification)</div></div>
+</div>
+
+<div class="cb" style="margin-top:10px;"><strong>Why it matters:</strong> A rule requiring additional capital is always more costly when institutions start with little room to spare. The thin pre-rule buffer set the stage for the compliance pressures documented in RQ2&ndash;RQ4.</div>
+
+</div>
+</div>
+
+---
+
+## RQ 2 &mdash; Did Capital Levels Rise? {.slide-section}
+
+<span class="bdg-rq">Research Question 2</span>
+
+**Did the rule cause complex credit unions to hold more capital?**
+
+<div class="abar">Answer: <strong>Mixed.</strong> Average capital levels rose &mdash; but fewer institutions are now meeting the well-capitalized standard. The bar rose faster than capital could accumulate.</div>
+
+<div class="two-col">
+<div class="col-l">
+
+<div class="stat-row" style="margin-bottom:14px;">
+<div class="stat-card green"><div class="sn">+46bp</div><div class="sl">Net worth ratio increase (p &lt; 0.01)</div></div>
+<div class="stat-card red"><div class="sn">-3.7pp</div><div class="sl">Well-capitalized probability change (p &lt; 0.01)</div></div>
+</div>
+
+<div class="lbl">The Paradox Explained</div>
+
+- Capital rose &mdash; institutions did respond to the rule's incentive to build reserves
+- But the **definition of well-capitalized changed** simultaneously, raising the bar
+- Result: more capital on average, but **fewer institutions clearing the new bar**
+
+<div class="cb" style="margin-top:10px;"><strong>Analogy:</strong> Every student studied harder and raised their score &mdash; but the passing grade was raised even more. Average scores went up, yet more students are technically failing. Both facts are simultaneously true.</div>
+
+</div>
+<div class="col-r">
+
+<div class="lbl">Event Study &mdash; Capital</div>
+
+```{r fig-rq2, out.width="100%", results="asis"}
+fig_include(file.path(fig_dir, "Figure3_EventStudy_Capital.png"))
+```
+
+<p class="fn">Pre-period flat confirms parallel trends. Post-period divergence attributed to the rule.</p>
+
+</div>
+</div>
+
+---
+
+## RQ 3 &mdash; Member Cost: Higher Rates and Less Lending {.slide-section}
+
+<span class="bdg-rq">Research Question 3</span>
+
+**What did the rule cost members in higher loan rates and reduced lending?**
+
+<div class="abar">Answer: Loan rates rose across every product; lending contracted persistently. Estimated total member cost: <strong>$325.9 billion over 4 years</strong> &mdash; approximately <strong>$865 per member per year</strong>.</div>
+
+<div class="two-col">
+<div class="col-l">
+
+<div class="lbl">Loan Rate Increases vs. Non-Complex CUs</div>
+
+<div class="stat-row" style="margin-bottom:10px;">
+<div class="stat-card red"><div class="sn sm">+75bp</div><div class="sl">Mortgage spread</div></div>
+<div class="stat-card red"><div class="sn sm">+59bp</div><div class="sl">Auto loan spread</div></div>
+<div class="stat-card red"><div class="sn sm">+58bp</div><div class="sl">Commercial spread</div></div>
+</div>
+
+- All increases **statistically significant**, persist 10+ quarters with no sign of convergence
+- A 75bp mortgage increase on a $300,000 loan adds roughly **$135 per month** in payments
+
+```{r fig-rq3a, out.width="100%", results="asis"}
+fig_include(file.path(fig_dir, "Figure4_EventStudy_Spreads.png"))
+```
+
+</div>
+<div class="col-r">
+
+<div class="lbl">Lending Volume and Total Member Cost</div>
+
+<div class="stat-row" style="margin-bottom:10px;">
+<div class="stat-card red"><div class="sn sm">-0.44pp</div><div class="sl">Quarterly loan growth &mdash; persistent, no recovery</div></div>
+<div class="stat-card red"><div class="sn sm">$325.9B</div><div class="sl">Total member welfare cost over 4 years</div></div>
+</div>
+
+- Loan growth fell **0.44pp per quarter** &mdash; compounding into a substantial reduction in credit availability
+- $325.9BN aggregates the rate-increase effect across all member-borrowers of all 696 complex CUs over four years
+- Per-member: approximately **$865/year** in higher borrowing costs
+
+```{r fig-rq3b, out.width="100%", results="asis"}
+fig_include(file.path(fig_dir, "Figure3b_EventStudy_LoanGrowth.png"))
+```
+
+</div>
+</div>
+
+---
+
+## RQ 4 &mdash; Portfolio Shift and the Crisis Comparison {.slide-section}
+
+<span class="bdg-rq">Research Question 4</span>
+
+**Did the rule change what loans credit unions make &mdash; and how does this compare to past stress?**
+
+<div class="abar">Answer: Yes. Complex CUs shifted from auto loans toward mortgages &mdash; consistent with <strong>risk-weight arbitrage</strong>. This shift is unique to the RBC rule; it did not occur during the 2008 financial crisis.</div>
+
+<div class="two-col">
+<div class="col-l">
+
+<div class="stat-row" style="margin-bottom:10px;">
+<div class="stat-card red"><div class="sn">-4.0pp</div><div class="sl">Auto loan share (vs. controls)</div></div>
+<div class="stat-card green"><div class="sn">+2.4pp</div><div class="sl">Real estate loan share</div></div>
+</div>
+
+- **Risk-weight arbitrage:** mortgages carry lower risk weights than auto loans under the RBC rule. Shifting to mortgages reduces required capital &mdash; a rational regulatory response
+- Loan quality also deteriorated: **delinquency +8bp**, driven by a capacity channel &mdash; CUs with the largest profitability declines showed 2&times; the delinquency increase
+
+```{r fig-rq4a, out.width="100%", results="asis"}
+fig_include(file.path(fig_dir, "Figure5_Portfolio_Trends.png"))
+```
+
+</div>
+<div class="col-r">
+
+<div class="lbl">Comparison to the 2008 Financial Crisis</div>
+
+<div class="cb">We ran the same DiD analysis using 2008 as the event, comparing how complex CUs responded to the financial crisis versus the RBC rule.</div>
+
+| Outcome | 2008 Crisis | RBC Rule |
+|:--------|:-----------:|:--------:|
+| Capital accumulation | Similar | Similar |
+| Auto loan exit | Not observed | **Persistent** |
+| Loan growth contraction | Temporary | **No recovery** |
+| Profitability decline | Temporary | **No recovery** |
+
+Capital behavior resembles a crisis response &mdash; but the lending and profitability effects are **distinctly regulatory** in nature.
+
+```{r fig-rq4b, out.width="100%", results="asis"}
+fig_include(file.path(fig_dir, "Figure6_Crisis_vs_RBC_Capital.png"))
+```
+
+</div>
+</div>
+
+---
+
+## Supporting Finding &mdash; Profitability {.slide-section}
+
+<span class="bdg-intro">Supporting Finding</span>
+
+**Profitability Declined Persistently &mdash; Largest Institutions Hit Hardest**
+
+<div class="abar">Return on assets fell across complex CUs &mdash; with the largest institutions experiencing the sharpest and most sustained declines. This finding directly informs the financial stability question in RQ5.</div>
+
+<div class="two-col">
+<div class="col-l">
+
+<div class="stat-row" style="margin-bottom:12px;">
+<div class="stat-card red"><div class="sn">-26bp</div><div class="sl">Average ROA decline &mdash; all complex CUs (p &lt; 0.01)</div></div>
+<div class="stat-card red"><div class="sn">-47bp</div><div class="sl">ROA decline for CUs above $10B in assets</div></div>
+</div>
+
+- ROA decline is **persistent** &mdash; no evidence of adaptation or recovery through the observation window
+- Largest CUs (above $10B in assets) experience a decline **nearly double the average**
+- CCULR provided **no significant relief** on lending outcomes; CCULR adopters showed worse baseline outcomes consistent with distressed self-selection
+
+</div>
+<div class="col-r">
+
+<div class="cb"><strong>Why this matters:</strong> Lower profitability reduces a credit union's ability to build capital organically. A CU that cannot retain earnings must either raise rates further, cut lending, or draw down its capital ratio &mdash; all three patterns appear in the data.</div>
+
+<div class="cb" style="margin-top:8px;"><strong>CCULR finding:</strong> The Community Credit Union Leverage Ratio was designed as a simpler compliance pathway. The data suggest institutions most likely to adopt it were already under financial stress &mdash; CCULR adoption did not cause their worse outcomes, but did not reverse them either.</div>
+
+```{r fig-roa, out.width="100%", results="asis"}
+fig_include(file.path(fig_dir, "Figure3d_EventStudy_ROA.png"))
+```
+
+</div>
+</div>
+
+---
+
+## RQ 5 &mdash; Failure Risk from Removing the Rule {.slide-section}
+
+<span class="bdg-rq">Research Question 5</span>
+
+**Does removing the RBC rule create unacceptable failure risk?**
+
+<div class="abar">Answer: Removing the rule carries <strong>real but quantifiable and modest risk</strong>. At 2008 GFC severity, the rule reduces failure risk by 3.4 percentage points &mdash; protecting approximately 24 institutions.</div>
+
+<div class="two-col">
+<div class="col-l">
+
+<div class="lbl">Capital Adequacy Stress Test &mdash; At 2008 GFC Severity</div>
+
+<div class="stat-row" style="margin-bottom:12px;">
+<div class="stat-card"><div class="sn sm">19.1%</div><div class="sl">Pre-rule failure rate (baseline)</div></div>
+<div class="stat-card green"><div class="sn sm">19.4%</div><div class="sl">With-rule rate (&minus;0.3pp incremental protection)</div></div>
+<div class="stat-card red"><div class="sn sm">22.5%</div><div class="sl">Post-removal (+3.4pp &asymp; 24 institutions)</div></div>
+</div>
+
+- The rule's **incremental protection is only &minus;0.3pp** &mdash; complex CUs were already building substantial buffers before the rule
+- Removal raises simulated failure risk by **+3.4pp at 2008 severity**, corresponding to approximately **24 additional institutions**
+- Each protected institution represents approximately **$14 billion in assets** sheltered from distress
+
+</div>
+<div class="col-r">
+
+<div class="stat-row" style="margin-bottom:12px;">
+<div class="stat-card"><div class="sn sm">$0.4B&ndash;$2.2B</div><div class="sl">Probability-weighted NCUSIF cost of removal</div></div>
+</div>
+
+<div class="lbl">Stress Scenario Sensitivity</div>
+
+| Recession Severity | Welfare Retained | Member Cost |
+|:-------------------|:----------------:|:-----------:|
+| Moderate recession | 87% | $284BN |
+| Severe recession | 73% | $238BN |
+
+<div class="cb" style="margin-top:8px;">Even in a severe recession, the estimated member cost of the rule substantially outweighs the estimated insurance benefit under any plausible combination of assumptions tested. No scenario produces a reversal of this finding.</div>
+
+</div>
+</div>
+
+---
+
+## Summary &mdash; Five Questions, Five Answers {.slide-section}
+
+<span class="bdg-sum">Summary</span>
+
+```{r summary-table}
+library(knitr)
+library(kableExtra)
+df <- data.frame(
+  RQ = c("RQ 1","RQ 2","RQ 3","RQ 4","RQ 5"),
+  Question = c(
+    "How much capital buffer before the rule?",
+    "Did complex CUs hold more capital?",
+    "What did it cost members?",
+    "Did the rule change what loans CUs make?",
+    "Does removing the rule create unacceptable failure risk?"
+  ),
+  Finding = c(
+    "Critically thin -- 72bp average buffer above the 10% threshold",
+    "Mixed -- NW ratio +46bp, but well-capitalized probability -3.7pp",
+    "Rates rose on every product; lending contracted persistently. $325.9BN total, $865/member/yr",
+    "Yes -- auto share -4.0pp, RE share +2.4pp. Pattern unique to RBC rule, not seen in 2008",
+    "Real but modest -- +3.4pp failure risk, ~24 institutions, NCUSIF cost $0.4-$2.2BN"
+  ),
+  stringsAsFactors = FALSE
+)
+kable(df, col.names = c("RQ", "Question", "Core Finding and Key Numbers"),
+      align = c("c","l","l")) |>
+  kable_styling(bootstrap_options = c("striped","hover"),
+                full_width = TRUE, font_size = 14) |>
+  column_spec(1, bold = TRUE, color = "#1a2744", width = "5%") |>
+  column_spec(2, width = "28%") |>
+  column_spec(3, bold = TRUE, color = "#1a2744") |>
+  row_spec(0, background = "#1a2744", color = "white", bold = TRUE)
+```
+
+<div style="margin-top:16px;padding:12px 16px;border-left:4px solid #c8972a;background:#ede8df;font-size:13px;color:#444;border-radius:0 4px 4px 0;">
+<strong>Across all five research questions</strong>, the findings are consistent: complex credit unions responded to the rule's capital incentive primarily through higher loan rates, reduced lending volume, portfolio reallocation, and lower profitability &mdash; rather than through material improvements in financial stability outcomes at the system level.
+</div>
