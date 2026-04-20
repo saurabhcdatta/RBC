@@ -1,9 +1,13 @@
 # =============================================================================
-# Combine_RQ3_Figures.R  —  FINAL VERSION
+# Combine_RQ3_Figures.R  —  CLEAN AUDITED VERSION
+#
+# Strategy: mirror exactly what 2_DiD_Estimation_v2.R does. Use i() with ref
+# matching the actual values in event_time. Diagnose first, then regress.
+#
 # Run from: S:/Projects/RBC_2026/Data/
-# Output:   output/paper/figures/Figure_RQ3_Combined.png
 # =============================================================================
 
+rm(list = ls())
 library(tidyverse)
 library(fixest)
 library(haven)
@@ -12,197 +16,173 @@ library(patchwork)
 PANEL_FILE <- "analysis_panel_raw.rds"
 FIGURE_OUT <- "output/paper/figures/Figure_RQ3_Combined.png"
 
-NAVY  <- "#1a2744"
-GOLD  <- "#C8972A"
-MUTED <- "#777777"
+NAVY <- "#1a2744"; GOLD <- "#C8972A"
 
+# =============================================================================
+# 1. LOAD AND DIAGNOSE
+# =============================================================================
+message("Loading panel...")
+panel <- readRDS(PANEL_FILE) |> haven::zap_labels()
+
+# Cast numeric columns explicitly
+num_cols <- c("event_time", "complex", "cu_number", "q_period_num",
+              "ln_assets", "loan_to_asset", "cecl_adopter",
+              "spread_mortgage", "spread_nauto", "spread_uauto", "loan_growth")
+for (nm in intersect(num_cols, names(panel))) {
+  panel[[nm]] <- as.numeric(panel[[nm]])
+}
+
+# ── Diagnostic: confirm key columns exist with correct types ─────────────────
+message("\n=== DIAGNOSTIC ===")
+for (col in c("event_time","complex","cu_number","q_period_num",
+              "ln_assets","loan_to_asset","cecl_adopter",
+              "spread_mortgage","spread_nauto","spread_uauto","loan_growth")) {
+  if (!(col %in% names(panel))) {
+    message("  MISSING: ", col)
+  } else {
+    x <- panel[[col]]
+    message(sprintf("  %-20s  class=%-10s  non-NA=%s  range=[%s, %s]",
+                    col, class(x)[1], sum(!is.na(x)),
+                    if (is.numeric(x)) round(min(x, na.rm=TRUE), 2) else "-",
+                    if (is.numeric(x)) round(max(x, na.rm=TRUE), 2) else "-"))
+  }
+}
+
+# Confirm event_time has -1 in it
+et_vals <- sort(unique(panel$event_time[!is.na(panel$event_time)]))
+message("\n  event_time unique values: ", paste(head(et_vals, 10), collapse=","),
+        " ... ", paste(tail(et_vals, 5), collapse=","))
+message("  -1 in event_time? ", -1 %in% et_vals)
+
+if (!(-1 %in% et_vals)) {
+  stop("event_time does not contain -1; cannot use as reference quarter")
+}
+
+# =============================================================================
+# 2. FILTER
+# =============================================================================
+panel_es <- panel |> filter(event_time >= -12, event_time <= 8)
+message(sprintf("\nPanel_es: %d rows", nrow(panel_es)))
+
+# =============================================================================
+# 3. EVENT STUDY (mirrors 2_DiD_Estimation_v2.R line for line)
+# =============================================================================
+run_es <- function(outcome_var, outcome_label, outcome_ylab) {
+  message("\n-- ", outcome_label, " [", outcome_var, "]")
+
+  df <- panel_es |> filter(!is.na(.data[[outcome_var]]))
+
+  if (nrow(df) == 0) {
+    stop("No non-NA rows for ", outcome_var)
+  }
+  message("  Rows: ", nrow(df))
+
+  # Formula matches paper spec exactly
+  fml <- as.formula(paste0(
+    outcome_var,
+    " ~ i(event_time, complex, ref = -1)",
+    " + ln_assets + loan_to_asset + cecl_adopter",
+    " | cu_number + q_period_num"
+  ))
+
+  m <- feols(fml, data = df, cluster = ~cu_number,
+             warn = FALSE, notes = FALSE)
+
+  # iplot gives the event-time coefficients directly
+  ip <- iplot(m, only.params = TRUE)$prms
+
+  tibble(
+    label     = outcome_label,
+    ylab      = outcome_ylab,
+    quarter   = as.numeric(as.character(ip$x)),
+    estimate  = ip$y,
+    conf_low  = ip$ci_low,
+    conf_high = ip$ci_high,
+    period    = if_else(as.numeric(as.character(ip$x)) < 0, "Pre", "Post"),
+    sig       = ip$ci_low > 0 | ip$ci_high < 0
+  ) |>
+    arrange(quarter)
+}
+
+message("\nRunning event studies...")
+r_mort  <- run_es("spread_mortgage", "A.  Mortgage Rate Spread",  "Spread (pp)")
+r_nauto <- run_es("spread_nauto",    "B.  New Auto Rate Spread",  "Spread (pp)")
+r_uauto <- run_es("spread_uauto",    "C.  Used Auto Rate Spread", "Spread (pp)")
+r_lgr   <- run_es("loan_growth",     "D.  Loan Growth (QoQ log\u00d7100)", "Growth (pp)")
+
+# =============================================================================
+# 4. PLOT
+# =============================================================================
 theme_rbc <- function() {
   theme_minimal(base_size = 12) +
     theme(
       panel.grid.minor   = element_blank(),
       panel.grid.major.x = element_blank(),
       panel.grid.major.y = element_line(color = "#E8E4DC", linewidth = 0.4),
-      plot.title         = element_text(face = "bold", size = 13, color = NAVY,
-                                        margin = margin(b = 4)),
-      plot.subtitle      = element_text(size = 9, color = MUTED,
-                                        lineheight = 1.2, margin = margin(b = 6)),
-      axis.title.x       = element_text(size = 10, color = "#555555", margin = margin(t = 6)),
-      axis.title.y       = element_text(size = 9,  color = "#555555", margin = margin(r = 4)),
-      axis.text          = element_text(size = 9,  color = "#555555"),
+      plot.title         = element_text(face = "bold", size = 13, color = NAVY),
+      plot.subtitle      = element_text(size = 9, color = "#777", lineheight = 1.2),
+      axis.title         = element_text(size = 10, color = "#555"),
+      axis.text          = element_text(size = 9, color = "#555"),
       legend.position    = "bottom",
-      legend.text        = element_text(size = 9),
       plot.background    = element_rect(fill = "white", color = NA),
       panel.background   = element_rect(fill = "#FAFAF8", color = NA),
-      plot.caption       = element_text(size = 7.5, color = "#999999",
-                                        lineheight = 1.2, margin = margin(t = 6)),
+      plot.caption       = element_text(size = 7.5, color = "#999", lineheight = 1.2),
       plot.margin        = margin(10, 14, 8, 10)
     )
 }
 
-# ── Load panel ────────────────────────────────────────────────────────────────
-message("Loading panel...")
-panel <- readRDS(PANEL_FILE) |>
-  haven::zap_labels() |>
-  mutate(across(where(is.numeric), as.numeric))
-
-message(sprintf("  %d rows x %d cols", nrow(panel), ncol(panel)))
-message("  event_time range: ", min(panel$event_time, na.rm=TRUE),
-        " to ", max(panel$event_time, na.rm=TRUE))
-message("  event_time class: ", class(panel$event_time))
-
-# ── Filter event window ───────────────────────────────────────────────────────
-panel_es <- panel |>
-  filter(event_time >= -12, event_time <= 8)
-
-message(sprintf("  Event window rows: %d", nrow(panel_es)))
-
-# ── Event study function ──────────────────────────────────────────────────────
-# KEY FIX: use sunab() or i() with ref as character matching actual values
-# Safest approach: manually dummy out event_time and use standard lm-style FE
-
-run_es <- function(outcome_var, outcome_label, ylab) {
-  message("  Running: ", outcome_label)
-
-  df <- panel_es |>
-    filter(!is.na(.data[[outcome_var]])) |>
-    # Create event time factor with explicit reference = -1
-    mutate(
-      et_fac = factor(event_time),
-      et_fac = relevel(et_fac, ref = "-1")
-    )
-
-  # Formula using factor with relevel (avoids i() ref mismatch)
-  fml <- as.formula(paste0(
-    outcome_var,
-    " ~ et_fac:complex",
-    " + ln_assets + loan_to_asset + cecl_adopter",
-    " | cu_number + q_period_num"
-  ))
-
-  m <- tryCatch(
-    feols(fml, data = df,
-          cluster = ~cu_number,
-          warn    = FALSE,
-          notes   = FALSE),
-    error = function(e) stop("feols failed for '", outcome_var, "': ", e$message)
-  )
-
-  # Extract coefficients for complex == 1 interactions (post and pre)
-  coefs <- coef(m)
-  ses   <- se(m)
-  cis   <- confint(m)
-
-  # Keep only the et_fac:complex interaction terms
-  idx <- str_detect(names(coefs), "^et_fac.*:complex$|^et_fac.*complex$")
-  if (sum(idx) == 0) {
-    # Try alternate naming
-    idx <- str_detect(names(coefs), "complex.*et_fac|et_fac.*complex")
-  }
-
-  coef_names <- names(coefs)[idx]
-
-  # Extract quarter from coefficient name
-  qtrs <- as.numeric(str_extract(coef_names, "-?\\d+"))
-
-  # Reference quarter = -1 contributes 0 by construction
-  all_qtrs <- sort(unique(c(qtrs, -1L)))
-
-  result <- tibble(
-    label     = outcome_label,
-    quarter   = all_qtrs,
-    estimate  = case_when(
-      all_qtrs == -1L ~ 0,
-      TRUE ~ coefs[coef_names][match(all_qtrs[all_qtrs != -1L], qtrs)]
-    ),
-    conf_low  = case_when(
-      all_qtrs == -1L ~ 0,
-      TRUE ~ cis[coef_names, 1][match(all_qtrs[all_qtrs != -1L], qtrs)]
-    ),
-    conf_high = case_when(
-      all_qtrs == -1L ~ 0,
-      TRUE ~ cis[coef_names, 2][match(all_qtrs[all_qtrs != -1L], qtrs)]
-    ),
-    period    = if_else(all_qtrs < 0, "Pre", "Post"),
-    sig       = (conf_low > 0 | conf_high < 0) & all_qtrs != -1L,
-    ylab      = ylab
-  )
-
-  result
-}
-
-# ── Run all four ──────────────────────────────────────────────────────────────
-message("\nRunning event studies...")
-
-SPECS <- list(
-  list(var="spread_mortgage", label="A.  Mortgage Rate Spread",
-       ylab="Coefficient (Mortgage Spread, pp)"),
-  list(var="spread_nauto",    label="B.  New Auto Rate Spread",
-       ylab="Coefficient (New Auto Spread, pp)"),
-  list(var="spread_uauto",    label="C.  Used Auto Rate Spread",
-       ylab="Coefficient (Used Auto Spread, pp)"),
-  list(var="loan_growth",     label="D.  Loan Growth (QoQ log\u00d7100)",
-       ylab="Coefficient (Loan Growth, pp)")
-)
-
-results <- map(SPECS, ~ run_es(.x$var, .x$label, .x$ylab))
-
-# ── Plot function ─────────────────────────────────────────────────────────────
 make_panel <- function(df) {
-  ylo <- min(df$conf_low,  na.rm=TRUE) - abs(diff(range(df$estimate, na.rm=TRUE)))*0.1
-  yhi <- max(df$conf_high, na.rm=TRUE) + abs(diff(range(df$estimate, na.rm=TRUE)))*0.1
+  pad <- diff(range(c(df$conf_low, df$conf_high), na.rm = TRUE)) * 0.12
+  yl  <- min(df$conf_low,  na.rm = TRUE) - pad
+  yh  <- max(df$conf_high, na.rm = TRUE) + pad
 
   ggplot(df, aes(x = quarter, y = estimate)) +
     geom_ribbon(aes(ymin = conf_low, ymax = conf_high),
                 fill = NAVY, alpha = 0.13) +
     geom_vline(xintercept = 0, color = GOLD,
                linetype = "dashed", linewidth = 1.1) +
-    geom_hline(yintercept = 0, color = "#AAAAAA",
+    geom_hline(yintercept = 0, color = "#AAA",
                linetype = "dashed", linewidth = 0.6) +
     geom_line(color = NAVY, linewidth = 1.5) +
     geom_point(data = ~filter(.x, period == "Pre"),
-               shape = 1, color = NAVY, size = 3.0, stroke = 1.2) +
+               shape = 1, color = NAVY, size = 3, stroke = 1.2) +
     geom_point(data = ~filter(.x, period == "Post", !sig),
-               shape = 1, color = NAVY, size = 3.0, stroke = 1.2) +
+               shape = 1, color = NAVY, size = 3, stroke = 1.2) +
     geom_point(data = ~filter(.x, period == "Post", sig),
                shape = 19, color = "#C8292C", size = 3.2) +
-    annotate("text", x = 0.3, y = yhi * 0.88,
-             label = "Rule\neffective", hjust = 0,
-             size = 3.0, color = GOLD, fontface = "bold", lineheight = 0.9) +
-    scale_x_continuous(breaks = c(-12,-8,-4,0,4,8),
+    annotate("text", x = 0.3, y = yh * 0.88, label = "Rule\neffective",
+             hjust = 0, size = 3, color = GOLD, fontface = "bold",
+             lineheight = 0.9) +
+    scale_x_continuous(breaks = c(-12, -8, -4, 0, 4, 8),
                        labels = c("Q-12","Q-8","Q-4","Q0","Q+4","Q+8")) +
-    coord_cartesian(ylim = c(ylo, yhi)) +
+    coord_cartesian(ylim = c(yl, yh)) +
     labs(
       title    = unique(df$label),
-      subtitle = paste0("Event time = quarters relative to RBC (Q0 = 2022 Q1). ",
-                        "Reference = Q\u22121. 95% CI shaded.\n",
-                        "\u25cf Post-RBC significant (red)  \u25cb Post-RBC not significant  \u25cb Pre-RBC"),
+      subtitle = "Event time = quarters relative to RBC (Q0 = 2022 Q1). Reference = Q\u22121. 95% CI shaded.",
       x        = "Quarters Relative to RBC Effective Date",
       y        = unique(df$ylab),
-      caption  = "\u2605 p < 0.05 (post-period). Two-way FE (CU + quarter-year). SE clustered at CU."
+      caption  = "Two-way FE (CU + quarter-year). SE clustered at CU."
     ) +
     theme_rbc()
 }
 
 message("\nBuilding panels...")
-plots <- map(results, make_panel)
+p1 <- make_panel(r_mort)
+p2 <- make_panel(r_nauto)
+p3 <- make_panel(r_uauto)
+p4 <- make_panel(r_lgr)
 
-# ── Combine 2x2 ───────────────────────────────────────────────────────────────
-combined <- (plots[[1]] | plots[[2]]) / (plots[[3]] | plots[[4]]) +
+combined <- (p1 | p2) / (p3 | p4) +
   plot_annotation(
     title   = "Event Study: RBC Rule Impact on Loan Rate Spreads and Lending Volume",
-    caption = paste0(
-      "Two-way FE (CU \u00d7 quarter-year). SE clustered at CU. ",
-      "Complex CUs = avg assets \u2265 $500M (2021 Q4). ",
-      "N \u2248 150,000 CU-quarters, 2000\u20132025."
-    ),
-    theme = theme(
-      plot.title   = element_text(face="bold", size=15, color=NAVY, margin=margin(b=6)),
-      plot.caption = element_text(size=8.5, color="#888888", lineheight=1.3)
+    caption = "Two-way FE (CU \u00d7 quarter-year). SE clustered at CU. Complex CUs = avg assets \u2265 $500M (2021 Q4). N \u2248 150,000 CU-quarters.",
+    theme   = theme(
+      plot.title   = element_text(face = "bold", size = 15, color = NAVY),
+      plot.caption = element_text(size = 8.5, color = "#888", lineheight = 1.3)
     )
   )
 
-# ── Save ──────────────────────────────────────────────────────────────────────
-dir.create(dirname(FIGURE_OUT), showWarnings=FALSE, recursive=TRUE)
+dir.create(dirname(FIGURE_OUT), showWarnings = FALSE, recursive = TRUE)
 message("\nSaving: ", FIGURE_OUT)
-ggsave(FIGURE_OUT, combined, width=16, height=12, dpi=300, bg="white")
-message("Done. Size: ", round(file.size(FIGURE_OUT)/1024), " KB")
+ggsave(FIGURE_OUT, combined, width = 16, height = 12, dpi = 300, bg = "white")
+message("Done. Size: ", round(file.size(FIGURE_OUT) / 1024), " KB")
