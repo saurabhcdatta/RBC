@@ -1,5 +1,5 @@
 # =============================================================================
-# Combine_RQ3_Figures.R  —  FIXED VERSION
+# Combine_RQ3_Figures.R  —  FIXED v3
 # Run from: S:/Projects/RBC_2026/Data/
 # Output:   output/paper/figures/Figure_RQ3_Combined.png
 # =============================================================================
@@ -37,53 +37,101 @@ panel <- readRDS("analysis_panel_raw.rds") |>
   haven::zap_labels() |>
   mutate(across(where(is.numeric), as.numeric))
 
-# ── Diagnostic: print relevant column names ───────────────────────────────────
-message("\n--- COLUMN NAMES CONTAINING 'spread', 'loan_gr', or 'complex' ---")
-print(names(panel)[str_detect(names(panel), "spread|loan_gr|complex")])
-message("--------------------------------------------------------------\n")
+# ── DIAGNOSTIC: print ALL column names so we can see everything ───────────────
+message("\n========== ALL COLUMN NAMES IN PANEL ==========")
+print(names(panel))
+message("================================================\n")
 
-# ── Auto-detect correct variable names ────────────────────────────────────────
+# ── Auto-detect CU identifier (entity FE) ────────────────────────────────────
+cu_id_var <- case_when(
+  "cu_id"     %in% names(panel) ~ "cu_id",
+  "cu_number" %in% names(panel) ~ "cu_number",
+  "rssd_id"   %in% names(panel) ~ "rssd_id",
+  "id"        %in% names(panel) ~ "id",
+  TRUE ~ NA_character_
+)
+if (is.na(cu_id_var)) stop("Cannot find CU identifier column — check column names above")
+message("CU identifier: ", cu_id_var)
+
+# ── Auto-detect time FE ───────────────────────────────────────────────────────
+time_var <- case_when(
+  "year_quarter"  %in% names(panel) ~ "year_quarter",
+  "yyyyqq"        %in% names(panel) ~ "yyyyqq",
+  "date"          %in% names(panel) ~ "date",
+  "period"        %in% names(panel) ~ "period",
+  "time"          %in% names(panel) ~ "time",
+  TRUE ~ NA_character_
+)
+# If no dedicated time column, construct one from year + quarter
+if (is.na(time_var)) {
+  if (all(c("year","quarter") %in% names(panel))) {
+    panel <- panel |> mutate(yq_fe = year * 10 + quarter)
+    time_var <- "yq_fe"
+    message("Constructed time FE: yq_fe = year*10 + quarter")
+  } else {
+    stop("Cannot find time fixed effect column — check column names above")
+  }
+}
+message("Time FE: ", time_var)
+
+# ── Auto-detect treatment variable ───────────────────────────────────────────
 treat_var <- case_when(
   "complex"    %in% names(panel) ~ "complex",
   "complex_cu" %in% names(panel) ~ "complex_cu",
+  "treated"    %in% names(panel) ~ "treated",
   TRUE ~ NA_character_
 )
-if (is.na(treat_var)) stop("No treatment variable found — check column names above")
+if (is.na(treat_var)) stop("Cannot find treatment indicator — check column names above")
 message("Treatment: ", treat_var)
 
-lgr_var <- names(panel)[str_detect(names(panel), "^loan_gr")][1]
-if (is.na(lgr_var)) stop("No loan growth variable found")
+# ── Auto-detect outcome variables ─────────────────────────────────────────────
+all_cols <- names(panel)
+
+# Loan growth
+lgr_var <- all_cols[str_detect(all_cols, "loan_gr")][1]
+if (is.na(lgr_var)) lgr_var <- all_cols[str_detect(all_cols, "^lgr|^loan_g")][1]
 message("Loan growth: ", lgr_var)
 
-spread_cols <- names(panel)[str_detect(names(panel), "^spread_")]
-spread_mortgage   <- spread_cols[str_detect(spread_cols, "mort")][1]
-spread_nauto      <- spread_cols[str_detect(spread_cols, "nauto|new_auto")][1]
-spread_commercial <- spread_cols[str_detect(spread_cols, "comm")][1]
+# Mortgage spread
+spread_mortgage <- all_cols[str_detect(all_cols, "spread") & str_detect(all_cols, "mort|re_j|re_30|re_fix")][1]
+message("Mortgage spread: ", spread_mortgage)
 
-message("Mortgage spread:   ", spread_mortgage)
-message("New auto spread:   ", spread_nauto)
+# Auto spread
+spread_nauto <- all_cols[str_detect(all_cols, "spread") & str_detect(all_cols, "nauto|uauto|auto")][1]
+message("New/used auto spread: ", spread_nauto)
+
+# Commercial spread — prefer non-RE commercial
+spread_commercial <- all_cols[str_detect(all_cols, "spread") & str_detect(all_cols, "comm|bus|mbl")][1]
 message("Commercial spread: ", spread_commercial)
 
-if (any(is.na(c(spread_mortgage, spread_nauto, spread_commercial)))) {
-  message("\nCould not auto-detect all spread columns.")
-  message("Please set them manually below and re-run.\n")
-  # MANUAL OVERRIDE — uncomment and set if auto-detect fails:
-  # spread_mortgage   <- "spread_mort"
-  # spread_nauto      <- "spread_nauto"
-  # spread_commercial <- "spread_comm_re"
-  stop("Fix spread column names above")
+# Check
+missing <- c(lgr_var, spread_mortgage, spread_nauto, spread_commercial)
+if (any(is.na(missing))) {
+  message("\nCould not auto-detect some columns. Available spread/loan columns:")
+  print(all_cols[str_detect(all_cols, "spread|loan_gr|irate")])
+  message("\nSet these manually below and re-run:")
+  message("  spread_mortgage   <- 'YOUR_COLUMN'")
+  message("  spread_nauto      <- 'YOUR_COLUMN'")
+  message("  spread_commercial <- 'YOUR_COLUMN'")
+  message("  lgr_var           <- 'YOUR_COLUMN'")
+  stop("Manual column assignment required")
 }
+
+# ══ MANUAL OVERRIDE (uncomment if auto-detect picks wrong columns) ════════════
+# spread_mortgage   <- "spread_re_junior"
+# spread_nauto      <- "spread_uauto"
+# spread_commercial <- "spread_comm_re"
+# lgr_var           <- "loan_growth"
+# cu_id_var         <- "cu_number"
+# time_var          <- "yq_fe"   # or whatever you construct below
+# ══════════════════════════════════════════════════════════════════════════════
 
 # ── Build event time ──────────────────────────────────────────────────────────
 if (all(c("year","quarter") %in% names(panel))) {
   panel <- panel |> mutate(event_time = (year - 2022) * 4 + (quarter - 1))
-} else if ("year_quarter" %in% names(panel)) {
-  panel <- panel |> mutate(
-    yr  = as.integer(str_extract(as.character(year_quarter), "^\\d{4}")),
-    qtr = as.integer(str_extract(as.character(year_quarter), "\\d$")),
-    event_time = (yr - 2022) * 4 + (qtr - 1)
-  )
-} else stop("Cannot build event time — need year+quarter columns")
+} else {
+  stop("Need 'year' and 'quarter' columns to build event time")
+}
 
 panel_es <- panel |>
   filter(event_time >= -12, event_time <= 8) |>
@@ -91,13 +139,14 @@ panel_es <- panel |>
 
 # ── Event study runner ────────────────────────────────────────────────────────
 run_es <- function(outcome_col, panel_label) {
-  message("Running: ", panel_label)
+  message("Running: ", panel_label, " [", outcome_col, "]")
   df  <- panel_es |> filter(!is.na(.data[[outcome_col]]))
   fml <- as.formula(paste0(
-    outcome_col, " ~ i(Et, ", treat_var, ", ref='-1') | cu_id + year_quarter"
+    outcome_col, " ~ i(Et, ", treat_var, ", ref='-1') | ",
+    cu_id_var, " + ", time_var
   ))
   tryCatch({
-    m  <- feols(fml, data = df, cluster = ~cu_id)
+    m  <- feols(fml, data = df, cluster = as.formula(paste0("~", cu_id_var)))
     ip <- iplot(m, only.params = TRUE)$prms
     tibble(
       label     = panel_label,
@@ -111,7 +160,7 @@ run_es <- function(outcome_col, panel_label) {
 }
 
 es_mort  <- run_es(spread_mortgage,   "A.  Mortgage Rate Spread")
-es_nauto <- run_es(spread_nauto,      "B.  New Auto Rate Spread")
+es_nauto <- run_es(spread_nauto,      "B.  New/Used Auto Rate Spread")
 es_comm  <- run_es(spread_commercial, "C.  Commercial Rate Spread")
 es_lgr   <- run_es(lgr_var,           "D.  Loan Growth")
 
@@ -144,8 +193,11 @@ combined <- (plot_es(es_mort) | plot_es(es_nauto)) /
   plot_annotation(
     title    = "Event Study: RBC Rule Impact on Loan Rate Spreads and Lending Volume",
     subtitle = "Event time = quarters relative to RBC effective date (2022 Q1). Reference = Q\u22121. Shaded band = 95% CI.",
-    caption  = "Two-way FE (CU + quarter-year). SE clustered at CU. Complex CUs = avg assets \u2265 $500M (2021 classification).",
-    theme    = theme(
+    caption  = paste0(
+      "Two-way FE (", cu_id_var, " + ", time_var, "). ",
+      "SE clustered at CU. Complex CUs = avg assets \u2265 $500M (2021)."
+    ),
+    theme = theme(
       plot.title    = element_text(face = "bold", size = 13, color = "#1a2744"),
       plot.subtitle = element_text(size = 10, color = "#555555"),
       plot.caption  = element_text(size = 8, color = "#888888")
